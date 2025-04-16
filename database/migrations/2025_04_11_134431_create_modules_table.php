@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('course_id')->constrained()->onDelete('cascade');
             $table->string('title');
+            $table->boolean('is_free')->default(0); // 0 = not free 
             $table->integer('position'); // ordering
             $table->timestamps();
         });

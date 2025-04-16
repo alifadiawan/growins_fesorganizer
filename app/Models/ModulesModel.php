@@ -7,6 +7,9 @@ use Illuminate\Support\Str;
 
 class ModulesModel extends Model
 {
+    protected $table = 'modules';
+    protected $guarded = [];
+
     protected static function booted()
     {
         static::creating(function ($model) {
@@ -26,6 +29,6 @@ class ModulesModel extends Model
 
     public function lessons()
     {
-        return $this->hasMany(LessonsModel::class);
+        return $this->hasMany(LessonsModel::class, 'module_id');
     }
 }

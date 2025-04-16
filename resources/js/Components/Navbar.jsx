@@ -1,4 +1,5 @@
-import { Link } from "@inertiajs/react"
+import { Link, usePage } from "@inertiajs/react"
+import { User } from "lucide-react"
 import React, { useEffect, useState } from "react"
 
 const navLinks = [
@@ -11,6 +12,8 @@ const navLinks = [
 export function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [scrolled, setScrolled] = useState(false)
+
+    const user = usePage().props.auth
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
@@ -69,9 +72,16 @@ export function Navbar() {
                     </nav>
 
                     {/* Register Button */}
-                    <Link href="/login" className="hidden md:block rounded-md bg-yellow-400 px-5 py-2 text-sm font-medium text-black transition-all duration-300 hover:bg-yellow-500 hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0">
-                        Daftar Sekarang
-                    </Link>
+                    {user.length ? (
+                        <Link href="/login" className="hidden md:block rounded-md bg-yellow-400 px-5 py-2 text-sm font-medium text-black transition-all duration-300 hover:bg-yellow-500 hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0">
+                            Daftar Sekarang
+                        </Link>
+
+                    ) : (
+                        <Link href={route('dashboard')} className="flex flex-row items-center gap-2 rounded-md px-5 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-yellow-500 hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0">
+                            <User /> {user.user.name}
+                        </Link>
+                    )}
 
                     {/* Mobile Menu Button */}
                     <div className="flex md:hidden">

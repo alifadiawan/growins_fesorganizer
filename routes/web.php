@@ -17,10 +17,11 @@ Route::get('/', function () {
 
 
 // admin route
-Route::middleware('auth.token')->prefix('admin')->group(function(){
+Route::middleware(['auth.token', 'verified'])->prefix('admin')->group(function(){
 
     Route::get('/course', [CourseController::class, 'index'])->name('admin.course.index');
     Route::get('/course/detail/{id}/{slug}', [CourseController::class, 'show'])->name('admin.course.show');
+    Route::get('/course/edit/{id}/', [CourseController::class, 'edit'])->name('admin.course.edit');
 
 });
 

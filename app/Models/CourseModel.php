@@ -30,7 +30,7 @@ class CourseModel extends Model
 
     public function modules()
     {
-        return $this->hasMany(ModulesModel::class);
+        return $this->hasMany(ModulesModel::class, 'course_id');
     }
 
     public function tags()
@@ -46,6 +46,10 @@ class CourseModel extends Model
     public function reviews()
     {
         return $this->hasMany(ReviewsModel::class);
+    }
+
+    public function lessons(){
+        return $this->hasMany(LessonsModel::class);
     }
 
     // public function payments()

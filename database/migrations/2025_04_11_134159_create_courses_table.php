@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->text('thumbnail')->nullable();
-            $table->decimal('price', 8, 2)->default(0);
+            $table->decimal('price', 15, 2)->default(0);
             $table->enum('status', ['draft', 'published'])->default('draft');
             $table->timestamps();
         });

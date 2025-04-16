@@ -8,6 +8,8 @@ use Illuminate\Support\Str;
 class LessonsModel extends Model
 {
 
+    protected $table = 'lessons';
+    protected $guarded = [];
     protected static function booted()
     {
         static::creating(function ($model) {

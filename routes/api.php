@@ -14,7 +14,7 @@ Route::get('/modules', [ModulesAPI::class, 'index'])
     ->middleware('throttle:100,1');
 Route::post('/login', [AuthenticatedSessionController::class, 'login'])->name('login');
 
-Route::middleware('auth:sanctum')->name('api.')->group(function () {
+Route::middleware('auth.token')->name('api.')->group(function () {
 
     // Course API
     Route::post('/store/courses', [CourseAPI::class, 'store'])->name('courses.store');
@@ -23,10 +23,10 @@ Route::middleware('auth:sanctum')->name('api.')->group(function () {
     Route::get('/delete/courses', [CourseAPI::class, 'delete'])->name('courses.delete');
 
     // Modules API
-    Route::get('/{title}/{id}/show', [ModulesAPI::class, 'show']);
-    Route::post('/modules/store', [ModulesAPI::class, 'store']);
-    Route::put('/modules//update{id}', [ModulesAPI::class, 'update']);
-    Route::delete('/modules/{id}/delete', [ModulesAPI::class, 'destroy']);
+    Route::get('/{title}/{id}/show', [ModulesAPI::class, 'show'])->name('modules.show');
+    Route::post('/modules/store', [ModulesAPI::class, 'store'])->name('modules.store');
+    Route::put('/modules//update{id}', [ModulesAPI::class, 'update'])->name('modules.update');
+    Route::delete('/modules/{id}/delete', [ModulesAPI::class, 'destroy'])->name('modules.delete');
 
 
 

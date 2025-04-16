@@ -22,4 +22,14 @@ class CourseController extends Controller
             'course' => $course
         ]);
     }
+
+    public function edit($id)
+    {
+        $course = CourseModel::with('instructor', 'modules.lessons')->find($id);
+
+        return Inertia::render('Admin/Course/Edit', [
+            'course' => $course,
+            'modules' => $course->modules
+        ]);
+    }
 }

@@ -25,7 +25,7 @@ class ModulesAPI extends Controller
             'course_id' => 'required|exists:courses,id',
             'title' => 'required|string|max:255',
             'position' => 'required|integer',
-            'is_free' => 'required|boolean'
+            // 'is_free' => 'required|boolean'
         ]);
 
         $module = ModulesModel::create([
@@ -33,7 +33,7 @@ class ModulesAPI extends Controller
             'course_id' => $validated['course_id'],
             'title' => $validated['title'],
             'position' => $validated['position'],
-            'is_free' => $validated['is_free'],
+            // 'is_free' => $validated['is_free'],
         ]);
 
         return response()->json([

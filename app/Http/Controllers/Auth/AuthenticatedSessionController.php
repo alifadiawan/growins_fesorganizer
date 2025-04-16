@@ -45,17 +45,7 @@ class AuthenticatedSessionController extends Controller
         $token = $user->createToken('token')->plainTextToken;
         Auth::login($user);
 
-        if ($request->wantsJson()) {
-            return response()->json([
-                'user' => $user,
-                'token' => $token,
-            ]);
-        }
-
-        return Inertia::render('User/Dashboard', [
-            'user' => $user,
-            'token' => $token,
-        ]);
+        return redirect('dashboard')->with('token', $token);;
     }
 
     /**

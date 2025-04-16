@@ -1,3 +1,4 @@
+import Modal from '@/Components/Modal';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Link } from '@inertiajs/react';
 import React, { useEffect, useState } from 'react'
@@ -5,6 +6,7 @@ import React, { useEffect, useState } from 'react'
 const Index = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     axios.get('/api/courses')
@@ -22,6 +24,19 @@ const Index = () => {
   return (
     <AuthenticatedLayout pageTitle="Courses">
 
+      {/* <Modal
+        onClose={() => setIsOpen(false)}
+        isOpen={isOpen}
+        title="Example Modal"
+        maxWidth="lg"
+      >
+        <h1>Hello World</h1>
+      </Modal> */}
+
+      <div className="flex flex-row gap-3 mb-5">
+        <button onClick={() => setIsOpen(true)} className='px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md'>New Course </button>
+      </div>
+
       {courses.length === 0 ? (
         <p className="text-gray-500">No courses found.</p>
       ) : (
@@ -38,11 +53,12 @@ const Index = () => {
             <tbody>
               {courses.map(course => (
                 <tr key={course.id} className="border-t">
+                
                   <td className="px-4 py-2">{course.title}</td>
-                  <td className="px-4 py-2">${course.price}</td>
+                  <td className="px-4 py-2">Rp. {course.price}</td>
                   <td className="px-4 py-2 capitalize">{course.status}</td>
                   <td className="px-4 py-2 space-x-2">
-                    <Link href={route('admin.course.show', {id: course.id, slug: course.slug} )} className="text-blue-600 hover:underline">View</Link>
+                    <Link href={route('admin.course.show', { id: course.id, slug: course.slug })} className="text-blue-600 hover:underline">View</Link>
                     <a href={`/courses/${course.id}/edit`} className="text-yellow-600 hover:underline">Edit</a>
                     {/* <button onClick={() => handleDelete(course.id)} className="text-red-600 hover:underline">
                       Delete

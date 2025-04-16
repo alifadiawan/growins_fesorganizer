@@ -17,8 +17,10 @@ class AuthenticateWithToken
     public function handle(Request $request, Closure $next)
     {
         if ($token = $request->bearerToken()) {
-            $user = \App\Models\User::whereHas('tokens', function ($query) use ($token) {
-                $query->where('token', $token);
+            $hashedToken = hash('sha256', $token);
+
+            $user = \App\Models\User::whereHas('tokens', function ($query) use ($hashedToken) {
+                $query->where('token', $hashedToken);
             })->first();
 
             if ($user) {
