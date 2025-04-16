@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\Course\CourseAPI;
+use App\Http\Controllers\API\Course\LessonsAPI;
 use App\Http\Controllers\API\Course\ModulesAPI;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Http\Request;
@@ -29,6 +30,9 @@ Route::middleware('auth.token')->name('api.')->group(function () {
     Route::delete('/modules/{id}/delete', [ModulesAPI::class, 'destroy'])->name('modules.delete');
 
 
+    Route::post('/lessons/store/{module_id}', [LessonsAPI::class, 'store'])->name('lessons.store');
+    Route::put('/lessons/update/{id}', [LessonsAPI::class, 'update'])->name('lessons.update');
+    Route::delete('/lessons/{id}/delete', [LessonsAPI::class, 'destroy'])->name('lessons.delete');
 
 
 

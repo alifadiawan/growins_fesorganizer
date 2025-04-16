@@ -2,18 +2,20 @@ import Modal from '@/Components/Modal';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { router, useForm, usePage } from '@inertiajs/react';
 import axios from 'axios';
+import { Link } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 
 
 const Edit = ({ course }) => {
     // modals
     const [isModuleModalOpen, setIsModuleModalOpen] = useState(false);
-    const [isLessonModalOpen, setIsLessonModalOpen] = useState(false);
+    const [openModuleId, setOpenModuleId] = useState(null);
+
     const [isEditLessonModalOpen, setIsEditLessonModalOpen] = useState(false);
+    const [selectedLessonId, setSelectedLessonId] = useState(null);
 
     const [processing, setProcessing] = useState(false);
     const user = usePage().props.auth;
-    console.log(course);
 
     // props
     const modules = course.modules;
@@ -91,13 +93,23 @@ const Edit = ({ course }) => {
 
     };
 
-    const handleAddLesson = (moduleId, lessonCount) => {
-        // router.post(route('lessons.store'), {
-        //     module_id: moduleId,
-        //     title: 'New Lesson',
-        //     position: lessonCount + 1,
-        //     slug: `lesson-${Date.now()}`
-        // });
+    const handleAddLesson = async (e, module_id) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+
+        const newLesson = {
+            module_id: module_id,
+            title: formData.get('lesson_title'),
+            content: formData.get('lesson_content'),
+            video_url: formData.get('lesson_video_url'),
+        }
+
+        try {
+            axios.post(route('api.lessons.store', module_id), newLesson)
+            console.log("success");
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     useEffect(() => {
@@ -245,7 +257,7 @@ const Edit = ({ course }) => {
                                     </div>
                                     <div className="flex space-x-2">
                                         <button
-                                            onClick={() => handleEditModule(module.id)}
+                                            onClick={() => setSelectedLessonId(module.lessons.id)}
                                             className="text-gray-600 hover:text-blue-600 p-1.5 rounded-full hover:bg-blue-50 transition-all"
                                             title="Edit module"
                                         >
@@ -254,7 +266,7 @@ const Edit = ({ course }) => {
                                             </svg>
                                         </button>
                                         <button
-                                            onClick={() => handleDeleteModule(module.id)}
+                                            // onClick={() => handleDeleteModule(module.id)}
                                             className="text-gray-600 hover:text-red-600 p-1.5 rounded-full hover:bg-red-50 transition-all"
                                             title="Delete module"
                                         >
@@ -289,27 +301,27 @@ const Edit = ({ course }) => {
                                                             <h3 className="font-medium text-gray-800">{lesson.title}</h3>
                                                         </div>
                                                         <div className="flex space-x-2">
-                                                            <button
-                                                                onClick={() => setIsEditLessonModalOpen(true)}
+                                                            <Link
+                                                                // href=
                                                                 className="text-gray-500 hover:text-blue-600 p-2 rounded hover:bg-blue-50 transition-all"
                                                                 title="Edit lesson"
                                                             >
                                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                                                     <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                                                                 </svg>
-                                                            </button>
-                                                            <button
+                                                            </Link>
+                                                            <Link
                                                                 className="text-gray-500 hover:text-red-600 p-2 rounded hover:bg-red-50 transition-all"
                                                                 title="Delete lesson"
                                                             >
                                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                                                     <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
                                                                 </svg>
-                                                            </button>
+                                                            </Link>
                                                         </div>
                                                     </div>
 
-                                                    <div className="pl-9"> {/* Indentation to align with title */}
+                                                    <div className="pl-9">
                                                         <p className="text-gray-700 text-sm mb-2">{lesson.content}</p>
 
                                                         {lesson.video_url && (
@@ -329,104 +341,8 @@ const Edit = ({ course }) => {
                                         </ul>
                                     )}
 
-                                    {/* Edit Lesson Modal */}
-                                    <Modal title="Edit Lesson" isOpen={isEditLessonModalOpen} onClose={() => setIsEditLessonModalOpen(false)}>
-                                        <form method="post" className="space-y-4">
-                                            <div className="space-y-1">
-                                                <label htmlFor="edit-title" className="block text-sm font-medium text-gray-700">Lesson Title</label>
-                                                <input
-                                                    id="edit-title"
-                                                    type="text"
-                                                    name="title"
-                                                    className="bg-white px-3 py-2 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                                                />
-                                            </div>
-                                            <div className="space-y-1">
-                                                <label htmlFor="edit-content" className="block text-sm font-medium text-gray-700">Content</label>
-                                                <textarea
-                                                    id="edit-content"
-                                                    name="content"
-                                                    rows="4"
-                                                    className="bg-white px-3 py-2 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                                                />
-                                            </div>
-                                            <div className="space-y-1">
-                                                <label htmlFor="edit-video" className="block text-sm font-medium text-gray-700">Video URL</label>
-                                                <input
-                                                    id="edit-video"
-                                                    type="text"
-                                                    name="video_url"
-                                                    className="bg-white px-3 py-2 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                                                />
-                                            </div>
-                                            <div className="flex justify-end space-x-3 pt-2">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setIsEditLessonModalOpen(false)}
-                                                    className='border border-gray-300 bg-white px-4 py-2 rounded-md text-gray-700 hover:bg-gray-50'
-                                                >
-                                                    Cancel
-                                                </button>
-                                                <button
-                                                    type="submit"
-                                                    className='bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-md text-white'
-                                                >
-                                                    Update Lesson
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </Modal>
-
-                                    {/* Add Lesson Modal */}
-                                    <Modal title="Add New Lesson" isOpen={isLessonModalOpen} onClose={() => setIsLessonModalOpen(false)}>
-                                        <form method="post" className="space-y-4">
-                                            <div className="space-y-1">
-                                                <label htmlFor="new-title" className="block text-sm font-medium text-gray-700">Lesson Title</label>
-                                                <input
-                                                    id="new-title"
-                                                    type="text"
-                                                    name="title"
-                                                    className="bg-white px-3 py-2 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                                                />
-                                            </div>
-                                            <div className="space-y-1">
-                                                <label htmlFor="new-content" className="block text-sm font-medium text-gray-700">Content</label>
-                                                <textarea
-                                                    id="new-content"
-                                                    name="content"
-                                                    rows="4"
-                                                    className="bg-white px-3 py-2 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                                                />
-                                            </div>
-                                            <div className="space-y-1">
-                                                <label htmlFor="new-video" className="block text-sm font-medium text-gray-700">Video URL</label>
-                                                <input
-                                                    id="new-video"
-                                                    type="text"
-                                                    name="video_url"
-                                                    className="bg-white px-3 py-2 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                                                />
-                                            </div>
-                                            <div className="flex justify-end space-x-3 pt-2">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setIsLessonModalOpen(false)}
-                                                    className='border border-gray-300 bg-white px-4 py-2 rounded-md text-gray-700 hover:bg-gray-50'
-                                                >
-                                                    Cancel
-                                                </button>
-                                                <button
-                                                    type="submit"
-                                                    className='bg-green-500 hover:bg-green-600 px-4 py-2 rounded-md text-white'
-                                                >
-                                                    Add Lesson
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </Modal>
-
                                     <button
-                                        onClick={() => setIsLessonModalOpen(true)}
+                                        onClick={() => setOpenModuleId(module.id)}
                                         className="mt-2 text-sm flex items-center text-blue-600 hover:text-blue-800 transition-all font-medium"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
@@ -434,6 +350,57 @@ const Edit = ({ course }) => {
                                         </svg>
                                         Add Lesson
                                     </button>
+
+                                    {openModuleId === module.id && (
+                                        <Modal key={module.id} title="Add New Lesson" isOpen={true} onClose={() => setOpenModuleId(null)}>
+                                            <form onSubmit={(e) => handleAddLesson(e, module.id)} method="post" className="space-y-4">
+                                                <p>{module.id}</p>
+                                                <div className="space-y-1">
+                                                    <label htmlFor="new-title" className="block text-sm font-medium text-gray-700">Lesson Title</label>
+                                                    <input
+                                                        id="new-title"
+                                                        type="text"
+                                                        name="lesson_title"
+                                                        className="bg-white px-3 py-2 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                                    />
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <label htmlFor="new-content" className="block text-sm font-medium text-gray-700">Content</label>
+                                                    <textarea
+                                                        id="new-content"
+                                                        name="lesson_content"
+                                                        rows="4"
+                                                        className="bg-white px-3 py-2 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                                    />
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <label htmlFor="new-video" className="block text-sm font-medium text-gray-700">Video URL</label>
+                                                    <input
+                                                        id="lesson_video_url"
+                                                        type="text"
+                                                        name="lesson_video_url"
+                                                        className="bg-white px-3 py-2 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                                    />
+                                                </div>
+                                                <div className="flex justify-end space-x-3 pt-2">
+                                                    <button
+                                                        type="button"
+                                                        // onClick={() => setIsLessonModalOpen(false)}
+                                                        className='border border-gray-300 bg-white px-4 py-2 rounded-md text-gray-700 hover:bg-gray-50'
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                    <button
+                                                        type="submit"
+                                                        className='bg-green-500 hover:bg-green-600 px-4 py-2 rounded-md text-white'
+                                                    >
+                                                        Add Lesson
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </Modal>
+                                    )}
+
                                 </div>
                             </div>
                         ))}

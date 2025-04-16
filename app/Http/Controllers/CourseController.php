@@ -14,6 +14,10 @@ class CourseController extends Controller
         return Inertia::render('Admin/Course/Index');
     }
 
+    public function create(){
+        return Inertia::render('Admin/Course/Create');
+    }
+
     public function show($id)
     {
         $course = CourseModel::with('instructor')->find($id);
