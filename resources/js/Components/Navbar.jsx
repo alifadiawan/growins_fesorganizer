@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react"
 
 const navLinks = [
     { href: "/", label: "Home" },
+    { href: "/courses/all", label: "Courses" },
     { href: "/about", label: "About" },
     { href: "/services", label: "Services" },
     { href: "/contact", label: "Contact" },
@@ -13,7 +14,7 @@ export function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [scrolled, setScrolled] = useState(false)
 
-    const user = usePage().props.auth
+    const user = usePage().props.auth;
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
@@ -40,7 +41,7 @@ export function Navbar() {
 
     return (
         <header
-            className={`fixed top-0 z-50 w-full py-2 transition-all duration-300 ease-in-out ${scrolled ? "bg-[#128884]/80 backdrop-blur-md shadow-lg" : "bg-[#128884]"
+            className={`fixed top-0 z-50 w-full py-2 transition-all duration-300 ease-in-out ${scrolled ? "bg-[#128884]/80 backdrop-blur-md shadow-lg" : "bg-gradient-to-r from-teal-900 to-teal-600"
                 }`}
         >
             <div className="container mx-auto px-4 sm:px-6 lg:px-12">
@@ -72,14 +73,28 @@ export function Navbar() {
                     </nav>
 
                     {/* Register Button */}
-                    {user.length ? (
-                        <Link href="/login" className="hidden md:block rounded-md bg-yellow-400 px-5 py-2 text-sm font-medium text-black transition-all duration-300 hover:bg-yellow-500 hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0">
-                            Daftar Sekarang
-                        </Link>
-
+                    {user.user ? (
+                        user.user.role == 'student' ? (
+                            <Link
+                                href={route('user.dashboard')}
+                                className="flex flex-row items-center gap-2 rounded-md px-5 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-yellow-500 hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0"
+                            >
+                                <User /> {user.user.name}
+                            </Link>
+                        ) : (
+                            <Link
+                                href={route('admin.dashboard')}
+                                className="flex flex-row items-center gap-2 rounded-md px-5 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-yellow-500 hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0"
+                            >
+                                <User /> {user.user.name}
+                            </Link>
+                        )
                     ) : (
-                        <Link href={route('dashboard')} className="flex flex-row items-center gap-2 rounded-md px-5 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-yellow-500 hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0">
-                            <User /> {user.user.name}
+                        <Link
+                            href="/login"
+                            className="hidden md:block rounded-md bg-yellow-400 px-5 py-2 text-sm font-medium text-black transition-all duration-300 hover:bg-yellow-500 hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0"
+                        >
+                            Daftar Sekarang
                         </Link>
                     )}
 

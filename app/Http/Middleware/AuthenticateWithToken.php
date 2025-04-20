@@ -25,6 +25,13 @@ class AuthenticateWithToken
 
             if ($user) {
                 Auth::login($user);
+
+                // Redirect based on role
+                if ($user->role === 'admin') {
+                    return redirect()->to('/admin/dashboard');
+                } elseif ($user->role === 'student') {
+                    return redirect()->to('/user/dashboard');
+                }
             }
         }
 

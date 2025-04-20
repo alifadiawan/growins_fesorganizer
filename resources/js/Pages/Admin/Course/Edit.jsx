@@ -13,9 +13,12 @@ const Edit = ({ course }) => {
 
     const [isEditLessonModalOpen, setIsEditLessonModalOpen] = useState(false);
     const [selectedLessonId, setSelectedLessonId] = useState(null);
+    const [thumbnail, setThumbnail] = useState(null);
 
     const [processing, setProcessing] = useState(false);
     const user = usePage().props.auth;
+    const errors = usePage().props.errors;
+
 
     // props
     const modules = course.modules;
@@ -26,7 +29,6 @@ const Edit = ({ course }) => {
     const [description, setDescription] = useState(course.description || '')
     const [price, setPrice] = useState(course.price || 0)
     const [status, setStatus] = useState(course.status || 'draft')
-    const [errors, setErrors] = useState({})
 
 
     const handleDeleteLesson = (lessonId) => {
@@ -49,24 +51,44 @@ const Edit = ({ course }) => {
 
     };
 
-    const handleCourseUpdate = (e) => {
+    const handleThumbnailChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setThumbnail(file);
+            setThumbnailPreview(URL.createObjectURL(file));
+        }
+    };
+
+    const handleCourseUpdate = async (e) => {
         e.preventDefault();
+        setProcessing(true);
 
         const formData = new FormData(e.target);
+        formData.append('title', e.target.title.value);
+        formData.append('description', e.target.description.value);
+        formData.append('price', e.target.price.value);
+        formData.append('status', e.target.status.value);
 
-        const data = {
-            title: formData.get('title'),
-            description: formData.get('description'),
-            price: formData.get('price'),
-            status: formData.get('status'),
-        };
+        const fileInput = e.target.thumbnail;
+        if (fileInput && fileInput.files[0]) {
+            formData.append('thumbnail', fileInput.files[0]);
+        }
 
-        // Send PUT request
         try {
-            router.put(route('api.courses.update', course.id), data);
-            console.log("success");
+            const response = await axios.post(route('api.courses.update', course.id), formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                params: {
+                    _method: 'PUT', // simulate PUT since form can't actually send PUT
+                }
+            });
+
+            console.log('Success:', response.data);
         } catch (error) {
-            console.log(error);
+            console.error('Update failed:', error.response?.data || error);
+        } finally {
+            setProcessing(false);
         }
     };
 
@@ -78,7 +100,7 @@ const Edit = ({ course }) => {
         const data = {
             title: form.title.value,
             course_id: course.id,
-            position: 1 + 1
+            is_free: form.is_free.checked,
         }
 
         console.log(data)
@@ -97,11 +119,13 @@ const Edit = ({ course }) => {
         e.preventDefault();
         const formData = new FormData(e.target);
 
+        const isFreeChecked = e.target.querySelector('input[name="is_free"]').checked;
         const newLesson = {
             module_id: module_id,
             title: formData.get('lesson_title'),
             content: formData.get('lesson_content'),
             video_url: formData.get('lesson_video_url'),
+            is_free: isFreeChecked,
         }
 
         try {
@@ -120,6 +144,15 @@ const Edit = ({ course }) => {
         <AuthenticatedLayout>
 
             <h1 className="text-3xl font-bold mb-8 text-gray-800 border-b pb-4">Edit Course</h1>
+
+            {errors.length != 0 ? (
+                <p>no error</p>
+            ) : (
+                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-5" role="alert">
+                    <p class="font-bold">Be Warned</p>
+                    <p>Something not ideal might be happening.</p>
+                </div>
+            )}
 
             {/* === Course Form === */}
             <div className="bg-white rounded-lg shadow-md p-6 mb-10">
@@ -142,6 +175,7 @@ const Edit = ({ course }) => {
                         {/* Image Upload Field */}
                         <input
                             type="file"
+                            id="thumbnail"
                             name="thumbnail"
                             accept="image/*"
                             className="w-full border border-gray-300 p-2 rounded-md"
@@ -164,7 +198,7 @@ const Edit = ({ course }) => {
                         <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
                         <textarea
                             name="description"
-                            defaultValue={course.title}
+                            defaultValue={course.description}
                             className="w-full border border-gray-300 p-3 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all min-h-32"
                             placeholder="Describe your course"
                         />
@@ -253,7 +287,13 @@ const Edit = ({ course }) => {
                                         <span className="bg-blue-100 text-blue-800 text-xs font-medium rounded-full h-6 w-6 flex items-center justify-center mr-3">
                                             {index + 1}
                                         </span>
-                                        <h3 className="font-bold text-lg text-gray-800">{module.title}</h3>
+                                        <h3 className="font-bold text-lg text-gray-800 flex items-center space-x-2">
+                                            <span>{module.title}</span>
+                                            <span className={`text-xs font-semibold px-2 py-1 rounded ${module.is_free == 1 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                                }`}>
+                                                {module.is_free == 1 ? "Free for public" : "Paid"}
+                                            </span>
+                                        </h3>
                                     </div>
                                     <div className="flex space-x-2">
                                         <button
@@ -298,7 +338,13 @@ const Edit = ({ course }) => {
                                                             <span className="text-sm font-medium bg-gray-200 text-gray-700 rounded-full h-6 w-6 flex items-center justify-center mr-3">
                                                                 {lessonIndex + 1}
                                                             </span>
-                                                            <h3 className="font-medium text-gray-800">{lesson.title}</h3>
+                                                            <h3 className="font-medium text-gray-800 flex items-center space-x-2">
+                                                                <span>{lesson.title}</span>
+                                                                <span className={`text-xs font-semibold px-2 py-1 rounded ${lesson.is_free ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                                                    }`}>
+                                                                    {lesson.is_free ? "Free" : "Paid"}
+                                                                </span>
+                                                            </h3>
                                                         </div>
                                                         <div className="flex space-x-2">
                                                             <Link
@@ -382,6 +428,17 @@ const Edit = ({ course }) => {
                                                         className="bg-white px-3 py-2 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                                                     />
                                                 </div>
+                                                <div className="flex items-center space-x-2">
+                                                    <input
+                                                        type="checkbox"
+                                                        id="is_free"
+                                                        name="is_free"
+                                                        className="rounded border-gray-300 text-green-600 shadow-sm focus:ring-green-500"
+                                                    />
+                                                    <label htmlFor="public" className="text-sm text-gray-700">
+                                                        Free for Public
+                                                    </label>
+                                                </div>
                                                 <div className="flex justify-end space-x-3 pt-2">
                                                     <button
                                                         type="button"
@@ -410,12 +467,41 @@ const Edit = ({ course }) => {
 
             {/* New module */}
             <Modal title="New Module" isOpen={isModuleModalOpen} onClose={() => setIsModuleModalOpen(false)}>
-                <form onSubmit={handleNewModule} method="post">
-                    <div className="input-form">
-                        <label htmlFor="">Module Title</label>
-                        <input type="text" name="title" className="bg-white px-2 w-full rounded-md border border-zinc-200 shadow" />
+                <form onSubmit={handleNewModule} method="post" className="rounded-lg space-y-5 w-full max-w-md">
+                    {/* Module Title */}
+                    <div>
+                        <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+                            Module Title
+                        </label>
+                        <input
+                            type="text"
+                            name="title"
+                            id="title"
+                            placeholder="Enter module title"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                        />
                     </div>
-                    <button type="submit" className='bg-green-500 px-4 py-2 rounded-md mt-3 text-white'>Add Module</button>
+
+                    {/* Checkbox */}
+                    <div className="flex items-center space-x-2">
+                        <input
+                            type="checkbox"
+                            id="is_free"
+                            name="is_free"
+                            className="rounded border-gray-300 text-green-600 shadow-sm focus:ring-green-500"
+                        />
+                        <label htmlFor="public" className="text-sm text-gray-700">
+                            Free for Public
+                        </label>
+                    </div>
+
+                    {/* Submit Button */}
+                    <button
+                        type="submit"
+                        className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md transition-colors"
+                    >
+                        Add Module
+                    </button>
                 </form>
             </Modal>
 

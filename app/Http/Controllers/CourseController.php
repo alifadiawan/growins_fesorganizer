@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CategoryModel;
 use App\Models\CourseModel;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -14,13 +15,18 @@ class CourseController extends Controller
         return Inertia::render('Admin/Course/Index');
     }
 
-    public function create(){
-        return Inertia::render('Admin/Course/Create');
+    public function create()
+    {
+        $categories = CategoryModel::all();
+        return Inertia::render('Admin/Course/Create', ['categories' => $categories]);
     }
 
     public function show($id)
     {
-        $course = CourseModel::with('instructor')->find($id);
+        $course = CourseModel::with([
+            'instructor',
+            'modules.lessons'
+        ])->find($id);
 
         return Inertia::render('Admin/Course/Detail', [
             'course' => $course
@@ -29,7 +35,10 @@ class CourseController extends Controller
 
     public function edit($id)
     {
-        $course = CourseModel::with('instructor', 'modules.lessons')->find($id);
+        $course = CourseModel::with([
+            'instructor',
+            'modules.lessons'
+        ])->find($id);
 
         return Inertia::render('Admin/Course/Edit', [
             'course' => $course,

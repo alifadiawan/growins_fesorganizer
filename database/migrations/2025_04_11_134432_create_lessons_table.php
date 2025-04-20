@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('video_url')->nullable();
             $table->integer('position');
             $table->string('slug')->unique();
+            $table->boolean('is_free')->default(0); // 0 = not free 
             $table->timestamps();
         });
     }

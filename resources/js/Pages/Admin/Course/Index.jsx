@@ -57,7 +57,9 @@ const Index = () => {
                   </tr>
                 ))
               ) : (
-                <p>aaa</p>
+                <tr>
+                  <td colSpan={4} className="text-center py-5 text-zinc-500">Belum Ada Kursus</td>
+                </tr>
               )
             )}
 

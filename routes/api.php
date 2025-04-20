@@ -21,7 +21,7 @@ Route::middleware('auth.token')->name('api.')->group(function () {
     Route::post('/store/courses', [CourseAPI::class, 'store'])->name('courses.store');
     Route::get('show/{slug}/{id}', [CourseAPI::class, 'show'])->name('courses.show');
     Route::put('/update/courses/{id}', [CourseAPI::class, 'update'])->name('courses.update');
-    Route::get('/delete/courses', [CourseAPI::class, 'delete'])->name('courses.delete');
+    Route::delete('/delete/courses/{course_id}', [CourseAPI::class, 'delete'])->name('courses.delete');
 
     // Modules API
     Route::get('/{title}/{id}/show', [ModulesAPI::class, 'show'])->name('modules.show');

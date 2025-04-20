@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\CategoryModel;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,9 +16,24 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        User::insert([
+            'email' => 'admin@gmail.com',
+            'password' => bcrypt('1234567890'),
+            'name' => 'admin',
+            'role' => 3
+        ]);
+
+        CategoryModel::insert([
+            ['name' => 'Web Development', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Graphic Design (Canva)', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Microsoft Excel', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Digital Marketing', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'UI/UX Design', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Content Creation', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Office & Admin Tools', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Sales & E-commerce', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Video Editing', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Freelancing & Remote Work', 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 }

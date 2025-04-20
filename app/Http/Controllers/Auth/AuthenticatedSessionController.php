@@ -45,7 +45,11 @@ class AuthenticatedSessionController extends Controller
         $token = $user->createToken('token')->plainTextToken;
         Auth::login($user);
 
-        return redirect('dashboard')->with('token', $token);;
+        if ($user->role == 'student') {
+            return redirect(route('user.dashboard'))->with('token', $token);;
+        }
+
+        return redirect(route('admin.dashboard'))->with('token', $token);;
     }
 
     /**

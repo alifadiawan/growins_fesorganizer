@@ -1,5 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
+import axios from 'axios';
 import {
   ChevronLeft, Edit, Calendar, Users, DollarSign,
   Award, Trash2, FileText, Clock, Eye
@@ -9,7 +10,7 @@ import React from 'react'
 
 const Detail = ({ course }) => {
 
-  console.log(course)
+  console.log(course.id)
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -29,12 +30,15 @@ const Detail = ({ course }) => {
 
   const handleArchiveCourse = () => {
     if (confirm("Are you sure you want to archive this course?")) {
-      Inertia.delete(route('admin.courses.destroy', course.id));
+      axios.delete(route('api.courses.delete', course.id))
+        .then(function (response) {
+          router.visit(route('admin.course.index'))
+        });
     }
   };
 
   const handlePublishToggle = () => {
-    Inertia.patch(route('admin.courses.toggle-status', course.id));
+    // Inertia.patch(route('admin.courses.toggle-status', course.id));
   };
 
   if (!course) return <div className="p-6 text-gray-600">Loading...</div>;
@@ -188,7 +192,97 @@ const Detail = ({ course }) => {
               </div>
             </div>
           </div>
+          
+          {/* course content */}
+          <div className="space-y-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-semibold text-gray-800">Modules & Lessons</h2>
+            </div>
+          </div>
         </div>
+        {course.modules.length === 0 ? (
+          <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+            <p className="text-gray-500">No modules yet. Add a module to get started.</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {course.modules.map((module, index) => (
+              <div key={module.id} className="border rounded-lg p-6 bg-white shadow-sm hover:shadow-md transition-all">
+                <div className="flex justify-between items-center mb-4 pb-2 border-b">
+                  <div className="flex items-center">
+                    <span className="bg-blue-100 text-blue-800 text-xs font-medium rounded-full h-6 w-6 flex items-center justify-center mr-3">
+                      {index + 1}
+                    </span>
+                    <h3 className="font-bold text-lg text-gray-800 flex items-center space-x-2">
+                      <span>{module.title}</span>
+                      <span className={`text-xs font-semibold px-2 py-1 rounded ${module.is_free == 1 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                        }`}>
+                        {module.is_free == 1 ? "Free for public" : "Paid"}
+                      </span>
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="ml-6">
+                  <h4 className="font-medium text-sm text-gray-600 mb-3 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
+                    </svg>
+                    Lessons ({module.lessons.length})
+                  </h4>
+
+                  {module.lessons.length === 0 ? (
+                    <div className="text-center py-6 bg-gray-50 rounded-md">
+                      <p className="text-sm text-gray-500 italic">No lessons added yet.</p>
+                    </div>
+                  ) : (
+                    <ul className="space-y-3 mb-4">
+                      {module.lessons.map((lesson, lessonIndex) => (
+                        <li key={lesson.id} className="bg-gray-50 p-4 rounded-md hover:bg-gray-100 transition-all border border-gray-100">
+                          <div className="flex justify-between items-start mb-2">
+                            <div className="flex items-center">
+                              <span className="text-sm font-medium bg-gray-200 text-gray-700 rounded-full h-6 w-6 flex items-center justify-center mr-3">
+                                {lessonIndex + 1}
+                              </span>
+                              <h3 className="font-medium text-gray-800 flex items-center space-x-2">
+                                <span>{lesson.title}</span>
+                                <span className={`text-xs font-semibold px-2 py-1 rounded ${lesson.is_free ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                  }`}>
+                                  {lesson.is_free ? "Free" : "Paid"}
+                                </span>
+                              </h3>
+                            </div>
+                          </div>
+
+                          <div className="pl-9">
+                            <p className="text-gray-700 text-sm mb-2">{lesson.content}</p>
+
+                            {lesson.video_url && (
+                              <div className="flex items-center mt-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-500 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                  <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+                                  <path fillRule="evenodd" d="M10 18a1 1 0 001-1v-6.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 10.414V17a1 1 0 001 1z" clipRule="evenodd" />
+                                </svg>
+                                <a href={lesson.video_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-600 text-sm truncate max-w-md">
+                                  {lesson.video_url}
+                                </a>
+                              </div>
+                            )}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
       </div>
     </AuthenticatedLayout>
   )

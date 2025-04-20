@@ -11,7 +11,7 @@ class ModulesAPI extends Controller
 {
     public function index()
     {
-        $modules = ModulesModel::with('course')->get();
+        $modules = ModulesModel::with('course')->orderBy('position', 'asc')->get();
 
         return response()->json([
             'success' => true,
@@ -24,16 +24,16 @@ class ModulesAPI extends Controller
         $validated = $request->validate([
             'course_id' => 'required|exists:courses,id',
             'title' => 'required|string|max:255',
-            'position' => 'required|integer',
-            // 'is_free' => 'required|boolean'
+            'is_free' => 'required|boolean'
         ]);
 
+        $lastPosition = ModulesModel::where('course_id', $validated['course_id'])->max('position') ?? 0;
         $module = ModulesModel::create([
             'id' => Str::uuid(),
             'course_id' => $validated['course_id'],
             'title' => $validated['title'],
-            'position' => $validated['position'],
-            // 'is_free' => $validated['is_free'],
+            'position' => $lastPosition + 1,
+            'is_free' => $validated['is_free'],
         ]);
 
         return response()->json([

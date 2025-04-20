@@ -25,6 +25,7 @@ class CourseAPI extends Controller
     {
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
+            'category_id' => 'required',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'thumbnail' => 'nullable',
@@ -43,6 +44,7 @@ class CourseAPI extends Controller
         $course = CourseModel::create([
             'id' => Str::uuid(),
             'user_id' => $validated['user_id'],
+            'category_id' => $validated['category_id'],
             'title' => $validated['title'],
             'slug' => Str::slug($validated['title']) . '-' . Str::random(5),
             'description' => $validated['description'] ?? null,
@@ -80,11 +82,24 @@ class CourseAPI extends Controller
         $validated = $request->validate([
             'title' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
-            'thumbnail' => 'nullable|string',
+            'thumbnail' => 'nullable|file|image|max:2048',  // Validate as image file
             'price' => 'sometimes|required|numeric|min:0',
             'status' => 'in:draft,published'
         ]);
 
+        // Check and delete the old thumbnail if it exists
+        if ($course->thumbnail && Storage::exists('public/' . $course->thumbnail)) {
+            Storage::delete('public/' . $course->thumbnail);
+        }
+
+        // Handle the new thumbnail file upload
+        if ($request->hasFile('thumbnail')) {
+            $validated['thumbnail'] = $request->file('thumbnail')->store('thumbnails', 'public');
+        } elseif (is_string($request->thumbnail)) {
+            $validated['thumbnail'] = $request->thumbnail;
+        }
+
+        // Update the course with the new data
         $course->update(array_merge($validated, [
             'slug' => isset($validated['title']) ? Str::slug($validated['title']) . '-' . Str::random(5) : $course->slug
         ]));
@@ -96,9 +111,9 @@ class CourseAPI extends Controller
         ]);
     }
 
-    public function delete($id)
+    public function delete($course_id)
     {
-        $course = CourseModel::find($id);
+        $course = CourseModel::find($course_id);
 
         if (!$course) {
             return response()->json(['success' => false, 'message' => 'Course not found.'], 404);

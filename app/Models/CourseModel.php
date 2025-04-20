@@ -30,7 +30,7 @@ class CourseModel extends Model
 
     public function modules()
     {
-        return $this->hasMany(ModulesModel::class, 'course_id');
+        return $this->hasMany(ModulesModel::class, 'course_id')->orderBy('position');
     }
 
     public function tags()
@@ -49,7 +49,7 @@ class CourseModel extends Model
     }
 
     public function lessons(){
-        return $this->hasMany(LessonsModel::class);
+        return $this->hasMany(LessonsModel::class, 'module_id')->orderBy('position');
     }
 
     // public function payments()

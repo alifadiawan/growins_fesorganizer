@@ -4,9 +4,9 @@ import React, { useState } from 'react'
 
 
 
-const Sidebar = () => {
+const AdminSidebar = () => {
     const user = usePage().props.auth.user
-    
+
     const [isOpen, setIsOpen] = useState(true)
     const [isMobileOpen, setIsMobileOpen] = useState(false)
     const [expandedSections, setExpandedSections] = useState({
@@ -17,7 +17,7 @@ const Sidebar = () => {
 
     const submit = (e) => {
         e.preventDefault();
-    
+
         router.post(route('logout'), {}, {
             onSuccess: () => {
                 router.visit('/');
@@ -32,11 +32,11 @@ const Sidebar = () => {
         })
     }
 
-    const toggleSidebar = () => {
+    const toggleAdminSidebar = () => {
         setIsOpen(!isOpen)
     }
 
-    const toggleMobileSidebar = () => {
+    const toggleMobileAdminSidebar = () => {
         setIsMobileOpen(!isMobileOpen)
     }
 
@@ -49,22 +49,22 @@ const Sidebar = () => {
         <>
             {/* Mobile Toggle Button */}
             <button
-                onClick={toggleMobileSidebar}
+                onClick={toggleMobileAdminSidebar}
                 className="fixed top-4 left-4 z-50 p-2 rounded-md bg-white shadow-md md:hidden dark:bg-zinc-900 dark:text-white dark:shadow-lg"
-                aria-label="Toggle sidebar"
+                aria-label="Toggle Adminsidebar"
             >
                 {isMobileOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
 
-            {/* Sidebar Backdrop for Mobile */}
+            {/* AdminSidebar Backdrop for Mobile */}
             {isMobileOpen && (
                 <div
                     className="fixed inset-0 bg-black/20 z-40 md:hidden"
-                    onClick={toggleMobileSidebar}
+                    onClick={toggleMobileAdminSidebar}
                 />
             )}
 
-            {/* Sidebar */}
+            {/* AdminSidebar */}
             <aside
                 className={`fixed top-0 left-0 z-40 h-screen bg-white border-r border-gray-200 transition-all duration-300 ease-in-out
     dark:bg-black dark:border-zinc-800
@@ -72,11 +72,11 @@ const Sidebar = () => {
     ${isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
   `}
             >
-                {/* Sidebar Header */}
+                {/* AdminSidebar Header */}
                 <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 dark:border-zinc-800">
                     <div className="flex items-center">
                         <div className="flex items-center justify-center w-8 h-8 rounded-md bg-blue-600 text-white">S</div>
-                        {isOpen && <span className="ml-2 font-semibold text-gray-800 dark:text-white">Sidebar</span>}
+                        {isOpen && <span className="ml-2 font-semibold text-gray-800 dark:text-white">AdminSidebar</span>}
                     </div>
                     <button
                         onClick={toggleDarkMode}
@@ -87,13 +87,13 @@ const Sidebar = () => {
                     </button>
                 </div>
 
-                {/* Sidebar Content */}
+                {/* AdminSidebar Content */}
                 <div className="py-4 overflow-y-auto">
                     <nav className="space-y-1 px-2">
 
                         {/* Dashboard */}
                         <Link
-                            href={route('dashboard')}
+                            href={route('admin.dashboard')}
                             className={`flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 ${isOpen ? "" : "justify-center"
                                 }`}
                         >
@@ -156,7 +156,7 @@ const Sidebar = () => {
                     </nav>
                 </div>
 
-                {/* Sidebar Footer */}
+                {/* AdminSidebar Footer */}
                 {isOpen && (
                     <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-zinc-800">
                         <div className="flex items-center">
@@ -178,4 +178,4 @@ const Sidebar = () => {
     )
 }
 
-export default Sidebar
+export default AdminSidebar

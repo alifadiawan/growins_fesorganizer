@@ -6,7 +6,7 @@ export default function GuestLayout({ children }) {
     return (
         <>
             <Navbar />
-            <div className="content mt-16 py-12">
+            <div className="content mt-20">
                 {children}
             </div>
         </>

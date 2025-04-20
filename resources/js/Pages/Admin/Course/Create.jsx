@@ -2,11 +2,26 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { router, usePage } from '@inertiajs/react';
 import axios from 'axios';
 import React, { useForm, useState } from 'react'
+import ReactQuill from 'react-quill';
 
-const Create = () => {
-    const errors = usePage().errors;
-    const [processing, setProcessing] = useState(false);
+
+const Create = ({ categories }) => {
     const user_id = usePage().props.auth.user.id;
+    const errors = usePage().errors;
+
+    const [processing, setProcessing] = useState(false);
+    const [thumbnail, setThumbnail] = useState(null);
+    const [thumbnailPreview, setThumbnailPreview] = useState(null);
+    const [value, setValue] = useState('');
+
+    const handleThumbnailChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setThumbnail(file);
+            setThumbnailPreview(URL.createObjectURL(file));
+        }
+    };
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -16,9 +31,14 @@ const Create = () => {
         const data = new FormData();
         data.append('user_id', user_id);
         data.append('title', e.target.title.value);
-        data.append('description', e.target.description.value);
+        data.append('description', value);
         data.append('price', e.target.price.value);
         data.append('status', e.target.status.value);
+        data.append('category_id', e.target.category_id.value);
+
+        if (thumbnail) {
+            data.append('thumbnail', thumbnail);
+        }
 
         axios.post(route('api.courses.store'), data)
             .then(function (response) {
@@ -35,52 +55,80 @@ const Create = () => {
         <AuthenticatedLayout>
             <h1 className="text-2xl font-bold mb-4">New Course</h1>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                    <label className="block text-sm font-medium">Title</label>
-                    <input
-                        type="text"
-                        name="title"
-                        className="w-full border rounded p-2"
-                    />
-                </div>
+            <div className="mx-auto p-6 bg-white shadow rounded">
 
-                <div>
-                    <label className="block text-sm font-medium">Description</label>
-                    <textarea
-                        name="description"
-                        className="w-full border rounded p-2"
-                    />
-                </div>
+                <form onSubmit={handleSubmit} className="space-y-5">
+                    {/* Title */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Title</label>
+                        <input type="text" name="title" required className="mt-1 w-full p-2 border rounded" />
+                    </div>
 
-                <div>
-                    <label className="block text-sm font-medium">Price</label>
-                    <input
-                        type="number"
-                        name="price"
-                        className="w-full border rounded p-2"
-                    />
-                </div>
+                    {/* Description */}
+                    <div className="min-h-36">
+                        <label className="block text-sm font-medium text-gray-700">Description</label>
+                        {/* <textarea name="description" className="mt-1 w-full p-2 border rounded" /> */}
+                        <ReactQuill
+                            style={{ minHeight: '200px' }}
+                            name="description"
+                            value={value}
+                            onChange={setValue} />
+                    </div>
 
-                <div>
-                    <label className="block text-sm font-medium">Status</label>
-                    <select
-                        name="status"
-                        className="w-full border rounded p-2"
-                    >
-                        <option value="draft">Draft</option>
-                        <option value="published">Published</option>
-                    </select>
-                </div>
+                    {/* Price */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Price</label>
+                        <input type="number" name="price" min="0" step="0.01" className="mt-1 w-full p-2 border rounded" />
+                    </div>
 
-                <button
-                    type="submit"
-                    disabled={processing}
-                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:bg-gray-300"
-                >
-                    {processing ? 'Saving...' : 'Add Course'}
-                </button>
-            </form>
+                    {/* Status */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Status</label>
+                        <select name="status" className="mt-1 w-full p-2 border rounded">
+                            <option value="draft">Draft</option>
+                            <option value="published">Published</option>
+                        </select>
+                    </div>
+
+                    {/* category */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Category</label>
+                        <select name="category_id" className="mt-1 w-full p-2 border rounded">
+                            <option>pilih category</option>
+                            {categories.map((category) =>
+                                <option key={category.id} value={category.id}>{category.name}</option>
+                            )}
+                        </select>
+                    </div>
+
+                    {/* Thumbnail Upload */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Thumbnail</label>
+                        <input
+                            type="file"
+                            id="thumbnail"
+                            name="thumbnail"
+                            accept="image/*"
+                            onChange={handleThumbnailChange}
+                            className="mt-1 block w-full text-sm"
+                        />
+                        {thumbnailPreview && (
+                            <img src={thumbnailPreview} alt="Preview" className="mt-2 h-40 rounded border" />
+                        )}
+                    </div>
+
+                    {/* Submit */}
+                    <div className="flex justify-end">
+                        <button
+                            type="submit"
+                            disabled={processing}
+                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-gray-400"
+                        >
+                            {processing ? 'Saving...' : 'Create Course'}
+                        </button>
+                    </div>
+                </form>
+            </div>
         </AuthenticatedLayout>
     )
 }

@@ -29,15 +29,19 @@ class LessonsAPI extends Controller
             'title' => 'required|string|max:255',
             'content' => 'nullable|string',
             'video_url' => 'nullable|string',
+            'is_free' => 'nullable|boolean',
         ]);
 
+
+        $lastPosition = LessonsModel::where('module_id', $module_id)->max('position') ?? 0;
         $lesson = LessonsModel::create([
             'id' => Str::uuid(),
             'module_id' => $module_id,
             'title' => $validated['title'],
             'content' => $validated['content'] ?? null,
             'video_url' => $validated['video_url'] ?? null,
-            'position' => 1 + 1,
+            'is_free' => $validated['is_free'] ?? null,
+            'position' => $lastPosition + 1,
             'slug' => Str::slug($validated['title']) . '-' . uniqid(),
         ]);
 
@@ -53,7 +57,7 @@ class LessonsAPI extends Controller
             'title' => 'sometimes|string|max:255',
             'content' => 'nullable|string',
             'video_url' => 'nullable|string',
-            'position' => 'nullable|integer',
+            'position' => 'nullable|boolean',
         ]);
 
         $lesson->update($validated);
