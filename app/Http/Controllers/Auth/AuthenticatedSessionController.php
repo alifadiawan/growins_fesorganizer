@@ -39,17 +39,19 @@ class AuthenticatedSessionController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            return response()->json([
+                'message' => 'Invalid credentials'
+            ], 401);
         }
 
-        $token = $user->createToken('token')->plainTextToken;
         Auth::login($user);
+        $token = $user->createToken('token')->plainTextToken;
 
-        if ($user->role == 'student') {
-            return redirect(route('user.dashboard'))->with('token', $token);;
+        if ($user->role === 'student') {
+            return Inertia::location(route('user.dashboard', $user->id));
+        } else {
+            return Inertia::location(route('admin.dashboard'));
         }
-
-        return redirect(route('admin.dashboard'))->with('token', $token);;
     }
 
     /**

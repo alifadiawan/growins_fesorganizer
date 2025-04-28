@@ -92,7 +92,7 @@ const UserSidebar = () => {
 
             {/* Dashboard */}
             <Link
-              href={route('user.dashboard')}
+              href={route('user.dashboard', user.id)}
               className={`flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 ${isOpen ? "" : "justify-center"
                 }`}
             >
@@ -102,12 +102,12 @@ const UserSidebar = () => {
 
             {/* Documents */}
             <Link
-              href={route('admin.course.index')}
+              href={route('user.myCourse', user.id)}
               className={`flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 ${isOpen ? "" : "justify-center"
                 }`}
             >
               <Video className="h-5 w-5 text-gray-500 dark:text-gray-300" />
-              {isOpen && <span className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200">Courses</span>}
+              {isOpen && <span className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200">My Courses</span>}
             </Link>
 
             {/* Settings Section */}

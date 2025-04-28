@@ -1,14 +1,16 @@
 import GuestLayout from '@/Layouts/GuestLayout'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Clock, Star, Users, Calendar, CheckCircle, ChevronDown, ChevronRight, Play, BookOpen, Award, PenTool, Video, VideoIcon, Lock } from 'lucide-react';
-import { Link } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 
 const DetailCourse = ({ course }) => {
+  const user = usePage().props.auth.user;
+  const modules = course.modules;
+
   const [activeTab, setActiveTab] = useState('overview');
   const [expandedSections, setExpandedSections] = useState([1]);
+  const [loading, setLoading] = useState(false);
 
-  const modules = course.modules;
-  console.log(modules)
 
   const toggleSection = (sectionId) => {
     if (expandedSections.includes(sectionId)) {
@@ -18,11 +20,60 @@ const DetailCourse = ({ course }) => {
     }
   };
 
+  async function handleTransaction(course_id){
+    setLoading(true);
+    
+    // check logged in or not
+    if(!user){
+      return router.visit(route('login'));
+    }
+
+    axios.post(route('api.transaction.createTransaction', course_id))
+      .then(function(response){
+        
+        window.snap.pay(response.data.snap_token, {
+          onSuccess: (result) => console.log('Payment success:', result),
+          onPending: (result) => console.log('Payment pending:', result),
+          onError: (result) => console.log('Payment error:', result),
+          onClose: () => console.log('Payment popup closed'),
+        });
+
+      })
+      .catch(function(error){
+        console.log('error', error);
+      })
+      .finally(function(){
+        setLoading(false);
+      });
+
+  }
+
+  useEffect(() => {
+    // You can also change below url value to any script url you wish to load, 
+    // for example this is snap.js for Sandbox Env (Note: remove `.sandbox` from url if you want to use production version)
+    const midtransScriptUrl = 'https://app.sandbox.midtrans.com/snap/snap.js';  
+  
+    let scriptTag = document.createElement('script');
+    scriptTag.src = midtransScriptUrl;
+  
+    // Optional: set script attribute, for example snap.js have data-client-key attribute 
+    // (change the value according to your client-key)
+    const myMidtransClientKey = 'your-client-key-goes-here';
+    scriptTag.setAttribute('data-client-key', myMidtransClientKey);
+  
+    document.body.appendChild(scriptTag);
+    
+  
+    return () => {
+      document.body.removeChild(scriptTag);
+    }
+  }, []);
+  
+
   return (
     <GuestLayout>
 
       <div className="min-h-screen bg-gray-50">
-
         {/* Course Header */}
         <div className="bg-white py-8 border-b border-gray-200">
           <div className="container mx-auto px-6">
@@ -48,7 +99,7 @@ const DetailCourse = ({ course }) => {
                 <div className="flex items-center mb-6">
                   <div className="ml-2">
                     <p className="font-medium">Dibuat oleh</p>
-                    <a href="#" className="text-teal-600 hover:text-teal-700">{course.instructor.name}</a>
+                    <p className="text-teal-600 hover:text-teal-700">{course.instructor.name}</p>
                   </div>
                 </div>
 
@@ -61,32 +112,40 @@ const DetailCourse = ({ course }) => {
               </div>
 
               {/* Course Card */}
-              <div className="md:w-1/3">
-                <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
-                  <img src={`/storage/${course.thumbnail}`} alt={course.title} className="w-full object-cover aspect-video" />
+              <div className="md:w-1/3 w-full px-2">
+                <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 w-full">
+                  <img
+                    src={`/storage/${course.thumbnail}`}
+                    alt={course.title}
+                    className="w-full object-cover aspect-video"
+                  />
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-4">
                       <div>
-                        <p className="text-3xl font-bold text-gray-800">Rp {course.price}</p>
-                        <p className="text-gray-500 line-through">Rp {course.price}</p>
-                      </div>
-                      <div className="bg-red-100 text-red-700 px-2 py-1 rounded text-sm font-medium">
-                        20% OFF
+                        <p className="text-2xl font-bold text-gray-800">
+                          Rp {course.price}
+                        </p>
                       </div>
                     </div>
-
-                    <button className="w-full bg-teal-500 hover:bg-teal-600 text-white py-3 rounded-md font-medium mb-3">
-                      Daftar Sekarang
-                    </button>
-
-                    <button className="w-full bg-white border border-teal-500 text-teal-500 hover:bg-teal-50 py-3 rounded-md font-medium">
-                      Coba Gratis
-                    </button>
-
-
+                    <button
+                        onClick={() => handleTransaction(course.id)}
+                        disabled={loading}
+                        className={`w-full block text-center py-3 rounded-md font-medium transition duration-300
+                          ${loading ? 'bg-teal-300 cursor-not-allowed' : 'bg-teal-500 hover:bg-teal-600 text-white'}`}
+                      >
+                        {loading ? (
+                          <div className="flex items-center justify-center space-x-2">
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            <span>Loading...</span>
+                          </div>
+                        ) : (
+                          'Daftar Sekarang'
+                        )}
+                      </button>
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
@@ -104,18 +163,6 @@ const DetailCourse = ({ course }) => {
                       onClick={() => setActiveTab('overview')}
                     >
                       Overview
-                    </button>
-                    <button
-                      className={`px-6 py-3 text-sm font-medium ${activeTab === 'curriculum' ? 'text-teal-600 border-b-2 border-teal-500' : 'text-gray-600 hover:text-teal-600'}`}
-                      onClick={() => setActiveTab('curriculum')}
-                    >
-                      Kurikulum
-                    </button>
-                    <button
-                      className={`px-6 py-3 text-sm font-medium ${activeTab === 'instructor' ? 'text-teal-600 border-b-2 border-teal-500' : 'text-gray-600 hover:text-teal-600'}`}
-                      onClick={() => setActiveTab('instructor')}
-                    >
-                      Instruktur
                     </button>
                     <button
                       className={`px-6 py-3 text-sm font-medium ${activeTab === 'reviews' ? 'text-teal-600 border-b-2 border-teal-500' : 'text-gray-600 hover:text-teal-600'}`}
@@ -173,21 +220,22 @@ const DetailCourse = ({ course }) => {
                             onClick={() => toggleSection(section.id)}
                           >
                             <div className="flex items-center">
-                              {expandedSections.includes(section.id) ?
-                                <ChevronDown className="w-5 h-5 text-gray-600 mr-2" /> :
+                              {expandedSections.includes(section.id) ? (
+                                <ChevronDown className="w-5 h-5 text-gray-600 mr-2" />
+                              ) : (
                                 <ChevronRight className="w-5 h-5 text-gray-600 mr-2" />
-                              }
+                              )}
                               <h3 className="font-medium text-gray-800">{section.title}</h3>
                             </div>
                             <div className="text-sm text-gray-600">
-                              {section.lectures.length} pelajaran • {section.duration}
+                              {section.lectures?.length ?? 0} pelajaran • {section.duration}
                             </div>
                           </div>
 
                           {expandedSections.includes(section.id) && (
                             <div className="p-4 pt-0 border-t border-gray-200">
                               <ul className="divide-y divide-gray-100">
-                                {section.lectures.map(lecture => (
+                                {(section.lectures || []).map(lecture => (
                                   <li key={lecture.id} className="py-3 flex justify-between items-center">
                                     <div className="flex items-center">
                                       <Play className="w-4 h-4 text-gray-500 mr-3" />
@@ -204,6 +252,7 @@ const DetailCourse = ({ course }) => {
                           )}
                         </div>
                       ))}
+
                     </div>
                   )}
 
@@ -323,19 +372,19 @@ const DetailCourse = ({ course }) => {
                 <h3 className="text-lg font-bold text-gray-800 mb-4">Konten Kursus</h3>
 
                 <div className="space-y-4">
-                  <div class="w-full divide-y divide-outline overflow-hidden rounded-radius border border-outline bg-surface-alt/40 text-on-surface dark:divide-outline-dark dark:border-outline-dark dark:bg-surface-dark-alt/50 dark:text-on-surface-dark">
+                  <div className="w-full divide-y divide-outline overflow-hidden rounded-radius border border-outline bg-surface-alt/40 text-on-surface dark:divide-outline-dark dark:border-outline-dark dark:bg-surface-dark-alt/50 dark:text-on-surface-dark">
                     
                     {modules.map((module) =>                   
                       <div key={module.id} x-data="{ isExpanded: false }">
-                        <button id="controlsAccordionItemOne" type="button" class="flex w-full items-center justify-between gap-4 bg-surface-alt p-4 text-left underline-offset-2 hover:bg-surface-alt/75 focus-visible:bg-surface-alt/75 focus-visible:underline focus-visible:outline-hidden dark:bg-surface-dark-alt dark:hover:bg-surface-dark-alt/75 dark:focus-visible:bg-surface-dark-alt/75" aria-controls="accordionItemOne" x-on:click="isExpanded = ! isExpanded" x-bind:class="isExpanded ? 'text-on-surface-strong dark:text-on-surface-dark-strong font-bold'  : 'text-on-surface dark:text-on-surface-dark font-medium'" x-bind:aria-expanded="isExpanded ? 'true' : 'false'">
+                        <button id="controlsAccordionItemOne" type="button" className="flex w-full items-center justify-between gap-4 bg-surface-alt p-4 text-left underline-offset-2 hover:bg-surface-alt/75 focus-visible:bg-surface-alt/75 focus-visible:underline focus-visible:outline-hidden dark:bg-surface-dark-alt dark:hover:bg-surface-dark-alt/75 dark:focus-visible:bg-surface-dark-alt/75" aria-controls="accordionItemOne" x-on:click="isExpanded = ! isExpanded" x-bind:class="isExpanded ? 'text-on-surface-strong dark:text-on-surface-dark-strong font-bold'  : 'text-on-surface dark:text-on-surface-dark font-medium'" x-bind:aria-expanded="isExpanded ? 'true' : 'false'">
                             {module.title}
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="currentColor" class="size-5 shrink-0 transition" aria-hidden="true" x-bind:class="isExpanded  ?  'rotate-180'  :  ''">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" strokeWidth="2" stroke="currentColor" className="size-5 shrink-0 transition" aria-hidden="true" x-bind:class="isExpanded  ?  'rotate-180'  :  ''">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
                             </svg>
                         </button>
                             {module.lessons.length > 0 ? (
                               <div 
-                                x-cloak 
+                                 
                                 x-show="isExpanded" 
                                 id="lessonsAccordion" 
                                 role="region" 

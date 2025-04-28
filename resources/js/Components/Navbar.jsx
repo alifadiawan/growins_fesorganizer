@@ -15,6 +15,7 @@ export function Navbar() {
     const [scrolled, setScrolled] = useState(false)
 
     const user = usePage().props.auth;
+    const { url } = usePage()
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
@@ -61,22 +62,29 @@ export function Navbar() {
 
                     {/* Desktop Navigation */}
                     <nav className="hidden md:flex md:items-center md:gap-8">
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.href}
-                                href={link.href}
-                                className="relative text-md font-medium text-white transition-colors hover:text-white/80 after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-yellow-400 after:transition-all after:duration-300 hover:after:w-full"
-                            >
-                                {link.label}
-                            </Link>
-                        ))}
+                        {navLinks.map((link) => {
+                            const isActive = url === link.href
+
+                            return (
+                                <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    className={`relative text-md font-medium transition-colors after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-yellow-400 after:transition-all after:duration-300 hover:after:w-full ${isActive
+                                            ? 'text-yellow-400 after:w-full'
+                                            : 'text-white hover:text-white/80'
+                                        }`}
+                                >
+                                    {link.label}
+                                </Link>
+                            )
+                        })}
                     </nav>
 
                     {/* Register Button */}
                     {user.user ? (
                         user.user.role == 'student' ? (
                             <Link
-                                href={route('user.dashboard')}
+                                href={route('user.dashboard', user.user.id)}
                                 className="flex flex-row items-center gap-2 rounded-md px-5 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-yellow-500 hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0"
                             >
                                 <User /> {user.user.name}

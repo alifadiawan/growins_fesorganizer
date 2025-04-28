@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\UserController;
 use App\Models\CategoryModel;
 use App\Models\CourseModel;
 use Illuminate\Foundation\Application;
@@ -52,16 +55,26 @@ Route::name('user.')->group(function () {
         return Inertia::render('User/DetailCourse', ['course' => $course]);
     })->name('allCourse.detail');
 
+
+    // transactions
+    Route::get('/my-course/{id}', [UserController::class, 'myCourse'])->name('myCourse');
+    Route::get('/my-course/{course_id}/play/{lesson_id?}', [UserController::class, 'coursePlay'])->name('coursePlay');
+
+
+    Route::get('/thank-you', function(){
+        return Inertia::render('Thanks');
+    });
+    Route::get('/processing-order', function(){
+        return Inertia::render('PaymentSuccess');
+    });
+
 });
 
 
 
 
 
-
-Route::get('/user/dashboard', function () {
-    return Inertia::render('User/Dashboard');
-})->middleware(['auth.token', 'verified'])->name('user.dashboard');
+Route::get('/user/dashboard/{id}', [DashboardController::class, 'user'])->middleware(['auth.token', 'verified'])->name('user.dashboard');
 
 Route::get('/admin/dashboard', function () {
     return Inertia::render('Admin/Dashboard');
