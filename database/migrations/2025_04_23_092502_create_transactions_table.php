@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('order_id')->unique();
+            $table->string('order_id', 255)->unique();
             $table->string('course_id');
             $table->string('user_id');
             $table->enum('status', ['pending', 'processing', 'completed', 'cancelled'])->default('pending');

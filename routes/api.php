@@ -37,7 +37,7 @@ Route::middleware('auth.token')->name('api.')->group(function () {
     Route::delete('/lessons/{id}/delete', [LessonsAPI::class, 'destroy'])->name('lessons.delete');
 
     // transactions
-    Route::post('/transaction/buy-course/{course_id}', [TransactionController::class, 'createTransaction'])->name('transaction.createTransaction');
+    Route::post('/transaction/buy-course/{course_id}/{user_id}', [TransactionController::class, 'createTransaction'])->name('transaction.createTransaction');
     Route::post('/processing-transactions/{orderId}', [TransactionController::class, 'setTransactionAccept'])->name('processing.transactions');
 
 

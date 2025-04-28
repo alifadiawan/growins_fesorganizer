@@ -61,12 +61,19 @@ Route::name('user.')->group(function () {
     Route::get('/my-course/{course_id}/play/{lesson_id?}', [UserController::class, 'coursePlay'])->name('coursePlay');
 
 
+    // transaction - 2
     Route::get('/thank-you', function(){
         return Inertia::render('Thanks');
     });
-    Route::get('/processing-order', function(){
-        return Inertia::render('PaymentSuccess');
-    });
+
+    Route::get('/checkout/{course_id}/{user_id}', function($course_id, $user_id){
+        $course = CourseModel::find($course_id);
+        return Inertia::render('Checkout', ['course' => $course, 'userId' => $user_id, 'midtransClientKey ' => env('MIDTRANS_CLIENTKEY')]);
+    })->name('checkout');
+
+    Route::get('/processing-order/{order_id}', function($order_id){
+        return Inertia::render('PaymentSuccess', ['orderId' => $order_id]);
+    })->name('process.order');
 
 });
 

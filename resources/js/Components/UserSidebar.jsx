@@ -1,5 +1,5 @@
 import { Link, router, usePage } from "@inertiajs/react"
-import { ChevronDown, ChevronRight, Home, Settings, Users, FileText, Mail, Menu, X, Video } from "lucide-react"
+import { ChevronDown, ChevronRight, Home, Settings, Users, FileText, Mail, Menu, X, Video, ArrowLeft } from "lucide-react"
 import React, { useState } from 'react'
 
 const UserSidebar = () => {
@@ -100,7 +100,7 @@ const UserSidebar = () => {
               {isOpen && <span className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200">Dashboard</span>}
             </Link>
 
-            {/* Documents */}
+            {/* My Courses */}
             <Link
               href={route('user.myCourse', user.id)}
               className={`flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 ${isOpen ? "" : "justify-center"
@@ -136,6 +136,17 @@ const UserSidebar = () => {
                 </div>
               )}
             </div>
+
+
+            {/* My Courses */}
+            <Link
+              href={'/'}
+              className={`flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 ${isOpen ? "" : "justify-center"
+                }`}
+            >
+              <ArrowLeft className="h-5 w-5 text-gray-500 dark:text-gray-300" />
+              {isOpen && <span className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200">Browse Courses</span>}
+            </Link>
           </nav>
         </div>
 

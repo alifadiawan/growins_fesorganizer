@@ -28,47 +28,9 @@ const DetailCourse = ({ course }) => {
       return router.visit(route('login'));
     }
 
-    axios.post(route('api.transaction.createTransaction', course_id))
-      .then(function(response){
-        
-        window.snap.pay(response.data.snap_token, {
-          onSuccess: (result) => console.log('Payment success:', result),
-          onPending: (result) => console.log('Payment pending:', result),
-          onError: (result) => console.log('Payment error:', result),
-          onClose: () => console.log('Payment popup closed'),
-        });
-
-      })
-      .catch(function(error){
-        console.log('error', error);
-      })
-      .finally(function(){
-        setLoading(false);
-      });
+    router.visit(route('user.checkout', [course_id, user.id]))
 
   }
-
-  useEffect(() => {
-    // You can also change below url value to any script url you wish to load, 
-    // for example this is snap.js for Sandbox Env (Note: remove `.sandbox` from url if you want to use production version)
-    const midtransScriptUrl = 'https://app.sandbox.midtrans.com/snap/snap.js';  
-  
-    let scriptTag = document.createElement('script');
-    scriptTag.src = midtransScriptUrl;
-  
-    // Optional: set script attribute, for example snap.js have data-client-key attribute 
-    // (change the value according to your client-key)
-    const myMidtransClientKey = 'your-client-key-goes-here';
-    scriptTag.setAttribute('data-client-key', myMidtransClientKey);
-  
-    document.body.appendChild(scriptTag);
-    
-  
-    return () => {
-      document.body.removeChild(scriptTag);
-    }
-  }, []);
-  
 
   return (
     <GuestLayout>
@@ -139,7 +101,7 @@ const DetailCourse = ({ course }) => {
                             <span>Loading...</span>
                           </div>
                         ) : (
-                          'Daftar Sekarang'
+                          'Beli Sekarang'
                         )}
                       </button>
                   </div>

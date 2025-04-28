@@ -28,20 +28,21 @@ class TransactionController extends Controller
         Config::$isProduction = config('services.midtrans.is_production');
     }
 
-    public function createTransaction($course_id)
+    public function createTransaction($course_id, $user_id)
     {
         $course = CourseModel::find($course_id);
+        $user = User::find($user_id);
         if (!$course) {
             return response()->json(['message' => 'course does not exist, please refresh the page'], 404);
         }
 
         $parameter = [
             'transaction_details' => array(
-                'order_id' => 'TRX-' . Carbon::now()->format('YmdHis') . uniqid(),
+                'order_id' => Carbon::now()->format('YmdHis') . base64_encode(random_bytes(8)),
                 'gross_amount' => $course->price,
             ),
             'customer_details' => array(
-                'email' => 'test@gmail.com',
+                'email' => $user->email,
                 'phone' => '0812345678',
             )
         ];
@@ -49,7 +50,7 @@ class TransactionController extends Controller
         Transaction::create([
             'order_id' => $parameter['transaction_details']['order_id'],
             'course_id' => $course_id,
-            'user_id' => 1,
+            'user_id' => $user->id,
             'payment_status' => 1 // pending
         ]);
 
@@ -66,24 +67,25 @@ class TransactionController extends Controller
         $current_transaction = Transaction::where('order_id', '=', $orderId)->first();
 
         if (!$current_transaction) {
-            return Inertia::render('Errors/404');
+            return Inertia::render('Errors/Page404');
         }
 
         // Panggil Midtrans API untuk cek status
         $midtransResponse = Http::withHeaders([
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
-            'Authorization' => 'Basic ' . base64_encode(env('MIDTRANS_SERVER_KEY') . ':'),
+            'Authorization' => 'Basic ' . base64_encode(env('MIDTRANS_SERVERKEY') . ':'),
         ])->get('https://api.sandbox.midtrans.com/v2/' . $orderId . '/status');
 
         if ($midtransResponse->failed()) {
-            return Inertia::render('Errors/500'); // atau handle error lain
+            dd('Midtrans Request Failed', $midtransResponse->status(), $midtransResponse->body());
         }
 
         $response = $midtransResponse->json();
 
         // Cek apakah transaksi sudah paid
         if (isset($response['transaction_status']) && $response['transaction_status'] === 'settlement') {
+            $current_transaction->status = 3; // completed
             $current_transaction->payment_status = 2; // paid
             $current_transaction->save();
 
@@ -96,7 +98,7 @@ class TransactionController extends Controller
 
             return Inertia::render('Thanks');
         } else {
-            return Inertia::render('Errors/PaymentPending');
+            return Inertia::render('Errors/Page500');
         }
     }
 
