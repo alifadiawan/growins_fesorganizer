@@ -1,11 +1,14 @@
 import { Link, router, usePage } from "@inertiajs/react"
-import { ChevronDown, ChevronRight, Home, Settings, Users, FileText, Mail, Menu, X, Video } from "lucide-react"
+import { ChevronDown, ChevronRight, Home, Settings, Users, FileText, Mail, Menu, X, Video, BookOpen, Layers, CreditCard } from "lucide-react"
 import React, { useState } from 'react'
 
-
-
 const AdminSidebar = () => {
-    const user = usePage().props.auth.user
+    const user = usePage().props.auth.user;
+    const { url } = usePage()
+
+    const isActive = (pattern) => {
+        return url.startsWith(route(pattern, undefined, false))
+    }
 
     const [isOpen, setIsOpen] = useState(true)
     const [isMobileOpen, setIsMobileOpen] = useState(false)
@@ -94,64 +97,95 @@ const AdminSidebar = () => {
                         {/* Dashboard */}
                         <Link
                             href={route('admin.dashboard')}
-                            className={`flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 ${isOpen ? "" : "justify-center"
-                                }`}
+                            className={`flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 
+                                ${isActive('admin.dashboard') ? 'bg-gray-200 text-blue-600 dark:bg-zinc-800 dark:text-white' : 'text-gray-700 dark:text-gray-200'} 
+                                ${isOpen ? "" : "justify-center"}`}
                         >
-                            <Home className="h-5 w-5 text-gray-500 dark:text-gray-300" />
-                            {isOpen && <span className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200">Dashboard</span>}
+                            <Home className="h-5 w-5" />
+                            {isOpen && <span className="ml-3 text-sm font-medium">Dashboard</span>}
                         </Link>
 
-                        {/* Documents */}
-                        <Link
-                            href={route('admin.course.index')}
-                            className={`flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 ${isOpen ? "" : "justify-center"
-                                }`}
-                        >
-                            <Video className="h-5 w-5 text-gray-500 dark:text-gray-300" />
-                            {isOpen && <span className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200">Courses</span>}
-                        </Link>
+                        {/* Courses & Bootcamp Section */}
+                        <div className="flex flex-col">
+                            <span className="block text-sm text-zinc-400 ms-2 mt-3">Courses & Bootcamp</span>
 
-                        {/* Messages */}
-                        <a
-                            href="#"
-                            className={`flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 ${isOpen ? "" : "justify-center"
-                                }`}
-                        >
-                            <Users className="h-5 w-5 text-gray-500 dark:text-gray-300" />
-                            {isOpen && <span className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200">Users</span>}
-                        </a>
-
-                        {/* Settings Section */}
-                        <div>
-                            <button
-                                onClick={() => toggleSection("settings")}
-                                className={`flex items-center w-full p-2 text-left rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 ${isOpen ? "justify-between" : "justify-center"
-                                    }`}
+                            {/* Courses */}
+                            <Link
+                                href={route('admin.course.index')}
+                                className={`flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 
+                                    ${isActive('admin.course.index') ? 'bg-gray-200 text-blue-600 dark:bg-zinc-800 dark:text-white' : 'text-gray-700 dark:text-gray-200'} 
+                                    ${isOpen ? '' : 'justify-center'}`}
                             >
-                                <div className="flex items-center">
-                                    <Settings className="h-5 w-5 text-gray-500 dark:text-gray-300" />
-                                    {isOpen && <span className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200">Settings</span>}
-                                </div>
-                                {isOpen && (
-                                    <ChevronDown
-                                        className={`h-4 w-4 text-gray-500 dark:text-gray-300 transition-transform ${expandedSections.settings ? "rotate-180" : ""
-                                            }`}
-                                    />
+                                <Layers className="h-5 w-5" />
+                                {isOpen && <span className="ml-3 text-sm font-medium">Courses</span>}
+                            </Link>
+                        </div>
+
+                        {/* Bootcamp Softskill */}
+                        <Link
+                            href={route('bootcamp.index')}
+                            className={`flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 
+                            ${isActive('bootcamp.index') ? 'bg-gray-200 text-blue-600 dark:bg-zinc-800 dark:text-white' : 'text-gray-700 dark:text-gray-200'} 
+                            ${isOpen ? '' : 'justify-center'}`}
+                        >
+                            <BookOpen className="h-5 w-5" />
+                            {isOpen && <span className="ml-3 text-sm font-medium">Bootcamp Softskill</span>}
+                        </Link>
+
+                        {/* Transactions */}
+                        <div className="flex flex-col">
+                            <span className="block text-sm text-zinc-400 ms-2 mt-3">Transactions</span>
+
+                            <Link
+                                href={route('admin.transactions.index')}
+                                className={`flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 
+                                ${isActive('admin.transactions.index') ? 'bg-gray-200 text-blue-600 dark:bg-zinc-800 dark:text-white' : 'text-gray-700 dark:text-gray-200'} 
+                                ${isOpen ? '' : 'justify-center'}`}
+                            >
+                                <CreditCard className="h-5 w-5" />
+                                {isOpen && <span className="ml-3 text-sm font-medium">All Transactions</span>}
+                            </Link>
+                        </div>
+
+                        {/* Misc */}
+                        <div className="flex flex-col">
+                            <span className="block text-sm text-zinc-400 ms-2 mt-3 mb-3">Misc</span>
+
+                            {/* Users */}
+                            <Link
+                                href="#"
+                                className={`flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 
+                                 text-gray-700 dark:text-gray-200 ${isOpen ? '' : 'justify-center'}`}
+                            >
+                                <Users className="h-5 w-5" />
+                                {isOpen && <span className="ml-3 text-sm font-medium">Users</span>}
+                            </Link>
+
+                            {/* Settings with Collapsible */}
+                            <div>
+                                <button
+                                    onClick={() => toggleSection("settings")}
+                                    className={`flex items-center w-full p-2 text-left rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 ${isOpen ? "justify-between" : "justify-center"}`}
+                                >
+                                    <div className="flex items-center">
+                                        <Settings className="h-5 w-5 text-gray-500 dark:text-gray-300" />
+                                        {isOpen && <span className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200">Settings</span>}
+                                    </div>
+                                    {isOpen && (
+                                        <ChevronDown
+                                            className={`h-4 w-4 text-gray-500 dark:text-gray-300 transition-transform ${expandedSections.settings ? "rotate-180" : ""}`}
+                                        />
+                                    )}
+                                </button>
+
+                                {isOpen && expandedSections.settings && (
+                                    <div className="mt-1 pl-6 space-y-1">
+                                        <a href="#" className="block px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-zinc-800">Profile</a>
+                                        <a href="#" className="block px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-zinc-800">Account</a>
+                                        <a href="#" className="block px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-zinc-800">Preferences</a>
+                                    </div>
                                 )}
-                            </button>
-                            {isOpen && expandedSections.settings && (
-                                <div className="mt-1 pl-6 space-y-1">
-                                    <a href="#" className="block px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-zinc-800">
-                                        Profile
-                                    </a>
-                                    <a href="#" className="block px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-zinc-800">
-                                        Account
-                                    </a>
-                                    <a href="#" className="block px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-zinc-800">
-                                        Preferences
-                                    </a>
-                                </div>
-                            )}
+                            </div>
                         </div>
                     </nav>
                 </div>
@@ -167,7 +201,7 @@ const AdminSidebar = () => {
                                 <p className="text-sm font-medium text-gray-700 dark:text-gray-200">{user.name}</p>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">{user.email}</p>
                                 <form onSubmit={submit}>
-                                    <button type="submit">Logout</button>
+                                    <button type="submit" className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-md text-xs">Logout</button>
                                 </form>
                             </div>
                         </div>

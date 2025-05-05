@@ -39,9 +39,9 @@ class AuthenticatedSessionController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'message' => 'Invalid credentials'
-            ], 401);
+            return redirect()->back()->withErrors([
+                'email' => 'Invalid credentials.', // or use 'general' if preferred
+            ]);
         }
 
         Auth::login($user);

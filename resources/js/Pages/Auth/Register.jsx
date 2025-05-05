@@ -3,10 +3,13 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 
 export default function Register() {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const errors = usePage().props.errors;
+    console.log(errors);
+
+    const { data, setData, post, processing, reset } = useForm({
         name: '',
         email: '',
         password: '',
@@ -116,9 +119,9 @@ export default function Register() {
         //         </div>
         //     </form>
         // </GuestLayout>
-        <div className="min-h-screen bg-[#0e9b8a] flex flex-col md:flex-row">
+        <div className="min-h-screen bg-gradient-to-b from-[#128884] to-[#03B5AA] flex flex-col md:flex-row">
             {/* Left side - Branding */}
-            <div className="hidden md:flex md:w-1/2 bg-[#0e9b8a] items-center justify-center p-8">
+            <div className="hidden md:flex md:w-1/2 bg-gradient-to-b from-[#128884] to-[#03B5AA] items-center justify-center p-8">
                 <div className="max-w-md text-white text-center">
                     <h1 className="text-4xl font-bold mb-6">Empower Your Future with GROW</h1>
                     <p className="text-lg mb-8">
@@ -133,11 +136,11 @@ export default function Register() {
 
             {/* Right side - Form */}
             <div className="w-full md:w-1/2 flex items-center justify-center p-8">
-                <div className="w-full max-w-md space-y-6 bg-[#1a1a2e] p-8 rounded-xl shadow-lg">
+                <div className="w-full max-w-md space-y-6 lg:bg-white/20 bg-transparent lg:backdrop-blur-sm p-8 rounded-xl lg:shadow-lg">
                     <div className="text-center">
                         <Link href="/" className="inline-block">
                             <img
-                                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-YLUST8C58r5MDsqRPuLQYc4uzH7ahp.png"
+                                src="/LOGOGROWINS.png"
                                 alt="Growins Logo"
                                 width={180}
                                 height={60}
@@ -147,6 +150,17 @@ export default function Register() {
                         <h2 className="mt-6 text-3xl font-bold text-white">Daftar Sekarang</h2>
                         <p className="mt-2 text-gray-300">Buat akun baru untuk memulai perjalanan Anda</p>
                     </div>
+
+                    {/* alert errors */}
+                    {Object.keys(errors).length > 0 && (
+                        <div role="alert" className="border-s-4 border-red-700 bg-red-50 p-4">
+                            <p className="text-sm text-red-700">
+                                {errors.email}
+                                {errors.password}
+                                {errors.nama_lengkap}
+                            </p>
+                        </div>
+                    )}
 
                     <form onSubmit={submit} className="mt-8 space-y-6">
                         <div className="space-y-4">

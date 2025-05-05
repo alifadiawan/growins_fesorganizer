@@ -14,13 +14,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         User::insert([
             'email' => 'admin@gmail.com',
             'password' => bcrypt('1234567890'),
             'name' => 'admin',
-            'role' => 3
+            'role' => 3 // admin
+        ]);
+
+        User::insert([
+            'email' => 'alifadiawan2005@gmail.com',
+            'password' => bcrypt('qwertyuiop'),
+            'name' => 'Muhammad Alif Adiawan',
+            'role' => 1, // user
         ]);
 
         CategoryModel::insert([

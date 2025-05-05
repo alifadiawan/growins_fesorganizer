@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BootcampController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Models\CategoryModel;
 use App\Models\CourseModel;
+use App\Models\Transaction;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -23,6 +25,10 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+Route::get('/about-us', function(){
+    return Inertia::render('About');
+})->name('about.us');
 
 
 // admin route
@@ -45,12 +51,12 @@ Route::name('user.')->group(function () {
     Route::get('/courses/all', function () {
         $courses = CourseModel::paginate(20);
         $categories = CategoryModel::take(10)->get();
-        
-        return Inertia::render('User/AllCourses', ['courses'=> $courses, 'categories' => $categories]);
+
+        return Inertia::render('User/AllCourses', ['courses' => $courses, 'categories' => $categories]);
     })->name('allCourse.index');
 
     // detail courses
-    Route::get('/course/{slug}/{id}', function($slug, $id){
+    Route::get('/course/show/{slug}/{id}', function ($slug, $id) {
         $course = CourseModel::with(['instructor', 'modules.lessons'])->find($id);
         return Inertia::render('User/DetailCourse', ['course' => $course]);
     })->name('allCourse.detail');
@@ -62,18 +68,23 @@ Route::name('user.')->group(function () {
 
 
     // transaction - 2
-    Route::get('/thank-you', function(){
+    Route::get('/thank-you', function () {
         return Inertia::render('Thanks');
     });
 
-    Route::get('/checkout/{course_id}/{user_id}', function($course_id, $user_id){
+    Route::get('/checkout/{course_id}/{user_id}', function ($course_id, $user_id) {
         $course = CourseModel::find($course_id);
         return Inertia::render('Checkout', ['course' => $course, 'userId' => $user_id, 'midtransClientKey ' => env('MIDTRANS_CLIENTKEY')]);
     })->name('checkout');
 
-    Route::get('/processing-order/{order_id}', function($order_id){
+    Route::get('/processing-order/{order_id}', function ($order_id) {
         return Inertia::render('PaymentSuccess', ['orderId' => $order_id]);
     })->name('process.order');
+
+
+    Route::get('/bootcamp-softskill', function(){
+        return Inertia::render('Bootcamp');
+    });
 
 });
 
@@ -81,11 +92,36 @@ Route::name('user.')->group(function () {
 
 
 
+// dashboards
 Route::get('/user/dashboard/{id}', [DashboardController::class, 'user'])->middleware(['auth.token', 'verified'])->name('user.dashboard');
-
 Route::get('/admin/dashboard', function () {
     return Inertia::render('Admin/Dashboard');
 })->middleware(['auth.token', 'verified'])->name('admin.dashboard');
+
+
+// transactions routes
+Route::get('admin/transactions/all', function () {
+    $allTransactions = Transaction::paginate(20);
+
+    return Inertia('Admin/Transactions/Index', ['transactions' => $allTransactions]);
+})->name('admin.transactions.index');
+
+Route::get('admin/transactions/detail/{order_id}', function ($order_id) {
+    $transaction = Transaction::with(['course', 'user'])->where('order_id', '=', $order_id)->get();
+
+    if (!$transaction) {
+        return redirect()->back()->with('error', 'Not found');
+    }
+
+    return Inertia('Admin/Transactions/Detail', ['transaction' => $transaction[0]]);
+})->name('admin.transactions.detail');
+
+
+// admin bootcamps routes
+Route::get('/admin/bootcamp-softskill/all', [BootcampController::class, 'index'])->name('bootcamp.index');
+Route::get('/admin/bootcamp-softskill/create', [BootcampController::class, 'create'])->name('bootcamp.create');
+Route::get('/admin/bootcamp-softskill/store', [BootcampController::class, 'store'])->name('bootcamp.store');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -101,43 +101,8 @@ export default function Welcome({ auth, laravelVersion, phpVersion, courseList, 
                         </div>
                     </div>
                 </div>
-                
-                {/* Stats section at the bottom */}
-                <div className="relative container mx-auto px-6 z-10 -mb-16">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-white rounded-xl shadow-xl p-6">
-                        <div className="flex items-center justify-center p-4">
-                            <div className="rounded-full bg-teal-100 p-3 mr-4">
-                                <Users className="h-6 w-6 text-teal-600" />
-                            </div>
-                            <div>
-                                <h3 className="text-2xl font-bold text-gray-900">10,000+</h3>
-                                <p className="text-gray-500">Siswa Aktif</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center justify-center p-4 border-y md:border-y-0 md:border-x border-gray-100">
-                            <div className="rounded-full bg-yellow-100 p-3 mr-4">
-                                <CheckCircle className="h-6 w-6 text-yellow-600" />
-                            </div>
-                            <div>
-                                <h3 className="text-2xl font-bold text-gray-900">150+</h3>
-                                <p className="text-gray-500">Kursus Tersedia</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center justify-center p-4">
-                            <div className="rounded-full bg-teal-100 p-3 mr-4">
-                                <Award className="h-6 w-6 text-teal-600" />
-                            </div>
-                            <div>
-                                <h3 className="text-2xl font-bold text-gray-900">97%</h3>
-                                <p className="text-gray-500">Tingkat Kepuasan</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                            
             </section>
-            
-            {/* Spacer for stats overlap */}
-            <div className="h-16"></div>
             
             {/* Categories section */}
             <div className="pt-10">
@@ -488,7 +453,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion, courseList, 
             </section>
             
             {/* Newsletter Section - New */}
-            <section className="py-16 bg-gray-100">
+            {/* <section className="py-16 bg-gray-100">
                 <div className="container mx-auto px-6">
                     <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
                         <div className="grid grid-cols-1 md:grid-cols-2">
@@ -513,7 +478,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion, courseList, 
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> */}
         </GuestLayout>
     );
 }

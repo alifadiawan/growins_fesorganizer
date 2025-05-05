@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react"
 import { ChevronLeft, ChevronRight, Monitor, Feather, Headphones, Package, PenTool, Music, BookOpen, Code, Camera, Briefcase } from "lucide-react"
+import { Link } from "@inertiajs/react"
 
 
 export function Categories({ categories = [] }) {
@@ -118,10 +119,10 @@ export function Categories({ categories = [] }) {
         </div>
 
         <div className="flex justify-center mt-10">
-          <button className="bg-teal-600 hover:bg-teal-700 text-white font-medium px-8 py-3 rounded-lg shadow-md uppercase text-sm tracking-wide transition-colors duration-200 flex items-center group">
+          <Link href={route('user.allCourse.index')} className="bg-teal-600 hover:bg-teal-700 text-white font-medium px-8 py-3 rounded-lg shadow-md uppercase text-sm tracking-wide transition-colors duration-200 flex items-center group">
             Browse All Courses
             <ChevronRight className="h-4 w-4 ml-1 group-hover:ml-2 transition-all" />
-          </button>
+          </Link>
         </div>
       </div>
     </div>

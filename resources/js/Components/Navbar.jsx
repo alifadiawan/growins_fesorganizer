@@ -5,8 +5,8 @@ import React, { useEffect, useState } from "react"
 const navLinks = [
     { href: "/", label: "Home" },
     { href: "/courses/all", label: "Courses" },
-    { href: "/about", label: "About" },
-    { href: "/services", label: "Services" },
+    { href: "/bootcamp-softskill", label: "Bootcamp Softskill" },
+    { href: "/about-us", label: "About" },
     { href: "/contact", label: "Contact" },
 ]
 
@@ -42,8 +42,8 @@ export function Navbar() {
 
     return (
         <header
-            className={`fixed top-0 z-50 w-full py-2 transition-all duration-300 ease-in-out ${scrolled ? "bg-[#128884]/80 backdrop-blur-md shadow-lg" : "bg-gradient-to-r from-teal-900 to-teal-600"
-                }`}
+            className={`fixed top-0 z-50 w-full py-2 transition-all duration-300 ease-in-out
+  ${scrolled ? "bg-gradient-to-r from-teal-900 to-teal-600 opacity-90 backdrop-blur-md shadow-lg" : "bg-gradient-to-r from-teal-900 to-teal-600 opacity-90"}`}
         >
             <div className="container mx-auto px-4 sm:px-6 lg:px-12">
                 <div className="flex h-16 items-center justify-between">
@@ -70,8 +70,8 @@ export function Navbar() {
                                     key={link.href}
                                     href={link.href}
                                     className={`relative text-md font-medium transition-colors after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-yellow-400 after:transition-all after:duration-300 hover:after:w-full ${isActive
-                                            ? 'text-yellow-400 after:w-full'
-                                            : 'text-white hover:text-white/80'
+                                        ? 'text-yellow-400 after:w-full'
+                                        : 'text-white hover:text-white/80'
                                         }`}
                                 >
                                     {link.label}

@@ -6,8 +6,10 @@ import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { router } from '@inertiajs/react'
+import { useState } from 'react';
 
 export default function Login({ status, canResetPassword }) {
+    const [generalError, setGeneralError] = useState('');
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -17,7 +19,17 @@ export default function Login({ status, canResetPassword }) {
     const submit = (e) => {
         e.preventDefault();
 
-        post('/login');
+        post('/login', {
+            onError: (error) => {
+                // Custom error handling for 401 and other messages
+                if (error.message) {
+                    setData((data) => ({
+                        ...data,
+                        errors: { general: error.message } // or put it where you want
+                    }));
+                }
+            }
+        });
     };
 
     return (
@@ -35,6 +47,17 @@ export default function Login({ status, canResetPassword }) {
                     </div>
                 </div>
             </div>
+
+            {generalError && (
+                <div role="alert" className="border-s-4 border-red-700 bg-red-50 p-4">
+                    <div className="flex items-center gap-2 text-red-700">
+                        <strong className="font-medium"> Something went wrong </strong>
+                    </div>
+                    <p className="mt-2 text-sm text-red-700">
+                        {generalError}
+                    </p>
+                </div>
+            )}
 
             <div className="w-full md:w-1/2 flex items-center justify-center p-8">
 

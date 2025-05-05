@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import { Users } from 'lucide-react'
+import { ChartBar, Users } from 'lucide-react'
 import React from 'react'
 
 const Dashboard = () => {
@@ -18,9 +18,9 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="flex flex-row gap-3 items-center bg-white px-6 py-4 rounded-md shadow">
-          <Users size={35} />
+          <ChartBar size={35} />
           <div className="content flex flex-col">
-            <h3 className='font-bold text-xl'>Users Registered</h3>
+            <h3 className='font-bold text-xl'>All Transactions</h3>
             <p>2320</p>
           </div>
         </div>

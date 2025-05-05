@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Midtrans\Config;
 use Midtrans\Snap;
@@ -38,7 +39,7 @@ class TransactionController extends Controller
 
         $parameter = [
             'transaction_details' => array(
-                'order_id' => Carbon::now()->format('YmdHis') . base64_encode(random_bytes(8)),
+                'order_id' => 'TRX-' . (string) Str::uuid(),
                 'gross_amount' => $course->price,
             ),
             'customer_details' => array(
