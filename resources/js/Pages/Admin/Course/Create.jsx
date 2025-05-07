@@ -69,14 +69,14 @@ const Create = ({ categories }) => {
                         <label className="block text-sm font-medium text-gray-700">Description</label>
                         {/* <textarea name="description" className="mt-1 w-full p-2 border rounded" /> */}
                         <ReactQuill
-                            style={{ minHeight: '200px' }}
+                            style={{ height: '400px' }}
                             name="description"
                             value={value}
                             onChange={setValue} />
                     </div>
 
                     {/* Price */}
-                    <div>
+                    <div className='pt-12'>
                         <label className="block text-sm font-medium text-gray-700">Price</label>
                         <input type="number" name="price" min="0" step="0.01" className="mt-1 w-full p-2 border rounded" />
                     </div>

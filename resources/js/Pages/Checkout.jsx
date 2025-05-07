@@ -119,7 +119,7 @@ const Checkout = ({ course, midtransClientKey }) => {
             <div className="flex flex-col justify-between">
               <div>
                 <h3 className="text-2xl font-bold text-gray-800 mb-3">{course.title}</h3>
-                <p className="text-gray-600 mb-6 leading-relaxed">{course.description}</p>
+                <div dangerouslySetInnerHTML={{ __html: course.description }} className="text-gray-600 mb-6 leading-relaxed"></div>
 
                 <div className="space-y-3 mb-6">
                   <div className="flex items-center p-2 bg-gray-50 rounded-lg">

@@ -104,11 +104,7 @@ class CourseAPI extends Controller
             'slug' => isset($validated['title']) ? Str::slug($validated['title']) . '-' . Str::random(5) : $course->slug
         ]));
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Course updated successfully.',
-            'data' => $course
-        ]);
+        return redirect('/admin/course')->with('success', 'Course Updated Successfully');
     }
 
     public function delete($course_id)

@@ -4,6 +4,7 @@ import { router, useForm, usePage } from '@inertiajs/react';
 import axios from 'axios';
 import { Link } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
+import ReactQuill from 'react-quill';
 
 
 const Edit = ({ course }) => {
@@ -41,7 +42,6 @@ const Edit = ({ course }) => {
 
         try {
             axios.delete(route('api.modules.delete', { id: moduleId }));
-            console.log('Success:');
 
             router.visit(`/admin/course/edit/${course.id}`);
         } catch (error) {
@@ -65,7 +65,7 @@ const Edit = ({ course }) => {
 
         const formData = new FormData(e.target);
         formData.append('title', e.target.title.value);
-        formData.append('description', e.target.description.value);
+        formData.append('description', description);
         formData.append('price', e.target.price.value);
         formData.append('status', e.target.status.value);
 
@@ -83,8 +83,7 @@ const Edit = ({ course }) => {
                     _method: 'PUT', // simulate PUT since form can't actually send PUT
                 }
             });
-
-            console.log('Success:', response.data);
+            window.location.href = route('admin.course.index');
         } catch (error) {
             console.error('Update failed:', error.response?.data || error);
         } finally {
@@ -196,16 +195,19 @@ const Edit = ({ course }) => {
 
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                        <textarea
+                        <ReactQuill
+                            theme="snow"
                             name="description"
-                            defaultValue={course.description}
-                            className="w-full border border-gray-300 p-3 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all min-h-32"
-                            placeholder="Describe your course"
+                            value={description}
+                            onChange={setDescription} 
+                            style={{ height: '400px', marginBottom: '2rem' }}
+                            className="bg-white"
                         />
+
                         {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-12">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Price</label>
                             <div className="relative">
