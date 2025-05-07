@@ -3,6 +3,7 @@
 use App\Http\Controllers\BootcampController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\OauthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
@@ -26,7 +27,7 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/about-us', function(){
+Route::get('/about-us', function () {
     return Inertia::render('About');
 })->name('about.us');
 
@@ -82,7 +83,7 @@ Route::name('user.')->group(function () {
     })->name('process.order');
 
 
-    Route::get('/bootcamp-softskill', function(){
+    Route::get('/bootcamp-softskill', function () {
         return Inertia::render('Bootcamp');
     });
 
@@ -128,5 +129,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
+// OAuth
+Route::get('oauth/google', [OauthController::class, 'redirectToProvider'])->name('oauth.google');
+Route::get('oauth/google/callback', [OauthController::class, 'handleProviderCallback'])->name('oauth.google.callback');
+Route::get('/set-password', [OauthController::class, 'showForm'])->name('oauth.showForm')->middleware('auth');
+Route::post('/set-password', [OauthController::class, 'store'])->name('oauth.store')->middleware('auth');
 
 require __DIR__ . '/auth.php';
