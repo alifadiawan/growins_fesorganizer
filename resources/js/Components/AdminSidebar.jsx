@@ -153,7 +153,7 @@ const AdminSidebar = () => {
 
                             {/* Users */}
                             <Link
-                                href="#"
+                                href={route('admin.user.index')}
                                 className={`flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 
                                  text-gray-700 dark:text-gray-200 ${isOpen ? '' : 'justify-center'}`}
                             >

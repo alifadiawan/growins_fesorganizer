@@ -89,6 +89,13 @@ export function Navbar() {
                             >
                                 <User /> {user.user.name}
                             </Link>
+                        ) : user.user.role === 'instructor' ? (
+                            <Link
+                                href={route('dosen.dashboard', user.user.id)}
+                                className="flex flex-row items-center gap-2 rounded-md px-5 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-yellow-500 hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0"
+                            >
+                                <User /> {user.user.name}
+                            </Link>
                         ) : (
                             <Link
                                 href={route('admin.dashboard')}

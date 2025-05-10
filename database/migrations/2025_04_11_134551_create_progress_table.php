@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('progress', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('course_id')->constrained()->onDelete('cascade');
             $table->foreignUuid('lesson_id')->constrained()->onDelete('cascade');
             $table->boolean('completed')->default(false);
             $table->timestamp('completed_at')->nullable();
+            $table->timestamps();
         });
     }
 

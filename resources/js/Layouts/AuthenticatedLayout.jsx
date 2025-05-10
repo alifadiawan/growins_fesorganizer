@@ -1,7 +1,6 @@
 import AdminSidebar from '@/Components/AdminSidebar';
 import ApplicationLogo from '@/Components/ApplicationLogo';
-import NavLink from '@/Components/NavLink';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
+import DosenSidebar from '@/Components/DosenSidebar';
 import UserSidebar from '@/Components/UserSidebar';
 import { usePage } from '@inertiajs/react';
 
@@ -172,8 +171,10 @@ export default function AuthenticatedLayout({ header, children, pageTitle }) {
 
         <div className="flex flex-1 flex-col md:flex-row max-w-7xl mx-auto w-full">
 
-            {user.role == 'student' ? (
+            {user.role === 'student' ? (
                 <UserSidebar />
+            ) : user.role === 'instructor' ? (
+                <DosenSidebar />
             ) : (
                 <AdminSidebar />
             )}

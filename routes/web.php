@@ -3,6 +3,7 @@
 use App\Http\Controllers\BootcampController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ManageUserController;
 use App\Http\Controllers\OauthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransactionController;
@@ -39,6 +40,10 @@ Route::middleware(['auth.token', 'verified'])->prefix('admin')->group(function (
     Route::get('/course/create', [CourseController::class, 'create'])->name('admin.course.create');
     Route::get('/course/detail/{id}/{slug}', [CourseController::class, 'show'])->name('admin.course.show');
     Route::get('/course/edit/{id}/', [CourseController::class, 'edit'])->name('admin.course.edit');
+
+    Route::get('/user/all', [ManageUserController::class, 'index'])->name('admin.user.index');
+    Route::get('/user/detail/{id}', [ManageUserController::class, 'index'])->name('admin.user.detail');
+    Route::put('/user/update/{id}', [ManageUserController::class, 'update'])->name('admin.user.update');
 
 });
 
@@ -98,6 +103,10 @@ Route::get('/user/dashboard/{id}', [DashboardController::class, 'user'])->middle
 Route::get('/admin/dashboard', function () {
     return Inertia::render('Admin/Dashboard');
 })->middleware(['auth.token', 'verified'])->name('admin.dashboard');
+
+Route::get('/dosen/dashboard', function(){
+    return Inertia::render('Dosen/Dashboard');
+})->name('dosen.dashboard');
 
 
 // transactions routes

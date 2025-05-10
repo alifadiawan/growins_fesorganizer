@@ -49,9 +49,12 @@ class AuthenticatedSessionController extends Controller
 
         if ($user->role === 'student') {
             return Inertia::location(route('user.dashboard', $user->id));
+        } else if ($user->role === 'instructor') {
+            return Inertia::location(route('dosen.dashboard'));
         } else {
             return Inertia::location(route('admin.dashboard'));
         }
+
     }
 
     /**

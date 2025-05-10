@@ -19,6 +19,10 @@ class ProgressModel extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
+    protected $table = 'progress';
+
+    protected $guarded = [];
+
     public function user()
     {
         return $this->belongsTo(User::class);

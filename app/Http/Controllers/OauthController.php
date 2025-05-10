@@ -51,7 +51,7 @@ class OauthController extends Controller
 
                 Auth::login($finduser);
 
-                return redirect('/dashboard');
+                return redirect('/');
 
             } else {
                 $newUser = User::create([
