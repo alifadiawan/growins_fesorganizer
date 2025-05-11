@@ -7,6 +7,7 @@ import ReactQuill from 'react-quill';
 
 const Create = ({ categories }) => {
     const user_id = usePage().props.auth.user.id;
+    const role = usePage().props.auth.user.role;
     const errors = usePage().errors;
 
     const [processing, setProcessing] = useState(false);
@@ -43,7 +44,12 @@ const Create = ({ categories }) => {
         axios.post(route('api.courses.store'), data)
             .then(function (response) {
                 setProcessing(false);
-                router.visit(route('admin.course.index'));
+
+                if (role == 'admin') {
+                    router.visit(route('admin.course.index'));
+                }
+                
+                router.visit(route('dosen.MyCourse', user_id));
             })
             .catch(function (error) {
                 setProcessing(false);

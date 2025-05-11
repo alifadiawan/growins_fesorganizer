@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ManageUserController;
 use App\Http\Controllers\OauthController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Models\CategoryModel;
@@ -68,7 +69,7 @@ Route::name('user.')->group(function () {
     })->name('allCourse.detail');
 
 
-    // transactions
+    // users courses
     Route::get('/my-course/{id}', [UserController::class, 'myCourse'])->name('myCourse');
     Route::get('/my-course/{course_id}/play/{lesson_id?}', [UserController::class, 'coursePlay'])->name('coursePlay');
 
@@ -104,7 +105,7 @@ Route::get('/admin/dashboard', function () {
     return Inertia::render('Admin/Dashboard');
 })->middleware(['auth.token', 'verified'])->name('admin.dashboard');
 
-Route::get('/dosen/dashboard', function(){
+Route::get('/dosen/dashboard', function () {
     return Inertia::render('Dosen/Dashboard');
 })->name('dosen.dashboard');
 
@@ -145,5 +146,27 @@ Route::get('oauth/google', [OauthController::class, 'redirectToProvider'])->name
 Route::get('oauth/google/callback', [OauthController::class, 'handleProviderCallback'])->name('oauth.google.callback');
 Route::get('/set-password', [OauthController::class, 'showForm'])->name('oauth.showForm')->middleware('auth');
 Route::post('/set-password', [OauthController::class, 'store'])->name('oauth.store')->middleware('auth');
+
+// Question
+Route::get('/quizzes/{quiz}/questions', [QuestionController::class, 'index']);
+Route::post('/quizzes/{quiz}/questions', [QuestionController::class, 'store']);
+Route::put('/questions/{question}', [QuestionController::class, 'update']);
+Route::delete('/questions/{question}', [QuestionController::class, 'destroy']);
+
+// dosen routes
+Route::get('/dosen/all-courses/{user_id}', function ($user_id) {
+    $courses = CourseModel::where('user_id', '=', value: $user_id)->paginate(10);
+
+    return Inertia::render('Dosen/Course/AllCourseIndex', ['myCourse' => $courses]);
+})->name('dosen.MyCourse');
+
+Route::get('/dosen/course-detail/{user_id}/{course_id}', function ($user_id, $course_id) {
+    $courses = CourseModel::with('instructor', 'modules.lessons')
+        ->where('user_id', '=',$user_id)
+        ->where('id', '=',$course_id)
+        ->first();
+
+    return Inertia::render('Dosen/Course/EditCourse', ['course' => $courses]);
+})->name('dosen.detailCourse');
 
 require __DIR__ . '/auth.php';

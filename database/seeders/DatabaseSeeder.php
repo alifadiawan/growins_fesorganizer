@@ -21,12 +21,12 @@ class DatabaseSeeder extends Seeder
             'role' => 3 // admin
         ]);
 
-        // User::insert([
-        //     'email' => 'alifadiawan2005@gmail.com',
-        //     'password' => bcrypt('qwertyuiop'),
-        //     'name' => 'Muhammad Alif Adiawan',
-        //     'role' => 1, // user
-        // ]);
+        User::insert([
+            'email' => 'dosen@gmail.com',
+            'password' => bcrypt('qwertyuiop'),
+            'name' => 'Dosen',
+            'role' => 2, // dosen
+        ]);
 
         CategoryModel::insert([
             ['name' => 'Web Development', 'created_at' => now(), 'updated_at' => now()],

@@ -74,7 +74,9 @@ const DosenSidebar = () => {
                 {/* UserSidebar Header */}
                 <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 dark:border-zinc-800">
                     <div className="flex items-center">
-                        <div className="flex items-center justify-center w-8 h-8 rounded-md bg-blue-600 text-white">S</div>
+                        <div className="w-8 h-8 rounded-md flex items-center justify-center">
+                            <img src="/robot.png" alt="icon" className="w-full h-full object-cover rounded-md" />
+                        </div>
                         {isOpen && <span className="ml-2 font-semibold text-gray-800 dark:text-white">Dosen</span>}
                     </div>
                     <button
@@ -86,7 +88,7 @@ const DosenSidebar = () => {
                     </button>
                 </div>
 
-                {/* UserSidebar Content */}
+                {/* DosenSidebar Content */}
                 <div className="py-4 overflow-y-auto">
                     <nav className="space-y-1 px-2">
 
@@ -102,12 +104,12 @@ const DosenSidebar = () => {
 
                         {/* My Courses */}
                         <Link
-                            href={route('user.myCourse', user.id)}
+                            href={route('dosen.MyCourse', user.id)}
                             className={`flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 ${isOpen ? "" : "justify-center"
                                 }`}
                         >
                             <Video className="h-5 w-5 text-gray-500 dark:text-gray-300" />
-                            {isOpen && <span className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200">All Courses</span>}
+                            {isOpen && <span className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200">My Courses</span>}
                         </Link>
 
                         {/* Settings Section */}
