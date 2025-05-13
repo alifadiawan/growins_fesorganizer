@@ -31,4 +31,9 @@ class LessonsModel extends Model
     {
         return $this->hasMany(ProgressModel::class);
     }
+
+    public function quiz()
+    {
+        return $this->hasOne(QuizModel::class, 'lesson_id');
+    }
 }

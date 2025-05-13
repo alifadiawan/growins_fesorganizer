@@ -89,23 +89,34 @@ const PlayCourse = ({ course, lesson, lesson_id }) => {
                   {/* Lessons inside the module */}
                   <div className="pl-4 space-y-2">
                     {module.lessons.map((lesson) => (
-                      <Link
-                        key={lesson.id}
-                        href={route('user.coursePlay', { course_id: course.id, lesson_id: lesson.id })}
-                        className={`block p-3 rounded-md cursor-pointer border transition-all duration-200
-                        ${lesson.completed ? 'bg-green-50 border-green-300' : 'border-gray-200'}
-                        ${isActive ? 'bg-blue-100 border-blue-400 font-semibold' : 'hover:bg-gray-100'}
-                      `}
-                      >
-                        <div className="font-medium text-sm truncate">{lesson.title}</div>
-                        <div className="text-xs text-gray-500">5:30 min</div>
+                      <div key={lesson.id} className="relative">
+                        <Link
+                          href={route('user.coursePlay', { course_id: course.id, lesson_id: lesson.id })}
+                          className={`block p-3 rounded-md cursor-pointer border transition-all duration-200
+                          ${lesson.completed ? 'bg-green-50 border-green-300' : 'border-gray-200'}
+                          ${isActive ? 'bg-blue-100 border-blue-400 font-semibold' : 'hover:bg-gray-100'}
+                        `}
+                        >
+                          <div className="font-medium text-sm truncate">{lesson.title}</div>
+                          <div className="text-xs text-gray-500">5:30 min</div>
 
-                        {lesson.completed && (
-                          <span className="text-green-600 text-xs font-semibold">
-                            ✔ Done
-                          </span>
+                          {lesson.completed && (
+                            <span className="text-green-600 text-xs font-semibold">
+                              ✔ Done
+                            </span>
+                          )}
+                        </Link>
+
+                        {/* Show Quiz Button if quiz exists */}
+                        {lesson.quiz && (
+                          <Link
+                            href={route('user.student.quiz.show', { quiz: lesson.quiz.id })}
+                            className="block mt-1 text-xs text-blue-600 hover:underline ml-3"
+                          >
+                            ➤ Take Quiz
+                          </Link>
                         )}
-                      </Link>
+                      </div>
                     ))}
 
                   </div>

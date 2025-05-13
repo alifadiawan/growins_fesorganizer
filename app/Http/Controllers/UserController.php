@@ -20,7 +20,7 @@ class UserController extends Controller
     public function coursePlay($course_id, $lesson_id = null)
     {
         // Load course with modules and lessons
-        $course = CourseModel::with('modules.lessons')->findOrFail($course_id);
+        $course = CourseModel::with('modules.lessons.quiz')->findOrFail($course_id);
 
         // Get the logged-in user ID
         $userId = Auth::id();

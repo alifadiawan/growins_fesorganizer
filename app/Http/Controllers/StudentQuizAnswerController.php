@@ -4,15 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Models\Choice;
 use App\Models\Question;
+use App\Models\QuizModel;
 use App\Models\StudentQuizAnswer;
+use App\Models\StudentQuizAnswerDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class StudentQuizAnswerController extends Controller
 {
+    public function showQuiz(QuizModel $quiz)
+    {
+        $quiz->load('questions.choices');
+
+        $hasAnswered = StudentQuizAnswer::where('user_id', '=',Auth::id())
+            ->where('quiz_id', $quiz->id)
+            ->exists();
+
+        return inertia('User/Quiz/TakeQuiz', [
+            'quiz' => $quiz,
+            'hasAnswered' => $hasAnswered,
+        ]);
+    }
+
     // Store student's answers to a quiz
-    public function store(Request $request, Question $quiz)
+    public function store(Request $request, QuizModel $quiz)
     {
         $request->validate([
             'answers' => 'required|array',
@@ -27,7 +43,7 @@ class StudentQuizAnswerController extends Controller
             ->first();
 
         if ($existing) {
-            return response()->json(['message' => 'You have already submitted this quiz.'], 400);
+            return redirect()->back()->with('error', 'You have already submitted this quiz.');
         }
 
         DB::beginTransaction();
@@ -50,7 +66,7 @@ class StudentQuizAnswerController extends Controller
                         ->where('question_id', $question->id)
                         ->firstOrFail();
 
-                    StudentQuizAnswer::create([
+                    StudentQuizAnswerDetail::create([
                         'student_quiz_answer_id' => $attempt->id,
                         'question_id' => $question->id,
                         'choice_id' => $choice->id,
@@ -60,22 +76,31 @@ class StudentQuizAnswerController extends Controller
 
             DB::commit();
 
-            return response()->json(['message' => 'Quiz submitted successfully.']);
+            return redirect()->back()->with('success', 'Quiz submitted successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['message' => 'Submission failed.'], 500);
+            return redirect()->back()->with('error', 'Failed.');
         }
     }
 
     // Optional: Show results (no correct answers shown)
-    public function show(StudentQuizAnswer $answer)
+    public function showResult(QuizModel $quiz)
     {
-        $this->authorize('view', $answer);
+        $studentId = Auth::id();
 
-        $answer->load('questionAnswers.choice', 'questionAnswers.question');
+        $questions = $quiz->questions()->with('choices')->get();
 
-        return inertia('Student/Quiz/AnswerDetail', [
-            'attempt' => $answer
+        // Get student's selected answers (map by question_id)
+        $studentAnswerMap = StudentQuizAnswerDetail::whereHas('answer', function ($q) use ($studentId, $quiz) {
+            $q->where('user_id', $studentId)->where('quiz_id', $quiz->id);
+        })->get()->groupBy('question_id');
+
+        return inertia('User/Quiz/Result', [
+            'quiz' => $quiz,
+            'questions' => $questions,
+            'studentAnswers' => $studentAnswerMap,
         ]);
     }
+
+
 }

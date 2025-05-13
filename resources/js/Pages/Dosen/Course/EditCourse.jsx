@@ -1,12 +1,12 @@
 import Modal from '@/Components/Modal';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { router, useForm, usePage } from '@inertiajs/react';
+import { Link, router, useForm, usePage } from '@inertiajs/react';
 import axios from 'axios';
-import { Link } from 'lucide-react';
+import { Eye, PenBoxIcon, Trash } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import ReactQuill from 'react-quill';
 
-const EditCourse = ({ course }) => {
+const EditCourse = ({ course, quiz }) => {
 
     // modals
     const [isModuleModalOpen, setIsModuleModalOpen] = useState(false);
@@ -15,6 +15,7 @@ const EditCourse = ({ course }) => {
     const [isEditLessonModalOpen, setIsEditLessonModalOpen] = useState(false);
     const [selectedLessonId, setSelectedLessonId] = useState(null);
     const [thumbnail, setThumbnail] = useState(null);
+    const [activeModal, setActiveModal] = useState(null);
 
     const [processing, setProcessing] = useState(false);
     const user = usePage().props.auth;
@@ -24,6 +25,7 @@ const EditCourse = ({ course }) => {
     // props
     const modules = course.modules;
     const lessons = course.modules.lessons;
+    const course_id = course.id;
 
     // Course Form 
     const [title, setTitle] = useState(course.title || '')
@@ -139,6 +141,28 @@ const EditCourse = ({ course }) => {
             console.log(error);
         }
     };
+
+    const handleAddQuiz = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+
+        const lesson_id = formData.get('lesson_id');
+
+        const data = {
+            title: formData.get('title'),
+            lesson_id,
+            course_id: course.id
+        };
+
+        axios.post(route('quizzes.store', { lesson: lesson_id }), data)
+            .catch(function (error) {
+                console.log(error);
+            })
+            .finally(function (response) {
+                console.log(response);
+            });
+    };
+
 
     useEffect(() => {
         axios.get('/sanctum/csrf-cookie');
@@ -262,6 +286,103 @@ const EditCourse = ({ course }) => {
                     </div>
                 </form>
             </div>
+
+            {/* Quizzes */}
+            <div className="space-y-6 mb-5">
+                {/* Header */}
+                <div className="flex justify-between items-center">
+                    <h2 className="text-2xl font-semibold text-gray-800">Quizzes</h2>
+                    <button
+                        onClick={() => setActiveModal(true)}
+                        className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition flex items-center shadow-sm font-medium"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5 mr-2"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                        >
+                            <path
+                                fillRule="evenodd"
+                                d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                clipRule="evenodd"
+                            />
+                        </svg>
+                        Add Quiz
+                    </button>
+                </div>
+
+                {/* Quiz List */}
+                <ul className="space-y-2">
+                    {quiz.length > 0 ? (
+                        quiz.map((item) => (
+                            <li
+                                key={item.id}
+                                className="p-4 bg-white rounded-md shadow-sm border border-gray-200 hover:shadow-md transition"
+                            >
+                                <div className="text-lg flex flex-row justify-between font-medium text-gray-700">
+                                    {item.title} - {item.id}
+                                    <div className="flex flex-row gap-3">
+                                        <Link href={route('quiz.index', item.id)}>  <PenBoxIcon /> </Link>
+                                        <button> <Eye /> </button>
+                                        <button> <Trash /> </button>
+                                    </div>
+                                </div>
+                            </li>
+                        ))
+                    ) : (
+                        <li className="text-gray-500 italic">No quizzes available.</li>
+                    )}
+                </ul>
+            </div>
+
+
+
+            <Modal
+                isOpen={activeModal}
+                onClose={() => setActiveModal(null)}
+                title="Add Quiz"
+            >
+
+                <form onSubmit={handleAddQuiz}>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 font-medium mb-2">Quiz Name</label>
+                        <input
+                            type="text"
+                            name="title"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
+
+                    <div className="mb-4">
+                        <label className="block text-gray-700 font-medium mb-2">Muncul di pelajaran : </label>
+                        <select
+                            name="lesson_id"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            {modules.map((module) => (
+                                <optgroup key={module.id} label={module.title}>
+                                    {module.lessons?.map((lesson) => (
+                                        <option key={lesson.id} value={lesson.id}>
+                                            {lesson.title}
+                                        </option>
+                                    ))}
+                                </optgroup>
+                            ))}
+                        </select>
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200"
+                    >
+                        Submit
+                    </button>
+                </form>
+
+
+            </Modal>
+
 
             {/* === Modules & Lessons === */}
             <div className="space-y-6">

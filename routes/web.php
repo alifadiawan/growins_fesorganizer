@@ -7,10 +7,13 @@ use App\Http\Controllers\ManageUserController;
 use App\Http\Controllers\OauthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\QuizController;
+use App\Http\Controllers\StudentQuizAnswerController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Models\CategoryModel;
 use App\Models\CourseModel;
+use App\Models\QuizModel;
 use App\Models\Transaction;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -32,23 +35,6 @@ Route::get('/', function () {
 Route::get('/about-us', function () {
     return Inertia::render('About');
 })->name('about.us');
-
-
-// admin route
-Route::middleware(['auth.token', 'verified'])->prefix('admin')->group(function () {
-
-    Route::get('/course', [CourseController::class, 'index'])->name('admin.course.index');
-    Route::get('/course/create', [CourseController::class, 'create'])->name('admin.course.create');
-    Route::get('/course/detail/{id}/{slug}', [CourseController::class, 'show'])->name('admin.course.show');
-    Route::get('/course/edit/{id}/', [CourseController::class, 'edit'])->name('admin.course.edit');
-
-    Route::get('/user/all', [ManageUserController::class, 'index'])->name('admin.user.index');
-    Route::get('/user/detail/{id}', [ManageUserController::class, 'index'])->name('admin.user.detail');
-    Route::put('/user/update/{id}', [ManageUserController::class, 'update'])->name('admin.user.update');
-
-});
-
-
 
 
 // users route
@@ -73,6 +59,16 @@ Route::name('user.')->group(function () {
     Route::get('/my-course/{id}', [UserController::class, 'myCourse'])->name('myCourse');
     Route::get('/my-course/{course_id}/play/{lesson_id?}', [UserController::class, 'coursePlay'])->name('coursePlay');
 
+
+    // Quiz Routes
+    Route::get('/student/quizzes/{quiz}', [StudentQuizAnswerController::class, 'showQuiz'])
+        ->name('student.quiz.show');
+
+    Route::post('/student/quizzes/{quiz}/submit', [StudentQuizAnswerController::class, 'store'])
+        ->name('student.quiz.submit');
+
+    Route::get('/quizzes/{quiz}/result', [StudentQuizAnswerController::class, 'showResult'])
+        ->name('student.quiz.result');
 
     // transaction - 2
     Route::get('/thank-you', function () {
@@ -101,9 +97,7 @@ Route::name('user.')->group(function () {
 
 // dashboards
 Route::get('/user/dashboard/{id}', [DashboardController::class, 'user'])->middleware(['auth.token', 'verified'])->name('user.dashboard');
-Route::get('/admin/dashboard', function () {
-    return Inertia::render('Admin/Dashboard');
-})->middleware(['auth.token', 'verified'])->name('admin.dashboard');
+
 
 Route::get('/dosen/dashboard', function () {
     return Inertia::render('Dosen/Dashboard');
@@ -111,27 +105,10 @@ Route::get('/dosen/dashboard', function () {
 
 
 // transactions routes
-Route::get('admin/transactions/all', function () {
-    $allTransactions = Transaction::paginate(20);
 
-    return Inertia('Admin/Transactions/Index', ['transactions' => $allTransactions]);
-})->name('admin.transactions.index');
-
-Route::get('admin/transactions/detail/{order_id}', function ($order_id) {
-    $transaction = Transaction::with(['course', 'user'])->where('order_id', '=', $order_id)->get();
-
-    if (!$transaction) {
-        return redirect()->back()->with('error', 'Not found');
-    }
-
-    return Inertia('Admin/Transactions/Detail', ['transaction' => $transaction[0]]);
-})->name('admin.transactions.detail');
 
 
 // admin bootcamps routes
-Route::get('/admin/bootcamp-softskill/all', [BootcampController::class, 'index'])->name('bootcamp.index');
-Route::get('/admin/bootcamp-softskill/create', [BootcampController::class, 'create'])->name('bootcamp.create');
-Route::get('/admin/bootcamp-softskill/store', [BootcampController::class, 'store'])->name('bootcamp.store');
 
 
 Route::middleware('auth')->group(function () {
@@ -147,11 +124,7 @@ Route::get('oauth/google/callback', [OauthController::class, 'handleProviderCall
 Route::get('/set-password', [OauthController::class, 'showForm'])->name('oauth.showForm')->middleware('auth');
 Route::post('/set-password', [OauthController::class, 'store'])->name('oauth.store')->middleware('auth');
 
-// Question
-Route::get('/quizzes/{quiz}/questions', [QuestionController::class, 'index']);
-Route::post('/quizzes/{quiz}/questions', [QuestionController::class, 'store']);
-Route::put('/questions/{question}', [QuestionController::class, 'update']);
-Route::delete('/questions/{question}', [QuestionController::class, 'destroy']);
+
 
 // dosen routes
 Route::get('/dosen/all-courses/{user_id}', function ($user_id) {
@@ -162,11 +135,13 @@ Route::get('/dosen/all-courses/{user_id}', function ($user_id) {
 
 Route::get('/dosen/course-detail/{user_id}/{course_id}', function ($user_id, $course_id) {
     $courses = CourseModel::with('instructor', 'modules.lessons')
-        ->where('user_id', '=',$user_id)
-        ->where('id', '=',$course_id)
+        ->where('user_id', '=', $user_id)
+        ->where('id', '=', $course_id)
         ->first();
 
-    return Inertia::render('Dosen/Course/EditCourse', ['course' => $courses]);
+    $quiz = QuizModel::where('course_id', '=', $course_id)->get();
+
+    return Inertia::render('Dosen/Course/EditCourse', ['course' => $courses, 'quiz' => $quiz]);
 })->name('dosen.detailCourse');
 
 require __DIR__ . '/auth.php';

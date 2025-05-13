@@ -1,39 +1,19 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import { VideoIcon } from 'lucide-react'
+import { Link, usePage } from '@inertiajs/react'
+import { PenIcon, VideoIcon } from 'lucide-react'
 import React from 'react'
 
-const Dashboard = ({course}) => {
+const Dashboard = ({ course }) => {
+  const user = usePage().props.auth.user;
 
   return (
-    <AuthenticatedLayout pageTitle="Dashboard" >
+    <AuthenticatedLayout>
+      <h2 className="text-2xl font-bold text-gray-800 my-5">
+        👋 Welcome back, {user.name}!
+      </h2>
 
-
-      {/* alerts */}
-      <div className="flex flex-col gap-3 mb-5">
-        <div role="alert" class="border-s-4 border-yellow-700 bg-yellow-50 p-4">
-          <div class="flex items-center gap-2 text-yellow-700">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
-              <path
-                fill-rule="evenodd"
-                d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
-                clip-rule="evenodd"
-              />
-            </svg>
-
-            <strong class="font-medium"> Almost there! Finish setting up your profile </strong>
-          </div>
-
-          <p class="mt-2 text-sm text-yellow-700">
-            Please complete your profile to access all features.
-          </p>
-        </div>
-      </div>
-
-
-      <div className="flex flex-row gap-3">
-
-
-        <div className="flex items-center shadow justify-between p-4 bg-white rounded-md min-w-72">
+      <div className="flex flex-row gap-3 w-full">
+        <div className="flex items-center shadow justify-between p-4 bg-white rounded-md min-w-64">
           <div>
             <h6 className="text-xs font-medium leading-none tracking-wider text-gray-500 uppercase">
               My Courses
@@ -47,7 +27,65 @@ const Dashboard = ({course}) => {
           </div>
         </div>
 
+        <div className="flex items-center shadow justify-between p-4 bg-white rounded-md min-w-64">
+          <div>
+            <h6 className="text-xs font-medium leading-none tracking-wider text-gray-500 uppercase">
+              Quiz Taken
+            </h6>
+            <span className="text-xl font-semibold">4</span>
+          </div>
+          <div>
+            <span>
+              <PenIcon />
+            </span>
+          </div>
+        </div>
+      </div>
 
+      <div className="mt-8 p-6 border border-green-500 rounded-md text-center">
+        <h4 className="text-lg font-semibold text-gray-800">Looking to Learn Something New?</h4>
+        <p className="text-sm text-gray-700 mb-4">Explore our top-rated courses and expand your skills.</p>
+        <Link
+          href="/courses"
+          className="inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
+        >
+          Browse Courses
+        </Link>
+      </div>
+
+      <div className="mt-10">
+        <h3 className="text-xl font-semibold text-gray-800 mb-4">Recent Activity</h3>
+        <div className="bg-white shadow rounded-md divide-y">
+          <div className="p-4 hover:bg-gray-50">
+            <p className="text-sm text-gray-700">✅ You completed <strong>React Basics Quiz</strong>.</p>
+            <span className="text-xs text-gray-400">2 hours ago</span>
+          </div>
+          <div className="p-4 hover:bg-gray-50">
+            <p className="text-sm text-gray-700">📚 You enrolled in <strong>Advanced Laravel</strong>.</p>
+            <span className="text-xs text-gray-400">1 day ago</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-10">
+        <h3 className="text-xl font-semibold text-gray-800 mb-4">Course Progress</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-white shadow rounded-md p-4">
+            <h5 className="font-medium text-gray-700 mb-1">Laravel Fundamentals</h5>
+            <div className="w-full bg-gray-200 rounded-full h-3">
+              <div className="bg-green-500 h-3 rounded-full" style={{ width: '70%' }}></div>
+            </div>
+            <p className="text-xs text-gray-500 mt-1">70% completed</p>
+          </div>
+
+          <div className="bg-white shadow rounded-md p-4">
+            <h5 className="font-medium text-gray-700 mb-1">React Essentials</h5>
+            <div className="w-full bg-gray-200 rounded-full h-3">
+              <div className="bg-blue-500 h-3 rounded-full" style={{ width: '45%' }}></div>
+            </div>
+            <p className="text-xs text-gray-500 mt-1">45% completed</p>
+          </div>
+        </div>
       </div>
 
 

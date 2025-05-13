@@ -1,9 +1,10 @@
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
 import React from 'react'
 
 const QuestionIndex = ({ quiz, questions }) => {
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <AuthenticatedLayout className="max-w-5xl mx-auto p-6">
       <Head title={`Quiz Questions: ${quiz.title}`} />
 
       <div className="mb-6">
@@ -65,7 +66,7 @@ const QuestionIndex = ({ quiz, questions }) => {
           + Add Question
         </Link>
       </div>
-    </div>
+    </AuthenticatedLayout>
   )
 }
 

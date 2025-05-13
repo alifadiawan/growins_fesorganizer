@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Question;
+use App\Models\QuizModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class QuestionController extends Controller
 {
-    public function index(Question $quiz)
+    public function index(QuizModel $quiz)
     {
         if (Auth::user()->role != 'instructor') {
             return redirect()->back()->with('error', 'You are not authorized');
@@ -17,14 +18,25 @@ class QuestionController extends Controller
 
         $questions = $quiz->questions()->with('choices')->get();
 
-        return inertia('Lecturer/Quiz/QuestionIndex', [
+        return inertia('Dosen/Quiz/QuestionIndex', [
             'quiz' => $quiz,
             'questions' => $questions,
         ]);
     }
 
+    public function create(QuizModel $quiz)
+    {
+        if (Auth::user()->role !== 'instructor') {
+            abort(403, 'Unauthorized');
+        }
+
+        return inertia('Dosen/Quiz/QuestionCreate', [
+            'quiz' => $quiz,
+        ]);
+    }
+
     // Store a new question
-    public function store(Request $request, Question $quiz)
+    public function store(Request $request, QuizModel $quiz)
     {
         if (Auth::user()->role != 'instructor') {
             return redirect()->back()->with('error', 'You are not authorized');
