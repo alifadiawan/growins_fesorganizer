@@ -96,7 +96,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion, courseList, 
                             <img 
                                 src="/robot.png" 
                                 alt="Maskot GROW" 
-                                className="relative rounded-lg max-w-md mx-auto"
+                                className="relative rounded-lg lg:max-w-md max-w-64 mx-auto"
                             />
                         </div>
                     </div>

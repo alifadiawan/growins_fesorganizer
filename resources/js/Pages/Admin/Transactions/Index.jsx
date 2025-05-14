@@ -1,5 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Link } from '@inertiajs/react';
+import { DollarSign } from 'lucide-react';
 import React from 'react'
 
 const Index = ({ transactions }) => {
@@ -23,6 +24,17 @@ const Index = ({ transactions }) => {
     };
     return (
         <AuthenticatedLayout pageTitle="Transactions">
+
+            <div className="flex flex-row gap-3">
+                <div className="w-full flex flex-row gap-3 items-center bg-white px-6 py-4 rounded-md shadow mb-5">
+                    <DollarSign size={35} />
+                    <div className="content flex flex-col">
+                        <h3 className='font-bold text-xl'>All Transactions</h3>
+                        <p>0</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="overflow-x-auto bg-white">
                 <table class="min-w-full divide-y-2 divide-gray-200">
                     <thead class="sticky top-0 bg-white">
@@ -45,7 +57,7 @@ const Index = ({ transactions }) => {
                                 <td class="px-3 py-2 whitespace-nowrap">{item.status}</td>
                                 <td class="px-3 py-2 whitespace-nowrap">
                                     <Link href={route('admin.transactions.detail', item.order_id)} className="px-3 py-1 bg-green-500 hover:bg-green-600 rounded-md text-white">Detail</Link>
-                                </td>   
+                                </td>
                             </tr>
                         )}
                     </tbody>

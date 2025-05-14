@@ -1,13 +1,15 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
+import axios from 'axios';
 import { ArrowLeft } from 'lucide-react';
 import React, { useState } from 'react'
 
 
-const PlayCourse = ({ course, lesson, lesson_id  }) => {
+const PlayCourse = ({ course, lesson, lesson_id }) => {
 
   const courseDetail = course
-  console.log(courseDetail)
+  const userId = usePage().props.auth.user.id;
+  const isActive = lesson.id === lesson_id;
 
   function extractYoutubeId(url) {
     const regex = /(?:\?v=|\/embed\/|\.be\/)([a-zA-Z0-9_-]{11})/;
@@ -15,6 +17,22 @@ const PlayCourse = ({ course, lesson, lesson_id  }) => {
     return match ? match[1] : null;
   }
 
+  function markAsComplete() {
+    axios.post(route('api.update.progress', {
+      user_id: userId,
+      course_id: course.id,
+      lesson_id: lesson.id
+    }))
+      .then(response => {
+        console.log('Progress updated:', response.data);
+      })
+      .catch(error => {
+        console.error('Failed to update progress:', error);
+      });
+
+  }
+
+  // console.log(courseDetail.modules[0].lessons);
   return (
     <AuthenticatedLayout>
       <div className="min-h-screen bg-white text-gray-900">
@@ -41,13 +59,14 @@ const PlayCourse = ({ course, lesson, lesson_id  }) => {
             <h1 className="text-2xl font-bold">{courseDetail.title}</h1>
 
             {/* Lecture Description / Notes */}
-            <div className="space-y-4 text-sm text-gray-700 leading-relaxed">
-              <p>{courseDetail.description}</p>
+            <div dangerouslySetInnerHTML={{ __html: courseDetail.description }} className="space-y-4 text-sm text-gray-700 leading-relaxed">
             </div>
 
             {/* Additional Buttons (optional) */}
             <div className="flex gap-4">
-              <button className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 text-sm">
+              <button
+                onClick={() => markAsComplete()}
+                className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 text-sm">
                 Mark as Complete
               </button>
             </div>
@@ -70,15 +89,36 @@ const PlayCourse = ({ course, lesson, lesson_id  }) => {
                   {/* Lessons inside the module */}
                   <div className="pl-4 space-y-2">
                     {module.lessons.map((lesson) => (
-                      <Link
-                        key={lesson.id}
-                        href={route('user.coursePlay', { course_id: course.id, lesson_id: lesson.id })}
-                        className="block p-3 rounded-md hover:bg-gray-100 cursor-pointer border border-gray-200 transition-all duration-200"
-                      >
-                        <div className="font-medium text-sm truncate">{lesson.title}</div>
-                        <div className="text-xs text-gray-500">5:30 min</div>
-                      </Link>
+                      <div key={lesson.id} className="relative">
+                        <Link
+                          href={route('user.coursePlay', { course_id: course.id, lesson_id: lesson.id })}
+                          className={`block p-3 rounded-md cursor-pointer border transition-all duration-200
+                          ${lesson.completed ? 'bg-green-50 border-green-300' : 'border-gray-200'}
+                          ${isActive ? 'bg-blue-100 border-blue-400 font-semibold' : 'hover:bg-gray-100'}
+                        `}
+                        >
+                          <div className="font-medium text-sm truncate">{lesson.title}</div>
+                          <div className="text-xs text-gray-500">5:30 min</div>
+
+                          {lesson.completed && (
+                            <span className="text-green-600 text-xs font-semibold">
+                              ✔ Done
+                            </span>
+                          )}
+                        </Link>
+
+                        {/* Show Quiz Button if quiz exists */}
+                        {lesson.quiz && (
+                          <Link
+                            href={route('user.student.quiz.show', { quiz: lesson.quiz.id })}
+                            className="block mt-1 text-xs text-blue-600 hover:underline ml-3"
+                          >
+                            ➤ Take Quiz
+                          </Link>
+                        )}
+                      </div>
                     ))}
+
                   </div>
 
                 </div>

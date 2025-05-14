@@ -108,7 +108,11 @@ const Detail = ({ course }) => {
               </div>
 
               <div className="mt-4 text-gray-700">
-                <p>{course.description || "No description provided."}</p>
+                {course.description ? (
+                  <div dangerouslySetInnerHTML={{ __html: course.description }} />
+                ) : (
+                  <p>No description provided.</p>
+                )}
               </div>
 
               <div className="mt-6 border-t pt-4">
@@ -192,7 +196,7 @@ const Detail = ({ course }) => {
               </div>
             </div>
           </div>
-          
+
           {/* course content */}
           <div className="space-y-6">
             <div className="flex justify-between items-center mb-6">

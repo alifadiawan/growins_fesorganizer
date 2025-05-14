@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'gauth_id',
+        'gauth_type',
     ];
 
     /**
@@ -65,6 +67,10 @@ class User extends Authenticatable
     public function reviews()
     {
         return $this->hasMany(ReviewsModel::class);
+    }
+
+    public function transactions(){
+        return $this->hasMany(Transaction::class, 'user_id');
     }
 
     // public function payments()

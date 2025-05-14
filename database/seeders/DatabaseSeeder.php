@@ -22,10 +22,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::insert([
-            'email' => 'alifadiawan2005@gmail.com',
+            'email' => 'dosen@gmail.com',
             'password' => bcrypt('qwertyuiop'),
-            'name' => 'Muhammad Alif Adiawan',
-            'role' => 1, // user
+            'name' => 'Dosen',
+            'role' => 2, // dosen
         ]);
 
         CategoryModel::insert([

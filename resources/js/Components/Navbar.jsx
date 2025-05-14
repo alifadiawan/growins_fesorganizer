@@ -89,6 +89,13 @@ export function Navbar() {
                             >
                                 <User /> {user.user.name}
                             </Link>
+                        ) : user.user.role === 'instructor' ? (
+                            <Link
+                                href={route('dosen.dashboard', user.user.id)}
+                                className="flex flex-row items-center gap-2 rounded-md px-5 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-yellow-500 hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0"
+                            >
+                                <User /> {user.user.name}
+                            </Link>
                         ) : (
                             <Link
                                 href={route('admin.dashboard')}
@@ -159,10 +166,40 @@ export function Navbar() {
                             {link.label}
                         </Link>
                     ))}
-                    <div className="pt-2">
-                        <button className="w-full rounded-md bg-yellow-400 px-4 py-2.5 text-sm font-medium text-black transition-all duration-300 hover:bg-yellow-500">
-                            Daftar Sekarang
-                        </button>
+
+                    {/* Register Button */}
+                    <div className="pt-2 w-full">
+                        {user.user ? (
+                            user.user.role == 'student' ? (
+                                <Link
+                                    href={route('user.dashboard', user.user.id)}
+                                    className="w-full rounded-md bg-yellow-400 px-4 py-2.5 text-sm font-medium text-black transition-all duration-300 hover:bg-yellow-500"
+                                >
+                                    <User /> {user.user.name}
+                                </Link>
+                            ) : user.user.role === 'instructor' ? (
+                                <Link
+                                    href={route('dosen.dashboard', user.user.id)}
+                                    className="w-full rounded-md bg-yellow-400 px-4 py-2.5 text-sm font-medium text-black transition-all duration-300 hover:bg-yellow-500"
+                                >
+                                    <User /> {user.user.name}
+                                </Link>
+                            ) : (
+                                <Link
+                                    href={route('admin.dashboard')}
+                                    className="w-full rounded-md bg-yellow-400 px-4 py-2.5 text-sm font-medium text-black transition-all duration-300 hover:bg-yellow-500"
+                                >
+                                    <User /> {user.user.name}
+                                </Link>
+                            )
+                        ) : (
+                            <Link
+                                href="/login"
+                                className="w-full rounded-md bg-yellow-400 px-4 py-2.5 text-sm font-medium text-black transition-all duration-300 hover:bg-yellow-500"
+                            >
+                                Daftar Sekarang
+                            </Link>
+                        )}
                     </div>
                 </div>
             </div>

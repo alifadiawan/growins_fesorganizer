@@ -7,6 +7,7 @@ import ReactQuill from 'react-quill';
 
 const Create = ({ categories }) => {
     const user_id = usePage().props.auth.user.id;
+    const role = usePage().props.auth.user.role;
     const errors = usePage().errors;
 
     const [processing, setProcessing] = useState(false);
@@ -43,7 +44,12 @@ const Create = ({ categories }) => {
         axios.post(route('api.courses.store'), data)
             .then(function (response) {
                 setProcessing(false);
-                router.visit(route('admin.course.index'));
+
+                if (role == 'admin') {
+                    router.visit(route('admin.course.index'));
+                }
+                
+                router.visit(route('dosen.MyCourse', user_id));
             })
             .catch(function (error) {
                 setProcessing(false);
@@ -69,14 +75,14 @@ const Create = ({ categories }) => {
                         <label className="block text-sm font-medium text-gray-700">Description</label>
                         {/* <textarea name="description" className="mt-1 w-full p-2 border rounded" /> */}
                         <ReactQuill
-                            style={{ minHeight: '200px' }}
+                            style={{ height: '400px' }}
                             name="description"
                             value={value}
                             onChange={setValue} />
                     </div>
 
                     {/* Price */}
-                    <div>
+                    <div className='pt-12'>
                         <label className="block text-sm font-medium text-gray-700">Price</label>
                         <input type="number" name="price" min="0" step="0.01" className="mt-1 w-full p-2 border rounded" />
                     </div>
