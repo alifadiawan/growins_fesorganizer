@@ -56,7 +56,7 @@ Route::get('/bootcamp-softskill/store', [BootcampController::class, 'store'])->n
 
 // Question
 Route::get('/quizzes/{quiz}/questions', [QuestionController::class, 'index'])->name('quiz.index');
-Route::get('/quizzes/{quiz}/questions/create', [QuestionController::class, 'create']);
+Route::get('/quizzes/{quiz}/questions/create', [QuestionController::class, 'create'])->name('quiz.create');
 Route::post('/quizzes/{quiz}/questions', [QuestionController::class, 'store'])->name('quiz.store');
 Route::put('/questions/{question}', [QuestionController::class, 'update']);
 Route::delete('/questions/{question}', [QuestionController::class, 'destroy']);

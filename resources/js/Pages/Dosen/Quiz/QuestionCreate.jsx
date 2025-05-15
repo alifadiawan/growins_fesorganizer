@@ -35,7 +35,7 @@ export default function QuestionCreate({ quiz }) {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('quiz.store',{quiz: quiz.id}));
+        post(route('quiz.store', { quiz: quiz.id }));
     };
 
     return (
