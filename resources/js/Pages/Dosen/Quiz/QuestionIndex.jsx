@@ -60,7 +60,7 @@ const QuestionIndex = ({ quiz, questions }) => {
 
       <div className="mt-8">
         <Link
-          href={`/quizzes/${quiz.id}/questions/create`}
+          href={route('quiz.create', quiz.id)}
           className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl shadow"
         >
           + Add Question
