@@ -20,7 +20,7 @@ const Show = ({ bootcamp, bootcampRegistration }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         post(route('admin.bootcamp_registrations.store', bootcamp.id), {
-            onSuccess: () => {
+            onSuccess: (success) => {
                 console.log(success);// Handle success, e.g., show a success message or redirect
             },
             onError: (error) => {

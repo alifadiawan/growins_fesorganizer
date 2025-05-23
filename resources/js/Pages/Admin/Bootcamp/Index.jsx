@@ -1,7 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import React from 'react'
 import { router, Link } from '@inertiajs/react'
-import { PlusCircle, Pencil, Trash2 } from 'lucide-react'
+import { PlusCircle, Pencil, Trash2, Eye } from 'lucide-react'
 
 const Index = ({ bootcamps }) => {
   const data = bootcamps.data;
@@ -12,13 +12,15 @@ const Index = ({ bootcamps }) => {
     }
   }
 
+  console.log(data);
+
   return (
     <AuthenticatedLayout pageTitle="Bootcamp Softskill Settings">
       <div className="">
         {/* Header */}
         <div className="sm:flex sm:items-center sm:justify-between mb-8">
-          <Link 
-            href="/admin/bootcamp/create" 
+          <Link
+            href={route('bootcamp.create')}
             className="inline-flex items-center px-4 py-2 bg-teal-600 hover:bg-teal-700 
                      text-white rounded-md shadow-sm transition-colors mt-4 sm:mt-0"
           >
@@ -28,27 +30,27 @@ const Index = ({ bootcamps }) => {
         </div>
 
         {/* Table */}
-        <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg">
+          <div className="w-full">
+            <table className="w-full table-fixed">
               <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-1/6">
                     Title
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Description
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-2/6">
+                    Cover
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-1/6">
                     Main Theme
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-1/12">
                     Normal Price
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-1/12">
                     Discounted Price
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-1/6">
                     Actions
                   </th>
                 </tr>
@@ -56,13 +58,22 @@ const Index = ({ bootcamps }) => {
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {data.map(b => (
                   <tr key={b.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white break-words">
                       {b.title}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300 max-w-xs truncate">
-                      {b.description}
+                    <td className="px-2 py-2 text-sm text-gray-500 dark:text-gray-300 max-w-[80px] w-[80px]">
+                      {b.cover ? (
+                        <img
+                          src={`/storage/${b.cover}`}
+                          alt="Cover"
+                          className="w-24 h-auto rounded object-cover"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <span className="italic text-gray-400">No cover</span>
+                      )}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300 break-words">
                       {b.main_theme}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
@@ -71,30 +82,33 @@ const Index = ({ bootcamps }) => {
                     <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
                       {b.discounted_price ? `Rp ${b.discounted_price.toLocaleString()}` : '-'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <Link 
-                        href={`/admin/bootcamp/${b.id}/edit`}
-                        className="inline-flex items-center px-3 py-1.5 bg-amber-500 text-white rounded-md 
-                                 hover:bg-amber-600 transition-colors mr-2"
-                      >
-                        <Pencil className="h-4 w-4 mr-1" />
-                        Edit
-                      </Link>
-                      <Link 
-                        href={`/admin/bootcamp/${b.id}`}
-                        className="inline-flex items-center px-3 py-1.5 bg-blue-500 text-white rounded-md 
-                                 hover:bg-blue-600 transition-colors mr-2"
-                      >
-                        View Registrations
-                      </Link>
-                      <button 
-                        onClick={() => handleDelete(b.id)}
-                        className="inline-flex items-center px-3 py-1.5 bg-red-500 text-white rounded-md 
-                                 hover:bg-red-600 transition-colors"
-                      >
-                        <Trash2 className="h-4 w-4 mr-1" />
-                        Delete
-                      </button>
+                    <td className="px-6 py-4 text-right text-sm font-medium">
+                      <div className="flex flex-col gap-2">
+                        <Link
+                          href={`/admin/bootcamp/${b.id}/edit`}
+                          className="inline-flex items-center px-3 py-1.5 bg-amber-500 text-white rounded-md 
+                                   hover:bg-amber-600 transition-colors"
+                        >
+                          <Pencil className="h-4 w-4 mr-1" />
+                          Edit
+                        </Link>
+                        <Link
+                          href={`/admin/bootcamp/${b.id}`}
+                          className="inline-flex items-center px-3 py-1.5 bg-blue-500 text-white rounded-md 
+                                   hover:bg-blue-600 transition-colors"
+                        >
+                          <Eye className="h-4 w-4 mr-1" />
+                          View
+                        </Link>
+                        <button
+                          onClick={() => handleDelete(b.id)}
+                          className="inline-flex items-center px-3 py-1.5 bg-red-500 text-white rounded-md 
+                                   hover:bg-red-600 transition-colors"
+                        >
+                          <Trash2 className="h-4 w-4 mr-1" />
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

@@ -42,11 +42,17 @@ class BootcampRegistrationController extends Controller
             'asal_kampus' => 'nullable|string|max:255',
             'username_ig' => 'nullable|string|max:255',
             'cv_path' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Add this line
         ]);
 
         // Handle CV upload if exists
         if ($request->hasFile('cv')) {
             $validated['cv_path'] = $request->file('cv')->store('cv_uploads', 'public');
+        }
+
+        // Handle cover image upload if exists
+        if ($request->hasFile('cover_image')) {
+            $validated['cover_image'] = $request->file('cover_image')->store('cover_images', 'public');
         }
 
         $validated['user_id'] = Auth::id();

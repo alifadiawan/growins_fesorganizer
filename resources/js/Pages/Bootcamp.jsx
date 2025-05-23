@@ -6,19 +6,24 @@ import { Link, usePage } from '@inertiajs/react';
 
 const Bootcamp = () => {
     const [bootcamps, setBootcamps] = useState({ data: [] });
+    const [isLoading, setIsLoading] = useState(true);
     const { auth } = usePage().props;
 
     useEffect(() => {
         const fetchBootcamps = async () => {
             try {
+                setIsLoading(true);
                 const response = await axios.get(route('bootcamp.fetch'));
                 setBootcamps(response.data);
             } catch (error) {
                 console.error('Error fetching bootcamps:', error);
+            } finally {
+                setIsLoading(false);
             }
         };
         fetchBootcamps();
     }, []);
+
 
     const benefits = [
         { icon: <UserIcon className="w-6 h-6" />, title: "Komunikasi Efektif", description: "Kembangkan kemampuan komunikasi verbal dan non-verbal untuk membangun hubungan profesional yang kuat" },
@@ -41,6 +46,128 @@ const Bootcamp = () => {
         { question: "Bagaimana format pembelajaran?", answer: "Format pembelajaran mencakup diskusi interaktif, simulasi, role-play, studi kasus, dan proyek kolaboratif." },
     ];
 
+    // Add Skeleton Loader Component
+    const SkeletonCard = () => (
+        <div className="flex-shrink-0 w-full md:w-[400px] snap-start bg-white rounded-xl shadow-2xl overflow-hidden text-gray-800">
+            <div className="p-8 animate-pulse">
+                <div className="h-6 w-24 bg-gray-200 rounded-full mb-4"></div>
+                <div className="h-14 bg-gray-200 rounded-lg mb-3"></div>
+                <div className="h-[4.5rem] bg-gray-200 rounded-lg mb-6"></div>
+
+                <div className="space-y-4">
+                    <div className="h-10 bg-gray-200 rounded-lg"></div>
+                    <div className="h-10 bg-gray-200 rounded-lg"></div>
+                    <div className="h-10 bg-gray-200 rounded-lg"></div>
+                </div>
+
+                <div className="mt-6 border-t pt-6">
+                    <div className="h-8 w-32 bg-gray-200 rounded-lg mb-4"></div>
+                    <div className="h-12 bg-gray-200 rounded-lg"></div>
+                </div>
+            </div>
+        </div>
+    );
+
+    // Modify the bootcamp cards section to include loading state
+    const renderBootcampCards = () => {
+        if (isLoading) {
+            return (
+                <div className="flex justify-center gap-8 px-4 py-6 min-w-full">
+                    {[1, 2, 3].map((index) => (
+                        <SkeletonCard key={index} />
+                    ))}
+                </div>
+            );
+        }
+
+        if (bootcamps.data?.length === 0) {
+            return (
+                <div className="text-center py-12">
+                    <p className="text-xl text-gray-100">No bootcamps available at the moment.</p>
+                </div>
+            );
+        }
+
+        return (
+            <div className="flex justify-center gap-8 px-4 py-6 min-w-full" style={{ scrollSnapType: 'x mandatory' }}>
+                {bootcamps.data?.map((bootcamp) => (
+                    <div
+                        key={bootcamp.id}
+                        className="flex-shrink-0 w-full md:w-[400px] snap-start bg-white rounded-xl shadow-2xl overflow-hidden text-gray-800 transform hover:scale-105 transition-transform duration-300"
+                    >
+                        {/* Add cover image */}
+                        <div className="w-full h-48 bg-gray-200 overflow-hidden">
+                            <img
+                                src={`/storage/${bootcamp.cover}`}
+                                alt={bootcamp.title}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                    e.target.src = '/images/default-cover.jpg'; // Add a default fallback image
+                                    e.target.onerror = null;
+                                }}
+                            />
+                        </div>
+                        <div className="p-8">
+                            <div className="inline-block px-4 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-semibold mb-4">
+                                #Bootcamp
+                            </div>
+                            <h2 className="text-2xl font-bold mb-3 line-clamp-2 h-14">{bootcamp.title}</h2>
+
+                            <div
+                                className="text-gray-600 mb-6 line-clamp-3 h-[4.5rem] overflow-hidden"
+                                dangerouslySetInnerHTML={{ __html: bootcamp.description }}
+                            ></div>
+
+                            <div className="space-y-4 text-sm">
+                                <div className="flex items-center p-2 bg-gray-50 rounded-lg">
+                                    <ClockIcon className="w-5 h-5 mr-3 text-teal-600" />
+                                    <span className="font-medium flex flex-row ">{bootcamp.time_start} - {bootcamp.time_end}</span>
+                                </div>
+                                <div className="flex items-center p-2 bg-gray-50 rounded-lg">
+                                    <CalendarIcon className="w-5 h-5 mr-3 text-teal-600" />
+                                    <span className="font-medium flex flex-row">{bootcamp.date_start} - {bootcamp.date_end}</span>
+                                </div>
+                                <div className="flex items-center p-2 bg-gray-50 rounded-lg">
+                                    <AwardIcon className="w-5 h-5 mr-3 text-teal-600" />
+                                    <span className="font-medium">{bootcamp.main_theme}</span>
+                                </div>
+                            </div>
+
+                            <div className="mt-6 border-t pt-6">
+                                <div className="text-2xl font-bold text-teal-600 mb-4">
+                                    {bootcamp.discounted_price ? (
+                                        <>
+                                            <span className="line-through text-gray-400 text-lg mr-2">
+                                                Rp {bootcamp.normal_price.toLocaleString()}
+                                            </span>
+                                            <br />
+                                            Rp {bootcamp.discounted_price.toLocaleString()}
+                                        </>
+                                    ) : (
+                                        bootcamp.normal_price == 0 ? (
+                                            <span className="text-teal-600">Gratis</span>
+                                        ) : (
+                                            <span>Rp {bootcamp.normal_price.toLocaleString()}</span>
+                                        )
+                                    )}
+                                </div>
+
+
+                                <Link
+                                    href={'workshop/connect'}
+                                    className="block w-full bg-teal-600 text-white py-3 px-6 rounded-lg text-center font-semibold hover:bg-teal-700 transition-colors duration-300"
+                                >
+                                    Daftar Sekarang
+                                </Link>
+
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        );
+    };
+
     return (
         <GuestLayout
             navbarProps={{
@@ -48,124 +175,61 @@ const Bootcamp = () => {
                 customBgColor: 'bg-gradient-to-r from-teal-900 to-teal-600 opacity-95',
             }}
         >
+            {/* Hero Section with improved styling */}
             <div className="bg-gradient-to-r from-teal-900 to-teal-600 opacity-90 text-white">
-                <div className="container mx-auto px-4 py-16">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-8 text-center">Our Bootcamps</h1>
+                <div className="container mx-auto px-4 py-20">
+                    <h1 className="text-5xl md:text-6xl font-bold mb-6 text-center leading-tight">
+                        Enhance Your <span className="text-teal-300">Professional Skills</span>
+                    </h1>
+                    <p className="text-xl text-center max-w-2xl mx-auto mb-12 text-teal-100">
+                        Join our intensive bootcamps designed to transform your career potential
+                    </p>
 
-                    {/* Bootcamp Cards */}
-                    <div className="w-full overflow-x-auto">
-                        <div className="flex gap-6 px-2 py-4 min-w-full" style={{ scrollSnapType: 'x mandatory' }}>
-                            {bootcamps.data?.map((bootcamp) => (
-                                <div
-                                    key={bootcamp.id}
-                                    className="flex-shrink-0 w-full snap-start bg-white rounded-lg shadow-lg overflow-hidden text-gray-800"
-                                >
-                                    <div className="p-6">
-                                        <div className="text-yellow-600 mb-2">#Bootcamp</div>
-                                        <h2 className="text-xl font-bold mb-2 line-clamp-2 h-14">{bootcamp.title}</h2>
-
-                                        <div
-                                            className="text-gray-600 mb-4 line-clamp-3 h-[4.5rem] overflow-hidden"
-                                            dangerouslySetInnerHTML={{ __html: bootcamp.description }}
-                                        ></div>
-
-                                        <div className="space-y-3 text-sm">
-                                            <div className="flex items-center">
-                                                <ClockIcon className="w-5 h-5 mr-2 text-teal-600" />
-                                                <span>{bootcamp.time}</span>
-                                            </div>
-                                            <div className="flex items-center">
-                                                <CalendarIcon className="w-5 h-5 mr-2 text-teal-600" />
-                                                <span>{bootcamp.date}</span>
-                                            </div>
-                                            <div className="flex items-center">
-                                                <AwardIcon className="w-5 h-5 mr-2 text-teal-600" />
-                                                <span>{bootcamp.main_theme}</span>
-                                            </div>
-                                        </div>
-
-                                        <div className="mt-4 space-y-2">
-                                            <div className="text-xl font-bold text-teal-600">
-                                                {bootcamp.discounted_price ? (
-                                                    <>
-                                                        <span className="line-through text-gray-400 text-base mr-2">
-                                                            Rp {bootcamp.normal_price.toLocaleString()}
-                                                        </span>
-                                                        Rp {bootcamp.discounted_price.toLocaleString()}
-                                                    </>
-                                                ) : (
-                                                    `Rp ${bootcamp.normal_price.toLocaleString()}`
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        {auth.user ? (
-                                            // Logged in: Show the Link
-                                            <Link
-                                                href={route('user.workshop.show', bootcamp.id)}
-                                                className="mt-4 w-full bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700 transition-colors"
-                                            >
-                                                Daftar Sekarang
-                                            </Link>
-                                        ) : (
-                                            // Not logged in: Show a login redirect or message
-                                            <Link
-                                                href={route('login')}
-                                                className="mt-4 w-full bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 transition-colors"
-                                            >
-                                                Login untuk Mendaftar
-                                            </Link>
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                    {/* Bootcamp Cards with loading state */}
+                    <div className="w-full max-w-7xl mx-auto overflow-x-auto scrollbar-hide">
+                        {renderBootcampCards()}
                     </div>
                 </div>
             </div>
 
-            {/* Benefits Section */}
-            <div className="py-16 bg-white">
+            {/* Benefits Section with improved design */}
+            <div className="py-20 bg-gray-50">
                 <div className="container mx-auto px-4">
-                    <h2 className="text-3xl font-bold text-center mb-12">Manfaat Bootcamp</h2>
+                    <h2 className="text-4xl font-bold text-center mb-4">Manfaat Bootcamp</h2>
+                    <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
+                        Dapatkan berbagai keuntungan yang akan membantu mengembangkan karir profesional Anda
+                    </p>
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {benefits.map((benefit, index) => (
-                            <div key={index} className="p-6 border border-gray-200 rounded-lg hover:shadow-lg transition-shadow">
-                                <div className="w-12 h-12 bg-teal-100 text-teal-600 rounded-full flex items-center justify-center mb-4">
+                            <div key={index} className="p-8 bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                                <div className="w-14 h-14 bg-teal-100 text-teal-600 rounded-2xl flex items-center justify-center mb-6">
                                     {benefit.icon}
                                 </div>
-                                <h3 className="text-xl font-bold mb-2">{benefit.title}</h3>
-                                <p className="text-gray-600">{benefit.description}</p>
+                                <h3 className="text-xl font-bold mb-3">{benefit.title}</h3>
+                                <p className="text-gray-600 leading-relaxed">{benefit.description}</p>
                             </div>
                         ))}
                     </div>
                 </div>
             </div>
 
-            {/* <div className="py-16 bg-gray-50">
+            {/* FAQ Section */}
+            <div className="py-20 bg-white">
                 <div className="container mx-auto px-4">
-                    <h2 className="text-3xl font-bold text-center mb-12">Kurikulum Program</h2>
-                    <div className="space-y-8">
-                        {modules.map((module, index) => (
-                            <div key={index} className="bg-white p-6 rounded-lg shadow-md">
-                                <div className="flex flex-wrap justify-between items-center mb-4">
-                                    <h3 className="text-xl font-bold text-teal-700">{module.title}</h3>
-                                    <span className="bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm">Durasi: {module.duration}</span>
-                                </div>
-                                <ul className="list-disc pl-5 text-gray-700">
-                                    {module.topics.map((topic, i) => (
-                                        <li key={i} className="mb-1">{topic}</li>
-                                    ))}
-                                </ul>
+                    <h2 className="text-4xl font-bold text-center mb-4">Frequently Asked Questions</h2>
+                    <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
+                        Temukan jawaban untuk pertanyaan yang sering diajukan
+                    </p>
+                    <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                        {faqs.map((faq, index) => (
+                            <div key={index} className="p-6 bg-gray-50 rounded-xl">
+                                <h3 className="text-lg font-bold mb-3 text-teal-700">{faq.question}</h3>
+                                <p className="text-gray-600">{faq.answer}</p>
                             </div>
                         ))}
                     </div>
                 </div>
-            </div> */}
-
-            {/* Pricing Section */}
-
-
+            </div>
         </GuestLayout>
     )
 }
