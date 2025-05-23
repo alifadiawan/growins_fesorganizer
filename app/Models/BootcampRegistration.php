@@ -5,8 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Bootcamp extends Model
+class BootcampRegistration extends Model
 {
+
     protected $guarded = [];
     protected static function booted()
     {

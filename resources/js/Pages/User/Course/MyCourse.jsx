@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/react';
 import React from 'react'
 
 const MyCourse = ({myCourse}) => {
-    console.log(myCourse);
+
     return (
         <AuthenticatedLayout>
             <div className="min-h-screen bg-gray-50">

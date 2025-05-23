@@ -25,13 +25,13 @@ class AppServiceProvider extends ServiceProvider
         Vite::prefetch(concurrency: 3);
 
         // Admin Routes
-        Route::middleware(['web'])->prefix('admin')->group(base_path('routes/admin.php'));
+        Route::middleware(['web','auth','middleware.admin'])->prefix('admin')->group(base_path('routes/admin.php'));
 
         // Student Routes
-        Route::middleware('web')->prefix('user')->group(base_path('routes/user.php'));
+        Route::middleware(['web','middleware.student'])->prefix('user')->group(base_path('routes/user.php'));
 
         // Dosen  Routes
-        Route::middleware('web')->prefix('dosen')->group(base_path('routes/dosen.php'));
+        Route::middleware(['web','auth','middleware.dosen'])->prefix('dosen')->group(base_path('routes/dosen.php'));
 
     }
 }

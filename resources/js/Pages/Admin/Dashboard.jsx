@@ -1,105 +1,102 @@
+import SummaryCard from '@/Components/SummaryCard'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import { ChartBar, Users } from 'lucide-react'
+import { Users, BarChart3, BookOpen, CreditCard, TrendingUp } from "lucide-react";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import React from 'react'
 
 const Dashboard = () => {
+
+  // Sample data for traffic chart
+  const trafficData = [
+    { name: "Jan", value: 1000 },
+    { name: "Feb", value: 1500 },
+    { name: "Mar", value: 1200 },
+    { name: "Apr", value: 1800 },
+    { name: "May", value: 2200 },
+    { name: "Jun", value: 1900 },
+    { name: "Jul", value: 2400 },
+  ];
+
+  // Sample data for recent transactions
+  const recentTransactions = [
+    { id: 1, user: "John Doe", amount: "$120.00", course: "Web Development", date: "May 16, 2025", status: "completed" },
+    { id: 2, user: "Sarah Smith", amount: "$85.50", course: "UI/UX Design", date: "May 15, 2025", status: "pending" },
+    { id: 3, user: "Mike Johnson", amount: "$199.99", course: "Data Science", date: "May 15, 2025", status: "completed" },
+    { id: 4, user: "Emily Brown", amount: "$49.99", course: "Digital Marketing", date: "May 14, 2025", status: "completed" },
+  ];
+
+
   return (
     <AuthenticatedLayout pageTitle="Dashboard" >
 
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <SummaryCard icon={<Users size={24} />} title="Users" value="2,320" color="bg-blue-500" />
+        <SummaryCard icon={<BarChart3 size={24} />} title="Transactions" value="1,845" color="bg-green-500" />
+        <SummaryCard icon={<BookOpen size={24} />} title="Courses" value="126" color="bg-purple-500" />
+        <SummaryCard icon={<CreditCard size={24} />} title="Revenue" value="$12,450" color="bg-yellow-500" />
+      </div>
 
-      <div className="flex flex-row gap-3 w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Traffic Chart */}
+        <div className="lg:col-span-2 bg-white p-4 rounded-lg shadow">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold">Traffic Overview</h2>
+            <div className="flex items-center gap-2">
+              <TrendingUp size={16} className="text-green-500" />
+              <span className="text-sm text-green-500">+12.5%</span>
+            </div>
+          </div>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={trafficData}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} />
+                <YAxis axisLine={false} tickLine={false} />
+                <Tooltip />
+                <Line
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#4F46E5"
+                  strokeWidth={2}
+                  dot={{ strokeWidth: 2 }}
+                  activeDot={{ r: 6 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
 
-        {/* cards */}
-        <div className="min-w-72 flex flex-row gap-3 items-center bg-white px-6 py-4 rounded-md shadow">
-          <Users size={35} />
-          <div className="content flex flex-col">
-            <h3 className='font-thin text-gray-500 text-xl'>Users Registered</h3>
-            <p>2320</p>
-          </div>
-        </div>
-        <div className="flex flex-row gap-3 items-center bg-white px-6 py-4 rounded-md shadow">
-          <ChartBar size={35} />
-          <div className="content flex flex-col">
-            <h3 className='font-thin text-gray-500 text-xl'>All Transactions</h3>
-            <p>2320</p>
-          </div>
-        </div>
-        <div className="flex flex-row gap-3 items-center bg-white px-6 py-4 rounded-md shadow">
-          <Users size={35} />
-          <div className="content flex flex-col">
-            <h3 className='font-thin text-gray-500 text-xl'>Courses</h3>
-            <p>2320</p>
-          </div>
-        </div>
-        <div className="flex flex-row gap-3 items-center bg-white px-6 py-4 rounded-md shadow">
-          <Users size={35} />
-          <div className="content flex flex-col">
-            <h3 className='font-thin text-gray-500 text-xl'>Users Registered</h3>
-            <p>2320</p>
+        {/* Recent Transactions */}
+        <div className="bg-white p-4 rounded-lg shadow">
+          <h2 className="text-lg font-semibold mb-4">Recent Transactions</h2>
+          <div className="overflow-y-auto h-64">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-gray-500 border-b">
+                  <th className="pb-2">User</th>
+                  <th className="pb-2">Amount</th>
+                  <th className="pb-2">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentTransactions.map((tx) => (
+                  <tr key={tx.id} className="border-b border-gray-100">
+                    <td className="py-3">{tx.user}</td>
+                    <td className="py-3">{tx.amount}</td>
+                    <td className="py-3">
+                      <span className={`px-2 py-1 rounded-full text-xs ${tx.status === "completed" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
+                        }`}>
+                        {tx.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-row gap-3 mt-5">
-        <div className="bg-white p-5 rounded shadow flex items-center gap-4">
-          <div className="bg-blue-100 p-3 rounded-full">
-            <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2"
-              viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 12h18M3 6h18M3 18h18" />
-            </svg>
-          </div>
-          <div>
-            <p className="text-sm text-gray-500">Total Visitors</p>
-            <h3 className="text-xl font-bold text-gray-800">12,456</h3>
-          </div>
-        </div>
-
-        <div className="bg-white p-5 rounded shadow flex items-center gap-4">
-          <div className="bg-green-100 p-3 rounded-full">
-            <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" strokeWidth="2"
-              viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 17v-2a4 4 0 014-4h2" />
-            </svg>
-          </div>
-          <div>
-            <p className="text-sm text-gray-500">Page Views</p>
-            <h3 className="text-xl font-bold text-gray-800">34,890</h3>
-          </div>
-        </div>
-
-      </div>
-
-      <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Logins */}
-        <div className="bg-white shadow rounded-md p-5">
-          <h4 className="text-lg font-semibold text-gray-800 mb-4">🔐 Recent Admin Logins</h4>
-          <ul className="divide-y divide-gray-200">
-            <li className="py-2 flex justify-between text-sm">
-              <span>admin@site.com</span>
-              <span className="text-gray-400">2 hours ago</span>
-            </li>
-            <li className="py-2 flex justify-between text-sm">
-              <span>superadmin@site.com</span>
-              <span className="text-gray-400">1 day ago</span>
-            </li>
-          </ul>
-        </div>
-
-        {/* New Users */}
-        <div className="bg-white shadow rounded-md p-5">
-          <h4 className="text-lg font-semibold text-gray-800 mb-4">🧑‍💻 Latest Registered Users</h4>
-          <ul className="divide-y divide-gray-200">
-            <li className="py-2 flex justify-between text-sm">
-              <span>johndoe@example.com</span>
-              <span className="text-gray-400">Joined 3h ago</span>
-            </li>
-            <li className="py-2 flex justify-between text-sm">
-              <span>janesmith@example.com</span>
-              <span className="text-gray-400">Joined yesterday</span>
-            </li>
-          </ul>
-        </div>
-      </div>
 
 
     </AuthenticatedLayout>

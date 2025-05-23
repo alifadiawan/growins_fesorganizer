@@ -3,9 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { Clock, Star, Users, Calendar, CheckCircle, ChevronDown, ChevronRight, Play, BookOpen, Award, PenTool, Video, VideoIcon, Lock } from 'lucide-react';
 import { Link, router, usePage } from '@inertiajs/react';
 
-const DetailCourse = ({ course }) => {
+const DetailCourse = ({ course, isEnrolled }) => {
   const user = usePage().props.auth.user;
   const modules = course.modules;
+
+    console.log(course);
 
   const [activeTab, setActiveTab] = useState('overview');
   const [expandedSections, setExpandedSections] = useState([1]);
@@ -100,6 +102,8 @@ const DetailCourse = ({ course }) => {
                             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                             <span>Loading...</span>
                           </div>
+                        ) : isEnrolled ? (
+                          <span className="text-green-600 font-semibold">Already bought</span>
                         ) : (
                           'Beli Sekarang'
                         )}

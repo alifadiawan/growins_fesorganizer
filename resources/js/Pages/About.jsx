@@ -28,28 +28,33 @@ const About = () => {
     ];
 
     const team = [
-        {
-            name: "Budi Santoso",
-            position: "Founder & CEO",
-            image: "/images/team/budi.jpg",
-            bio: "Berpengalaman lebih dari 15 tahun di bidang pengembangan SDM dan kepemimpinan.",
-        },
-        {
-            name: "Dian Permata",
-            position: "Head of Training",
-            image: "/images/team/dian.jpg",
-            bio: "Ahli dalam merancang kurikulum pelatihan yang efektif dan berdampak.",
-        },
-        {
-            name: "Rudi Hartono",
-            position: "Senior Trainer",
-            image: "/images/team/rudi.jpg",
-            bio: "Spesialis di bidang komunikasi efektif dan kepemimpinan transformasional.",
-        },
+        // {
+        //     name: "Niko",
+        //     position: "Founder & CEO",
+        //     image: "/images/team/budi.jpg",
+        //     bio: "Berpengalaman lebih dari 15 tahun di bidang pengembangan SDM dan kepemimpinan.",
+        // },
+        // {
+        //     name: "Dian Permata",
+        //     position: "Head of Training",
+        //     image: "/images/team/dian.jpg",
+        //     bio: "Ahli dalam merancang kurikulum pelatihan yang efektif dan berdampak.",
+        // },
+        // {
+        //     name: "Rudi Hartono",
+        //     position: "Senior Trainer",
+        //     image: "/images/team/rudi.jpg",
+        //     bio: "Spesialis di bidang komunikasi efektif dan kepemimpinan transformasional.",
+        // },
     ];
 
     return (
-        <GuestLayout>
+        <GuestLayout
+            navbarProps={{
+                isTransparent: false,
+                customBgColor: 'bg-gradient-to-r from-teal-900 to-teal-600 opacity-95',
+            }}
+        >
             {/* Hero Section */}
             <div className="bg-gradient-to-r from-teal-900 to-teal-600 opacity-90 text-white">
                 <div className="container mx-auto px-4 py-16">
