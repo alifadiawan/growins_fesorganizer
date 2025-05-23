@@ -11,9 +11,12 @@ use Inertia\Inertia;
 
 class UserController extends Controller
 {
-    public function myCourse($id)
+    public function myCourse()
     {
-        $myCourse = EnrollmentsModel::with(['course'])->where('user_id', '=', $id)->get();
+        $myCourse = EnrollmentsModel::with(['course'])
+            ->where('user_id', '=', Auth::id())
+            ->get();
+
         return Inertia::render('User/Course/MyCourse', ['myCourse' => $myCourse]);
     }
 

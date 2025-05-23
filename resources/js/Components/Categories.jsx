@@ -52,41 +52,50 @@ export function Categories({ categories = [] }) {
   }
 
   return (
-    <div className="w-full bg-gradient-to-b from-gray-50 to-white py-16">
+    <div className="w-full bg-gradient-to-b from-gray-50 to-white py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-10">
-          <h1 className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">Jelajahi Kursus Terpopuler</h1>
-          <p className="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
-            Temukan Berbagai Kursus Terpopuler
-          </p>
+        <div className="text-center mb-12">
+          <span className="text-teal-600 font-semibold text-sm uppercase tracking-wider">Our Categories</span>
+          <h1 className="mt-3 text-4xl font-bold text-gray-900 sm:text-5xl">
+            Jelajahi Kursus Terpopuler
+          </h1>
+          <div className="mt-4 flex justify-center">
+            <p className="max-w-2xl text-lg text-gray-600">
+              Temukan Berbagai Kursus Terpopuler untuk Mengembangkan Skillmu
+            </p>
+          </div>
         </div>
 
-        <div className="relative mt-12">
+        <div className="relative mt-16">
           <button
             onClick={handlePrev}
             disabled={currentIndex === 0}
-            className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 bg-white rounded-full p-3 shadow-lg
-              hover:bg-gray-100 transition-all duration-200 ease-in-out border border-gray-200
-              ${currentIndex === 0 ? "opacity-30 cursor-not-allowed" : ""}`}
+            className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 z-10 bg-white rounded-full p-4 shadow-xl
+              hover:bg-gray-50 hover:shadow-2xl transition-all duration-300 ease-out border border-gray-200
+              ${currentIndex === 0 ? "opacity-30 cursor-not-allowed" : "hover:scale-110"}`}
             aria-label="Previous categories"
           >
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className="h-6 w-6 text-gray-700" />
           </button>
 
           <div className="overflow-hidden" ref={containerRef}>
             <div
-              className="flex transition-transform duration-300 ease-in-out"
+              className="flex transition-transform duration-500 ease-out"
               style={{ transform: `translateX(-${currentIndex * (100 / visibleItems)}%)` }}
             >
               {defaultCategories.map((category) => (
-                <div key={category.id} className="flex-shrink-0 px-3" style={{ width: `${100 / visibleItems}%` }}>
-                  <div className="bg-white border border-gray-200 rounded-xl p-6 flex flex-col items-center justify-center h-44 transition-all hover:shadow-lg hover:border-teal-300 group cursor-pointer hover:-translate-y-1">
-                    <div className={`p-4 rounded-full mb-4 ${category.color} group-hover:scale-110 transition-transform`}>
+                <div key={category.id} className="flex-shrink-0 px-4" style={{ width: `${100 / visibleItems}%` }}>
+                  <div className="bg-white border-2 border-gray-100 rounded-2xl p-8 flex flex-col items-center justify-center h-48 transition-all duration-300 hover:shadow-2xl hover:border-teal-300 group cursor-pointer hover:-translate-y-2">
+                    <div className={`p-5 rounded-xl mb-5 ${category.color} group-hover:scale-110 transition-transform duration-300`}>
                       {category.icon}
                     </div>
-                    <h3 className="font-semibold text-center text-gray-800">{category.name}</h3>
-                    <p className="text-sm text-gray-500 text-center mt-1">{category.courses} Courses</p>
-                    <div className="w-10 h-0.5 bg-teal-500 mt-3 group-hover:w-16 transition-all"></div>
+                    <h3 className="font-bold text-lg text-center text-gray-800 group-hover:text-teal-600 transition-colors">
+                      {category.name}
+                    </h3>
+                    <p className="text-sm text-gray-500 text-center mt-2">
+                      {category.courses} Courses Available
+                    </p>
+                    <div className="w-12 h-0.5 bg-teal-500 mt-4 group-hover:w-20 transition-all duration-300"></div>
                   </div>
                 </div>
               ))}
@@ -96,32 +105,35 @@ export function Categories({ categories = [] }) {
           <button
             onClick={handleNext}
             disabled={currentIndex >= maxIndex}
-            className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 bg-white rounded-full p-3 shadow-lg
-              hover:bg-gray-100 transition-all duration-200 ease-in-out border border-gray-200
-              ${currentIndex >= maxIndex ? "opacity-30 cursor-not-allowed" : ""}`}
+            className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 z-10 bg-white rounded-full p-4 shadow-xl
+              hover:bg-gray-50 hover:shadow-2xl transition-all duration-300 ease-out border border-gray-200
+              ${currentIndex >= maxIndex ? "opacity-30 cursor-not-allowed" : "hover:scale-110"}`}
             aria-label="Next categories"
           >
-            <ChevronRight className="h-5 w-5" />
+            <ChevronRight className="h-6 w-6 text-gray-700" />
           </button>
         </div>
         
-        <div className="flex justify-center mt-6">
+        <div className="flex justify-center mt-8">
           {Array.from({ length: maxIndex + 1 }).map((_, idx) => (
             <button
               key={idx}
               onClick={() => setCurrentIndex(idx)}
-              className={`h-2 mx-1 rounded-full transition-all ${
-                currentIndex === idx ? "w-6 bg-teal-600" : "w-2 bg-gray-300 hover:bg-gray-400"
+              className={`h-2 mx-1.5 rounded-full transition-all duration-300 ${
+                currentIndex === idx ? "w-8 bg-teal-600" : "w-2 bg-gray-300 hover:bg-gray-400 hover:w-4"
               }`}
               aria-label={`Go to slide ${idx + 1}`}
             />
           ))}
         </div>
 
-        <div className="flex justify-center mt-10">
-          <Link href={route('user.allCourse.index')} className="bg-teal-600 hover:bg-teal-700 text-white font-medium px-8 py-3 rounded-lg shadow-md uppercase text-sm tracking-wide transition-colors duration-200 flex items-center group">
-            Browse All Courses
-            <ChevronRight className="h-4 w-4 ml-1 group-hover:ml-2 transition-all" />
+        <div className="flex justify-center mt-12">
+          <Link
+            href={route('user.allCourse.index')}
+            className="group bg-teal-600 hover:bg-teal-700 text-white font-semibold px-10 py-4 rounded-xl shadow-lg hover:shadow-xl uppercase text-sm tracking-wider transition-all duration-300 flex items-center space-x-2"
+          >
+            <span>Browse All Courses</span>
+            <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
       </div>

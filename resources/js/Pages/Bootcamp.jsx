@@ -1,8 +1,24 @@
 import GuestLayout from '@/Layouts/GuestLayout'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { ClockIcon, CalendarIcon, AwardIcon, CheckCircleIcon, UserIcon, BriefcaseIcon, StarIcon } from 'lucide-react';
+import axios from 'axios';
+import { Link, usePage } from '@inertiajs/react';
 
 const Bootcamp = () => {
+    const [bootcamps, setBootcamps] = useState({ data: [] });
+    const { auth } = usePage().props;
+
+    useEffect(() => {
+        const fetchBootcamps = async () => {
+            try {
+                const response = await axios.get(route('bootcamp.fetch'));
+                setBootcamps(response.data);
+            } catch (error) {
+                console.error('Error fetching bootcamps:', error);
+            }
+        };
+        fetchBootcamps();
+    }, []);
 
     const benefits = [
         { icon: <UserIcon className="w-6 h-6" />, title: "Komunikasi Efektif", description: "Kembangkan kemampuan komunikasi verbal dan non-verbal untuk membangun hubungan profesional yang kuat" },
@@ -26,57 +42,92 @@ const Bootcamp = () => {
     ];
 
     return (
-        <GuestLayout>
-
+        <GuestLayout
+            navbarProps={{
+                isTransparent: false,
+                customBgColor: 'bg-gradient-to-r from-teal-900 to-teal-600 opacity-95',
+            }}
+        >
             <div className="bg-gradient-to-r from-teal-900 to-teal-600 opacity-90 text-white">
                 <div className="container mx-auto px-4 py-16">
-                    <div className="grid md:grid-cols-2 gap-8 items-center">
-                        <div>
-                            <div className="text-yellow-300 mb-2">#ProgramPeningkatanSkill</div>
-                            <h1 className="text-4xl md:text-5xl font-bold mb-4">Bootcamp Softskill</h1>
-                            <div className="w-20 h-1 bg-yellow-300 mb-6"></div>
-                            <p className="text-lg mb-6">
-                                Program pelatihan intensif yang dirancang untuk mengembangkan keterampilan lunak yang vital di tempat kerja.
-                                Soft skill adalah keterampilan non-teknis yang melibatkan aspek interpersonal, komunikasi, kepemimpinan, kerjasama, dan kreativitas.
-                            </p>
-                            <a href="#daftar" className="text-black bg-yellow-400 hover:bg-yellow-500 text-brown-800 font-bold py-3 px-6 rounded-md inline-block transition-colors">
-                                Daftar Sekarang
-                            </a>
-                        </div>
-                        <div className="relative">
-                            <div className="absolute -top-12 -left-12 w-24 h-24 bg-yellow-300 rounded-full opacity-50"></div>
-                            <div className="bg-teal-700 p-6 rounded-lg shadow-lg">
-                                <div className="flex items-center mb-4">
-                                    <ClockIcon className="w-6 h-6 mr-2 text-yellow-300" />
-                                    <div>
-                                        <div className="font-bold">09.00 - 15.00 WIB</div>
-                                        <div className="text-sm text-teal-200">Alokasi Waktu Pembelajaran</div>
+                    <h1 className="text-4xl md:text-5xl font-bold mb-8 text-center">Our Bootcamps</h1>
+
+                    {/* Bootcamp Cards */}
+                    <div className="w-full overflow-x-auto">
+                        <div className="flex gap-6 px-2 py-4 min-w-full" style={{ scrollSnapType: 'x mandatory' }}>
+                            {bootcamps.data?.map((bootcamp) => (
+                                <div
+                                    key={bootcamp.id}
+                                    className="flex-shrink-0 w-full snap-start bg-white rounded-lg shadow-lg overflow-hidden text-gray-800"
+                                >
+                                    <div className="p-6">
+                                        <div className="text-yellow-600 mb-2">#Bootcamp</div>
+                                        <h2 className="text-xl font-bold mb-2 line-clamp-2 h-14">{bootcamp.title}</h2>
+
+                                        <div
+                                            className="text-gray-600 mb-4 line-clamp-3 h-[4.5rem] overflow-hidden"
+                                            dangerouslySetInnerHTML={{ __html: bootcamp.description }}
+                                        ></div>
+
+                                        <div className="space-y-3 text-sm">
+                                            <div className="flex items-center">
+                                                <ClockIcon className="w-5 h-5 mr-2 text-teal-600" />
+                                                <span>{bootcamp.time}</span>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <CalendarIcon className="w-5 h-5 mr-2 text-teal-600" />
+                                                <span>{bootcamp.date}</span>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <AwardIcon className="w-5 h-5 mr-2 text-teal-600" />
+                                                <span>{bootcamp.main_theme}</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-4 space-y-2">
+                                            <div className="text-xl font-bold text-teal-600">
+                                                {bootcamp.discounted_price ? (
+                                                    <>
+                                                        <span className="line-through text-gray-400 text-base mr-2">
+                                                            Rp {bootcamp.normal_price.toLocaleString()}
+                                                        </span>
+                                                        Rp {bootcamp.discounted_price.toLocaleString()}
+                                                    </>
+                                                ) : (
+                                                    `Rp ${bootcamp.normal_price.toLocaleString()}`
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {auth.user ? (
+                                            // Logged in: Show the Link
+                                            <Link
+                                                href={route('user.workshop.show', bootcamp.id)}
+                                                className="mt-4 w-full bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700 transition-colors"
+                                            >
+                                                Daftar Sekarang
+                                            </Link>
+                                        ) : (
+                                            // Not logged in: Show a login redirect or message
+                                            <Link
+                                                href={route('login')}
+                                                className="mt-4 w-full bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 transition-colors"
+                                            >
+                                                Login untuk Mendaftar
+                                            </Link>
+                                        )}
                                     </div>
                                 </div>
-                                <div className="flex items-center mb-4">
-                                    <CalendarIcon className="w-6 h-6 mr-2 text-yellow-300" />
-                                    <div>
-                                        <div className="font-bold">Maret 2025</div>
-                                        <div className="text-sm text-teal-200">Waktu Pelaksanaan Kelas</div>
-                                    </div>
-                                </div>
-                                <div className="flex items-center">
-                                    <AwardIcon className="w-6 h-6 mr-2 text-yellow-300" />
-                                    <div>
-                                        <div className="font-bold">Real Project SDGs</div>
-                                        <div className="text-sm text-teal-200">Sustainable Development Goals</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="absolute -bottom-12 -right-12 w-32 h-32 bg-teal-800 rounded-full opacity-50"></div>
+                            ))}
                         </div>
                     </div>
                 </div>
             </div>
 
+            {/* Benefits Section */}
             <div className="py-16 bg-white">
                 <div className="container mx-auto px-4">
-                    <h2 className="text-3xl font-bold text-center mb-12">Manfaat Bootcamp Softskill</h2>
+                    <h2 className="text-3xl font-bold text-center mb-12">Manfaat Bootcamp</h2>
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {benefits.map((benefit, index) => (
                             <div key={index} className="p-6 border border-gray-200 rounded-lg hover:shadow-lg transition-shadow">
@@ -91,7 +142,7 @@ const Bootcamp = () => {
                 </div>
             </div>
 
-            <div className="py-16 bg-gray-50">
+            {/* <div className="py-16 bg-gray-50">
                 <div className="container mx-auto px-4">
                     <h2 className="text-3xl font-bold text-center mb-12">Kurikulum Program</h2>
                     <div className="space-y-8">
@@ -110,80 +161,10 @@ const Bootcamp = () => {
                         ))}
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             {/* Pricing Section */}
-            <div id="daftar" className="py-16 bg-white">
-                <div className="container mx-auto px-4">
-                    <h2 className="text-3xl font-bold text-center mb-12">Pilihan Pendaftaran</h2>
-                    <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                        {/* Special Price Card */}
-                        <div className="bg-yellow-100 border-2 border-yellow-400 rounded-lg overflow-hidden relative">
-                            <div className="bg-yellow-400 text-brown-800 text-center py-2 font-bold">
-                                Special Price
-                            </div>
-                            <div className="p-6">
-                                <div className="text-center mb-6">
-                                    <div className="text-gray-500 line-through">Rp. 2.500.000</div>
-                                    <div className="text-3xl font-bold">Rp. 1.800.000</div>
-                                    <div className="text-sm mt-1">Limited Time Offer</div>
-                                </div>
-                                <ul className="space-y-3 mb-6">
-                                    <li className="flex items-center">
-                                        <CheckCircleIcon className="w-5 h-5 text-teal-600 mr-2" />
-                                        <span>Akses penuh ke seluruh modul</span>
-                                    </li>
-                                    <li className="flex items-center">
-                                        <CheckCircleIcon className="w-5 h-5 text-teal-600 mr-2" />
-                                        <span>Sertifikat resmi</span>
-                                    </li>
-                                    <li className="flex items-center">
-                                        <CheckCircleIcon className="w-5 h-5 text-teal-600 mr-2" />
-                                        <span>Konsultasi dengan mentor</span>
-                                    </li>
-                                    <li className="flex items-center">
-                                        <CheckCircleIcon className="w-5 h-5 text-teal-600 mr-2" />
-                                        <span>Jaringan alumni</span>
-                                    </li>
-                                </ul>
-                                <button className="w-full bg-amber-300 hover:bg-amber-500 text-black font-bold py-3 px-6 rounded-md transition-colors">
-                                    Daftar Sekarang
-                                </button>
-                            </div>
-                        </div>
 
-                        {/* Regular Price Card */}
-                        <div className="bg-teal-50 border border-teal-200 rounded-lg overflow-hidden">
-                            <div className="bg-teal-600 text-white text-center py-2 font-bold">
-                                Normal Price
-                            </div>
-                            <div className="p-6">
-                                <div className="text-center mb-6">
-                                    <div className="text-3xl font-bold">Rp. 2.500.000</div>
-                                    <div className="text-sm mt-1">Regular Registration</div>
-                                </div>
-                                <ul className="space-y-3 mb-6">
-                                    <li className="flex items-center">
-                                        <CheckCircleIcon className="w-5 h-5 text-teal-600 mr-2" />
-                                        <span>Akses penuh ke seluruh modul</span>
-                                    </li>
-                                    <li className="flex items-center">
-                                        <CheckCircleIcon className="w-5 h-5 text-teal-600 mr-2" />
-                                        <span>Sertifikat resmi</span>
-                                    </li>
-                                    <li className="flex items-center">
-                                        <CheckCircleIcon className="w-5 h-5 text-teal-600 mr-2" />
-                                        <span>Konsultasi dengan mentor</span>
-                                    </li>
-                                </ul>
-                                <button className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-md transition-colors">
-                                    Lihat Detail
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
         </GuestLayout>
     )

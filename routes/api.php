@@ -4,6 +4,7 @@ use App\Http\Controllers\API\Course\CourseAPI;
 use App\Http\Controllers\API\Course\LessonsAPI;
 use App\Http\Controllers\API\Course\ModulesAPI;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\BootcampController;
 use App\Http\Controllers\ManageUserController;
 use App\Http\Controllers\ProgressController;
 use App\Http\Controllers\TransactionController;
@@ -12,11 +13,14 @@ use Illuminate\Support\Facades\Route;
 
 
 // public API
+// 100 request per menit
 Route::get('/courses', [CourseAPI::class, 'index'])->name('courses.get')
-    ->middleware('throttle:100,1'); // 100 request per menit
+    ->middleware('web', 'auth', 'throttle:100,1');
 Route::get('/modules', [ModulesAPI::class, 'index'])
-    ->middleware('throttle:100,1');
+    ->middleware('web', 'auth', 'throttle:100,1');
 Route::post('/login', [AuthenticatedSessionController::class, 'login'])->name('login');
+
+Route::get('/bootcamp/fetch', [BootcampController::class, 'fetchBootcamp'])->name('bootcamp.fetch');
 
 Route::middleware('auth.token')->name('api.')->group(function () {
 

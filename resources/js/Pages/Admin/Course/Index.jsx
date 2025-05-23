@@ -2,11 +2,13 @@ import Modal from '@/Components/Modal';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Link } from '@inertiajs/react';
 import React, { useEffect, useState } from 'react'
+import { Check, Clock, VideoIcon } from 'lucide-react'
 
-const Index = () => {
+const Index = ({ myCourse, pendingCourse, publishedCourse }) => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  console.log(courses)
 
   useEffect(() => {
     axios.get('/api/courses')
@@ -21,9 +23,38 @@ const Index = () => {
   return (
     <AuthenticatedLayout pageTitle="Courses">
 
-      <div className="flex flex-row gap-3 mb-5">
+      {/* cards */}
+      <div className="flex flex-row gap-3 w-full">
+
+        <div className="w-full flex flex-row gap-3 items-center bg-white px-6 py-4 rounded-md shadow">
+          <VideoIcon size={35} />
+          <div className="content flex flex-col">
+            <h3 className='font-thin text-gray-500 text-xl'>My Course</h3>
+            <p>{myCourse}</p>
+          </div>
+        </div>
+        <div className="w-full flex flex-row gap-3 items-center bg-white px-6 py-4 rounded-md shadow">
+          <Check size={35} />
+          <div className="content flex flex-col">
+            <h3 className='font-thin text-gray-500 text-xl'>Published</h3>
+            <p>{publishedCourse}</p>
+          </div>
+        </div>
+        <div className="w-full flex flex-row gap-3 items-center bg-white px-6 py-4 rounded-md shadow">
+          <Clock size={35} />
+          <div className="content flex flex-col">
+            <h3 className='font-thin text-gray-500 text-xl'>Pending</h3>
+            <p>{pendingCourse}</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div className="flex flex-row gap-3 my-5">
         <Link href={route('admin.course.create')} className='px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md'>New Course </Link>
       </div>
+
+
 
       <div className="bg-white shadow-md rounded overflow-hidden">
         <table className="w-full table-auto">

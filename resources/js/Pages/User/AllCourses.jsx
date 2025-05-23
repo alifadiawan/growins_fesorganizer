@@ -41,7 +41,12 @@ const AllCourses = ({ categories, courses }) => {
 
 
   return (
-    <GuestLayout>
+    <GuestLayout
+      navbarProps={{
+        isTransparent: false,
+        customBgColor: 'bg-gradient-to-r from-teal-900 to-teal-600 opacity-95',
+      }}
+    >
       <div className="min-h-screen bg-gray-50">
         {/* Page Title */}
         <div className="bg-gradient-to-r from-teal-900 to-teal-600 opacity-90 py-8">

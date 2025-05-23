@@ -1,10 +1,11 @@
 <?php
-use App\Http\Controllers\BootcampController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\BootcampController;
+use App\Http\Controllers\BootcampRegistrationController;
 use App\Http\Controllers\ManageUserController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuizController;
@@ -37,12 +38,9 @@ Route::get('/transactions/detail/{order_id}', function ($order_id) {
 
 
 // **** Controllers **** // 
+// Admin course management
 
-// Course CRUD
-Route::get('/course', [CourseController::class, 'index'])->name('admin.course.index');
-Route::get('/course/create', [CourseController::class, 'create'])->name('admin.course.create');
-Route::get('/course/detail/{id}/{slug}', [CourseController::class, 'show'])->name('admin.course.show');
-Route::get('/course/edit/{id}/', [CourseController::class, 'edit'])->name('admin.course.edit');
+
 
 // Manage User
 Route::get('/user/all', [ManageUserController::class, 'index'])->name('admin.user.index');
@@ -66,3 +64,34 @@ Route::post('/lessons/{lesson}/quizzes', [QuizController::class, 'store'])->name
 Route::get('/quizzes/{quiz}/edit', [QuizController::class, 'edit'])->name('quizzes.edit');
 Route::put('/quizzes/{quiz}', [QuizController::class, 'update'])->name('quizzes.update');
 Route::delete('/quizzes/{quiz}', [QuizController::class, 'destroy'])->name('quizzes.destroy');
+
+// Bootcamp Registration
+Route::prefix('admin/bootcamp')->name('bootcamp.')->group(function () {
+    Route::get('/', [BootcampController::class, 'index'])->name('index');
+    Route::get('/create', [BootcampController::class, 'create'])->name('create');
+    Route::post('/', [BootcampController::class, 'store'])->name('store');
+    Route::get('/{id}', [BootcampController::class, 'show'])->name('show');
+    Route::get('/{id}/edit', [BootcampController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [BootcampController::class, 'update'])->name('update');
+    Route::delete('/{id}', [BootcampController::class, 'destroy'])->name('destroy');
+});
+
+
+Route::get('/admin/bootcamp-regis', [BootcampRegistrationController::class, 'index'])->name('admin.bootcamp_registrations.index');
+Route::get('/admin/bootcamp-regis/create', [BootcampRegistrationController::class, 'create'])->name('admin.bootcamp_registrations.create');
+Route::post('/admin/bootcamp-regis/store', [BootcampRegistrationController::class, 'store'])->name('admin.bootcamp_registrations.store');
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('course', CourseController::class)->except(['destroy']);
+
+    // Admin bootcamp management
+    Route::prefix('bootcamp')->name('bootcamp.')->group(function () {
+        Route::get('/', [BootcampController::class, 'index'])->name('index');
+        Route::get('/create', [BootcampController::class, 'create'])->name('create');
+        Route::post('/', [BootcampController::class, 'store'])->name('store');
+        Route::get('/{id}', [BootcampController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [BootcampController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [BootcampController::class, 'update'])->name('update');
+        Route::delete('/{id}', [BootcampController::class, 'destroy'])->name('destroy');
+    });
+});

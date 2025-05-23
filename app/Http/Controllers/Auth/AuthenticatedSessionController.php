@@ -45,15 +45,8 @@ class AuthenticatedSessionController extends Controller
         }
 
         Auth::login($user);
-        $token = $user->createToken('token')->plainTextToken;
 
-        if ($user->role === 'student') {
-            return Inertia::location(route('user.dashboard', $user->id));
-        } else if ($user->role === 'instructor') {
-            return Inertia::location(route('dosen.dashboard'));
-        } else {
-            return Inertia::location(route('admin.dashboard'));
-        }
+        return redirect()->intended('/')->with('success', 'Login successful.');
 
     }
 

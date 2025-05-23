@@ -3,10 +3,11 @@ import Footer from '@/Components/Footer';
 import { Navbar } from '@/Components/Navbar';
 import { Link } from '@inertiajs/react';
 
-export default function GuestLayout({ children }) {
+export default function GuestLayout({ children, navbarProps = {} }) {
     return (
         <>
-            <Navbar />
+            {/* Pass navbarProps to the Navbar */}
+            <Navbar {...navbarProps} />
             <div className="content mt-20">
                 {children}
             </div>

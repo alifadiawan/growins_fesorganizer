@@ -5,12 +5,11 @@ import React, { useEffect, useState } from "react"
 const navLinks = [
     { href: "/", label: "Home" },
     { href: "/courses/all", label: "Courses" },
-    { href: "/bootcamp-softskill", label: "Bootcamp Softskill" },
+    { href: "/bootcamp-softskill", label: "Bootcamp & Workshop" },
     { href: "/about-us", label: "About" },
-    { href: "/contact", label: "Contact" },
 ]
 
-export function Navbar() {
+export function Navbar({ isTransparent = true, customBgColor = "" }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [scrolled, setScrolled] = useState(false)
 
@@ -40,10 +39,16 @@ export function Navbar() {
         }
     }, [])
 
+    // Determine the navbar background class
+    const navbarBgClass = scrolled
+        ? customBgColor || "bg-gradient-to-r from-teal-900 to-teal-600 opacity-90 backdrop-blur-md shadow-lg"
+        : isTransparent
+            ? "bg-transparent"
+            : customBgColor || "bg-gradient-to-r from-teal-900 to-teal-600 opacity-90"
+
     return (
         <header
-            className={`fixed top-0 z-50 w-full py-2 transition-all duration-300 ease-in-out
-  ${scrolled ? "bg-gradient-to-r from-teal-900 to-teal-600 opacity-90 backdrop-blur-md shadow-lg" : "bg-gradient-to-r from-teal-900 to-teal-600 opacity-90"}`}
+            className={`fixed top-0 z-50 w-full py-2 transition-all duration-300 ease-in-out ${navbarBgClass}`}
         >
             <div className="container mx-auto px-4 sm:px-6 lg:px-12">
                 <div className="flex h-16 items-center justify-between">
@@ -82,23 +87,23 @@ export function Navbar() {
 
                     {/* Register Button */}
                     {user.user ? (
-                        user.user.role == 'student' ? (
+                        user.user.role === "student" ? (
                             <Link
-                                href={route('user.dashboard', user.user.id)}
+                                href={route("user.dashboard", user.user.id)}
                                 className="flex flex-row items-center gap-2 rounded-md px-5 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-yellow-500 hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0"
                             >
                                 <User /> {user.user.name}
                             </Link>
-                        ) : user.user.role === 'instructor' ? (
+                        ) : user.user.role === "instructor" ? (
                             <Link
-                                href={route('dosen.dashboard', user.user.id)}
+                                href={route("dosen.dashboard", user.user.id)}
                                 className="flex flex-row items-center gap-2 rounded-md px-5 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-yellow-500 hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0"
                             >
                                 <User /> {user.user.name}
                             </Link>
                         ) : (
                             <Link
-                                href={route('admin.dashboard')}
+                                href={route("admin.dashboard")}
                                 className="flex flex-row items-center gap-2 rounded-md px-5 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-yellow-500 hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0"
                             >
                                 <User /> {user.user.name}
@@ -131,7 +136,12 @@ export function Navbar() {
                                     stroke="currentColor"
                                     aria-hidden="true"
                                 >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M6 18L18 6M6 6l12 12"
+                                    />
                                 </svg>
                             ) : (
                                 <svg
@@ -142,7 +152,12 @@ export function Navbar() {
                                     stroke="currentColor"
                                     aria-hidden="true"
                                 >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M4 6h16M4 12h16M4 18h16"
+                                    />
                                 </svg>
                             )}
                         </button>
@@ -170,23 +185,23 @@ export function Navbar() {
                     {/* Register Button */}
                     <div className="pt-2 w-full">
                         {user.user ? (
-                            user.user.role == 'student' ? (
+                            user.user.role === "student" ? (
                                 <Link
-                                    href={route('user.dashboard', user.user.id)}
+                                    href={route("user.dashboard", user.user.id)}
                                     className="w-full rounded-md bg-yellow-400 px-4 py-2.5 text-sm font-medium text-black transition-all duration-300 hover:bg-yellow-500"
                                 >
                                     <User /> {user.user.name}
                                 </Link>
-                            ) : user.user.role === 'instructor' ? (
+                            ) : user.user.role === "instructor" ? (
                                 <Link
-                                    href={route('dosen.dashboard', user.user.id)}
+                                    href={route("dosen.dashboard", user.user.id)}
                                     className="w-full rounded-md bg-yellow-400 px-4 py-2.5 text-sm font-medium text-black transition-all duration-300 hover:bg-yellow-500"
                                 >
                                     <User /> {user.user.name}
                                 </Link>
                             ) : (
                                 <Link
-                                    href={route('admin.dashboard')}
+                                    href={route("admin.dashboard")}
                                     className="w-full rounded-md bg-yellow-400 px-4 py-2.5 text-sm font-medium text-black transition-all duration-300 hover:bg-yellow-500"
                                 >
                                     <User /> {user.user.name}

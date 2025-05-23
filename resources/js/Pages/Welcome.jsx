@@ -1,15 +1,16 @@
 import Card from '@/Components/Card';
 import { Categories } from '@/Components/Categories';
-import { Navbar } from '@/Components/Navbar';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link } from '@inertiajs/react';
-import { Award, Calendar, Clock, ChevronLeft, ChevronRight, ArrowRight, Star, Users, CheckCircle, Play } from "lucide-react";
+import { Link, usePage } from '@inertiajs/react';
+import { Award, Calendar, Clock, ChevronLeft, ChevronRight, ArrowRight, Star } from "lucide-react";
 import { useRef, useState } from 'react';
 
-export default function Welcome({ auth, laravelVersion, phpVersion, courseList, categories }) {
+export default function Welcome({ courseList, categories }) {
     const [scrollPosition, setScrollPosition] = useState(0);
     const scrollContainerRef = useRef(null);
-    const course = courseList.data;
+    const [isLoading, setIsLoading] = useState(true);
+    const course = courseList?.data || [];
+
 
     const scrollLeft = () => {
         if (scrollContainerRef.current) {
@@ -44,80 +45,75 @@ export default function Welcome({ auth, laravelVersion, phpVersion, courseList, 
     };
 
     return (
-        <GuestLayout>
+        <GuestLayout
+            navbarProps={{
+                isTransparent: false,
+                customBgColor: 'bg-gradient-to-r from-teal-900 to-teal-600 opacity-95',
+            }}
+        >
             {/* Hero Section - Updated with more modern design */}
             <section className="relative overflow-hidden">
-                {/* Background with overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-r from-teal-900 to-teal-600 opacity-90"></div>
-                <div className="absolute inset-0 bg-[url('/bg-pattern.png')] opacity-20 bg-repeat"></div>
-                
-                <div className="relative container mx-auto px-6 py-20 lg:py-28 flex flex-col lg:flex-row items-center">
+                {/* Enhanced background with subtle pattern */}
+                <div className="absolute inset-0 bg-gradient-to-r from-teal-900 to-teal-600 opacity-95"></div>
+                <div className="absolute inset-0 bg-[url('/bg-pattern.png')] opacity-10 bg-repeat mix-blend-overlay"></div>
+
+                <div className="relative container mx-auto px-6 py-24 lg:py-32 flex flex-col lg:flex-row items-center">
                     <div className="text-white max-w-xl mb-12 lg:mb-0 z-10">
-                        <div className="inline-block px-3 py-1 bg-teal-400 bg-opacity-30 rounded-full text-sm font-medium mb-6">
-                            Platform Pembelajaran Terbaik
+                        <div className="inline-block px-4 py-1.5 bg-teal-400/20 rounded-full text-sm font-medium mb-8 backdrop-blur-sm border border-teal-400/30">
+                            ✨ Platform Pembelajaran Terbaik
                         </div>
-                        <h1 className="text-4xl lg:text-5xl font-black mb-6 leading-tight">
-                            Empower Your Future <span className="text-yellow-400">with GROW</span>
+                        <h1 className="text-4xl lg:text-6xl font-black mb-8 leading-tight">
+                            Empower Your Future <br />
+                            <span className="text-yellow-400 relative">
+                                with GROW
+                                <span className="absolute bottom-0 left-0 w-full h-1 bg-yellow-400/30"></span>
+                            </span>
                         </h1>
-                        <p className="text-lg text-teal-50 mb-8 leading-relaxed">
+                        <p className="text-lg text-teal-50 mb-10 leading-relaxed opacity-90">
                             Tingkatkan keterampilan komunikasi, kepemimpinan, dan pengelolaan diri melalui workshop kami yang interaktif dan aplikatif.
                         </p>
-                        <div className="flex flex-col sm:flex-row gap-4">
-                            <Link href="/register" className="px-8 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded-lg transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center justify-center">
-                                Mulai Belajar <ArrowRight className="ml-2 h-5 w-5" />
+                        <div className="flex flex-col sm:flex-row gap-5">
+                            <Link href="/register" className="px-8 py-4 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl inline-flex items-center justify-center">
+                                Mulai Belajar
+                                <ArrowRight className="ml-2 h-5 w-5 transform group-hover:translate-x-1 transition-transform" />
                             </Link>
-                            <Link href="/courses/all" className="px-8 py-3 border-2 border-white hover:bg-white/10 text-white font-medium rounded-lg transition-all duration-300 inline-flex items-center justify-center">
+                            <Link href="/courses/all" className="px-8 py-4 border-2 border-white/30 hover:border-white hover:bg-white/10 text-white font-medium rounded-xl transition-all duration-300 inline-flex items-center justify-center backdrop-blur-sm">
                                 Lihat Semua Kursus
                             </Link>
                         </div>
-                        
-                        {/* <div className="mt-10 flex items-center gap-6">
-                            <div className="flex -space-x-2">
-                                {[1, 2, 3, 4].map((i) => (
-                                    <div key={i} className={`w-10 h-10 rounded-full border-2 border-teal-600 bg-teal-${300 + i*100} flex items-center justify-center text-xs font-bold`}>
-                                        {String.fromCharCode(64 + i)}
-                                    </div>
-                                ))}
-                            </div>
-                            <div>
-                                <div className="flex items-center">
-                                    {[1, 2, 3, 4, 5].map((i) => (
-                                        <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                                    ))}
-                                </div>
-                                <p className="text-sm text-teal-50">Dari 2,000+ siswa</p>
-                            </div>
-                        </div> */}
                     </div>
-                    
+
                     <div className="relative lg:absolute lg:right-0 lg:top-1/2 lg:-translate-y-1/2 lg:w-1/2 z-10">
                         <div className="relative">
-                            <div className="absolute -inset-0.5 rounded-lg blur opacity-30"></div>
-                            <img 
-                                src="/robot.png" 
-                                alt="Maskot GROW" 
-                                className="relative rounded-lg lg:max-w-md max-w-64 mx-auto"
+                            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-teal-400/30 to-yellow-400/30 blur-3xl opacity-30"></div>
+                            <img
+                                src="/robot.png"
+                                alt="Maskot GROW"
+                                className="relative rounded-2xl lg:max-w-md max-w-64 mx-auto transform hover:scale-105 transition-transform duration-500"
                             />
                         </div>
                     </div>
                 </div>
-                            
+
             </section>
-            
+
             {/* Categories section */}
             <div className="pt-10">
                 <Categories categories={categories} />
             </div>
-            
+
             {/* Testimonials Section - New */}
-            <section className="py-20 bg-gray-50">
+            <section className="py-24 bg-gray-50">
                 <div className="container mx-auto px-6">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold mb-4">Apa Kata <span className="text-teal-600">Mereka</span></h2>
-                        <p className="text-gray-600 max-w-2xl mx-auto">Dengarkan pengalaman dari peserta yang telah mengikuti program pelatihan GROW.</p>
+                        <span className="px-4 py-1.5 bg-teal-500/10 text-teal-600 rounded-full text-sm font-medium mb-4 inline-block">
+                            Testimonials
+                        </span>
+                        <h2 className="text-3xl md:text-5xl font-bold mb-4">Apa Kata <span className="text-teal-600">Mereka</span></h2>
+                        <p className="text-gray-600 max-w-2xl mx-auto text-lg">Dengarkan pengalaman dari peserta yang telah mengikuti program pelatihan GROW.</p>
                     </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                         {[
                             {
                                 name: "Anisa Putri",
@@ -138,22 +134,28 @@ export default function Welcome({ auth, laravelVersion, phpVersion, courseList, 
                                 quote: "Bootcamp soft skills dari GROW memberi saya perspektif baru tentang pentingnya keterampilan interpersonal dalam karir saya sebagai freelancer."
                             }
                         ].map((testimonial, index) => (
-                            <div key={index} className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                            <div key={index}
+                                className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 w-20 h-20 bg-teal-500/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
                                 <div className="flex items-center mb-6">
-                                    <img 
-                                        src={testimonial.image} 
-                                        alt={testimonial.name} 
-                                        className="w-14 h-14 rounded-full object-cover border-2 border-teal-400"
+                                    <img
+                                        src={testimonial.image}
+                                        alt={testimonial.name}
+                                        className="w-16 h-16 rounded-full object-cover border-2 border-teal-400 p-0.5"
                                     />
                                     <div className="ml-4">
-                                        <h4 className="font-bold text-lg">{testimonial.name}</h4>
-                                        <p className="text-gray-500 text-sm">{testimonial.role}</p>
+                                        <h4 className="font-bold text-lg text-gray-900">{testimonial.name}</h4>
+                                        <p className="text-teal-600 text-sm">{testimonial.role}</p>
                                     </div>
                                 </div>
-                                <p className="text-gray-700 mb-4">"{testimonial.quote}"</p>
+                                <p className="text-gray-700 mb-6 relative">
+                                    <span className="text-5xl text-teal-200 absolute -top-4 -left-2">"</span>
+                                    {testimonial.quote}
+                                    <span className="text-5xl text-teal-200 absolute -bottom-8 right-0">"</span>
+                                </p>
                                 <div className="flex">
                                     {[1, 2, 3, 4, 5].map(i => (
-                                        <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                                        <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
                                     ))}
                                 </div>
                             </div>
@@ -254,7 +256,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion, courseList, 
                     </div>
                 </div>
             </Card>
-            
+
             {/* Features Section - New */}
             <section className="py-20">
                 <div className="container mx-auto px-6">
@@ -262,7 +264,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion, courseList, 
                         <h2 className="text-3xl md:text-4xl font-bold mb-4">Kenapa <span className="text-teal-600">Memilih Kami</span>?</h2>
                         <p className="text-gray-600 max-w-2xl mx-auto">Platform pembelajaran profesional yang dirancang khusus untuk membantu Anda meningkatkan soft skill.</p>
                     </div>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {[
                             {
@@ -329,64 +331,71 @@ export default function Welcome({ auth, laravelVersion, phpVersion, courseList, 
                     className="flex gap-6 overflow-x-auto pb-8 pt-2 scrollbar-hide snap-x snap-mandatory"
                     style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
-                    {course.map((course) => (
-                        <div
-                            key={course.id}
-                            className="flex-shrink-0 w-[22rem] snap-start rounded-xl shadow-lg bg-white border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden"
-                        >
-                            {/* Card Image with discount badge */}
-                            <div className="relative w-full h-48 overflow-hidden group">
-                                <img
-                                    src={`/storage/${course.thumbnail}`}
-                                    alt={course.title}
-                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-                                    <div className="p-4 w-full">
-                                        <button className="w-full bg-yellow-400 hover:bg-yellow-500 py-2 rounded-lg font-medium text-gray-900 transition-colors duration-200">
-                                            Lihat Detail
-                                        </button>
-                                    </div>
-                                </div>
-                                <div className="absolute top-4 right-4 bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full">
-                                    70% OFF
-                                </div>
-                            </div>
 
-                            {/* Card Content */}
-                            <div className="p-5">
-                                <div className="flexjustify-between items-center mb-3">
-                                    <span className="text-xs font-medium bg-teal-100 text-teal-800 px-2 py-1 rounded-full">Populer</span>
-                                    <div className="flex items-center">
-                                        <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                                        <span className="text-sm text-gray-700 ml-1">4.8</span>
+                    {
+                        isLoading ? (
+                            <div className="text-center py-12" > Loading courses...</div>
+                        ) : (
+                            course.map((course) => (
+                                <div
+                                    key={course.id}
+                                    className="flex-shrink-0 w-[22rem] snap-start rounded-xl shadow-lg bg-white border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden"
+                                >
+                                    {/* Card Image with discount badge */}
+                                    <div className="relative w-full h-48 overflow-hidden group">
+                                        <img
+                                            src={`/storage/${course.thumbnail}`}
+                                            alt={course.title}
+                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                                            <div className="p-4 w-full">
+                                                <button className="w-full bg-yellow-400 hover:bg-yellow-500 py-2 rounded-lg font-medium text-gray-900 transition-colors duration-200">
+                                                    Lihat Detail
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div className="absolute top-4 right-4 bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full">
+                                            70% OFF
+                                        </div>
                                     </div>
-                                </div>
-                                
-                                <h2 className="text-lg font-bold text-gray-900 line-clamp-2 h-14 mb-3">
-                                    {course.title}
-                                </h2>
-                                
-                                <div className="flex items-center mb-4 text-sm text-gray-600">
-                                    <Clock className="w-4 h-4 mr-1" />
-                                    {/* <span>10 jam belajar</span>
+
+                                    {/* Card Content */}
+                                    <div className="p-5">
+                                        <div className="flexjustify-between items-center mb-3">
+                                            <span className="text-xs font-medium bg-teal-100 text-teal-800 px-2 py-1 rounded-full">Populer</span>
+                                            <div className="flex items-center">
+                                                <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                                                <span className="text-sm text-gray-700 ml-1">4.8</span>
+                                            </div>
+                                        </div>
+
+                                        <h2 className="text-lg font-bold text-gray-900 line-clamp-2 h-14 mb-3">
+                                            {course.title}
+                                        </h2>
+
+                                        <div className="flex items-center mb-4 text-sm text-gray-600">
+                                            <Clock className="w-4 h-4 mr-1" />
+                                            {/* <span>10 jam belajar</span>
                                     <span className="mx-2">•</span> */}
-                                    <span>15 modul</span>
-                                </div>
+                                            <span>15 modul</span>
+                                        </div>
 
-                                <div className="mt-4 flex justify-between items-end">
-                                    <div>
-                                        <p className="text-teal-600 text-xl font-bold">{formatRupiah(course.price)}</p>
+                                        <div className="mt-4 flex justify-between items-end">
+                                            <div>
+                                                <p className="text-teal-600 text-xl font-bold">{formatRupiah(course.price)}</p>
+                                            </div>
+                                            <button
+                                                className="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 rounded-lg font-semibold text-gray-900 transition-all duration-200 text-sm transform hover:-translate-y-1"
+                                            >
+                                                Beli Sekarang
+                                            </button>
+                                        </div>
                                     </div>
-                                    <button
-                                        className="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 rounded-lg font-semibold text-gray-900 transition-all duration-200 text-sm transform hover:-translate-y-1"
-                                    >
-                                        Beli Sekarang
-                                    </button>
                                 </div>
-                            </div>
-                        </div>
-                    ))}
+                            )
+                            ))}
+
                 </div>
 
                 {/* View All Button */}
@@ -397,7 +406,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion, courseList, 
                     </Link>
                 </div>
             </div>
-            
+
             {/* FAQ Section - New */}
             <section className="py-20 bg-gray-50">
                 <div className="container mx-auto px-6">
@@ -405,7 +414,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion, courseList, 
                         <h2 className="text-3xl md:text-4xl font-bold mb-4">Pertanyaan <span className="text-teal-600">Umum</span></h2>
                         <p className="text-gray-600 max-w-2xl mx-auto">Jawaban untuk pertanyaan yang sering ditanyakan tentang program kami.</p>
                     </div>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                         {[
                             {
@@ -433,7 +442,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion, courseList, 
                     </div>
                 </div>
             </section>
-            
+
             {/* Call to Action - New */}
             <section className="py-20 bg-gradient-to-r from-teal-900 to-teal-600 text-white">
                 <div className="container mx-auto px-6">
@@ -451,7 +460,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion, courseList, 
                     </div>
                 </div>
             </section>
-            
+
             {/* Newsletter Section - New */}
             {/* <section className="py-16 bg-gray-100">
                 <div className="container mx-auto px-6">
@@ -479,7 +488,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion, courseList, 
                     </div>
                 </div>
             </section> */}
-        </GuestLayout>
+        </GuestLayout >
     );
 }
 

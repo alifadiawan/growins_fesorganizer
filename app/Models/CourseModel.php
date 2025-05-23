@@ -48,8 +48,14 @@ class CourseModel extends Model
         return $this->hasMany(ReviewsModel::class);
     }
 
-    public function lessons(){
+    public function lessons()
+    {
         return $this->hasMany(LessonsModel::class, 'module_id')->orderBy('position');
+    }
+
+    public function progresses()
+    {
+        return $this->hasMany(ProgressModel::class);
     }
 
     // public function payments()

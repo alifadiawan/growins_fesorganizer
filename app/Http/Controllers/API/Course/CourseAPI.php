@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Course;
 use App\Http\Controllers\Controller;
 use App\Models\CourseModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -13,7 +14,13 @@ class CourseAPI extends Controller
     // GET All Course 
     public function index()
     {
-        $courses = CourseModel::with('instructor')->get();
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Not authorized'], 401);
+        }
+
+        $courses = CourseModel::with('instructor')
+            ->where('user_id', '=', Auth::id())
+            ->get();
 
         return response()->json([
             'success' => true,

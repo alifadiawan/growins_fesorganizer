@@ -1,5 +1,5 @@
 import { Link, router, usePage } from "@inertiajs/react"
-import { ChevronDown, ChevronRight, Home, Settings, Users, FileText, Mail, Menu, X, Video, ArrowLeft } from "lucide-react"
+import { ChevronDown, ChevronRight, Home, Settings, Users, FileText, Mail, Menu, X, Video, ArrowLeft, Briefcase } from "lucide-react"
 import React, { useState } from 'react'
 
 const UserSidebar = () => {
@@ -74,8 +74,7 @@ const UserSidebar = () => {
         {/* UserSidebar Header */}
         <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 dark:border-zinc-800">
           <div className="flex items-center">
-            <div className="flex items-center justify-center w-8 h-8 rounded-md bg-blue-600 text-white">S</div>
-            {isOpen && <span className="ml-2 font-semibold text-gray-800 dark:text-white">UserSidebar</span>}
+            {isOpen && <span className="ml-2 font-semibold text-gray-800 dark:text-white">Welcome</span>}
           </div>
           <button
             onClick={toggleDarkMode}
@@ -102,12 +101,27 @@ const UserSidebar = () => {
 
             {/* My Courses */}
             <Link
-              href={route('user.myCourse', user.id)}
+              href={route('user.myCourse')}
               className={`flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 ${isOpen ? "" : "justify-center"
                 }`}
             >
               <Video className="h-5 w-5 text-gray-500 dark:text-gray-300" />
               {isOpen && <span className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200">My Courses</span>}
+            </Link>
+
+            {/* Workshop & Bootcamp */}
+            <Link
+              href={route('user.workshops')}
+              className={`flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 ${
+                isOpen ? "" : "justify-center"
+              }`}
+            >
+              <Briefcase className="h-5 w-5 text-gray-500 dark:text-gray-300" />
+              {isOpen && (
+                <span className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200">
+                  Workshop & Bootcamp
+                </span>
+              )}
             </Link>
 
             {/* Settings Section */}

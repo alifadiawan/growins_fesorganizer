@@ -78,8 +78,9 @@ const AdminSidebar = () => {
                 {/* AdminSidebar Header */}
                 <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 dark:border-zinc-800">
                     <div className="flex items-center">
-                        <div className="flex items-center justify-center w-8 h-8 rounded-md bg-blue-600 text-white">S</div>
-                        {isOpen && <span className="ml-2 font-semibold text-gray-800 dark:text-white">AdminSidebar</span>}
+                        <div className="flex items-center">
+                            {isOpen && <span className="ml-2 font-semibold text-gray-800 dark:text-white">Welcome</span>}
+                        </div>
                     </div>
                     <button
                         onClick={toggleDarkMode}
@@ -187,6 +188,17 @@ const AdminSidebar = () => {
                                 )}
                             </div>
                         </div>
+
+                        {/* Bootcamp Registrations (Admin) */}
+                        <Link
+                            href={route('admin.bootcamp_registrations.index')}
+                            className={`flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 
+                            ${isActive('admin.bootcamp_registrations.index') ? 'bg-gray-200 text-blue-600 dark:bg-zinc-800 dark:text-white' : 'text-gray-700 dark:text-gray-200'} 
+                            ${isOpen ? '' : 'justify-center'}`}
+                        >
+                            <FileText className="h-5 w-5" />
+                            {isOpen && <span className="ml-3 text-sm font-medium">Bootcamp Registrations</span>}
+                        </Link>
                     </nav>
                 </div>
 

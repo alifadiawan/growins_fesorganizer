@@ -1,4 +1,5 @@
 import Modal from '@/Components/Modal';
+import Toast from '@/Components/Toast';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { router, useForm, usePage } from '@inertiajs/react';
 import axios from 'axios';
@@ -11,6 +12,8 @@ const Edit = ({ course }) => {
     // modals
     const [isModuleModalOpen, setIsModuleModalOpen] = useState(false);
     const [openModuleId, setOpenModuleId] = useState(null);
+    const [toastMessage, setToastMessage] = useState({ success: '', error: '' });
+    const [loading, setLoading] = useState(false);
 
     const [isEditLessonModalOpen, setIsEditLessonModalOpen] = useState(false);
     const [selectedLessonId, setSelectedLessonId] = useState(null);
@@ -95,20 +98,20 @@ const Edit = ({ course }) => {
         e.preventDefault();
         const form = e.target
 
-
         const data = {
             title: form.title.value,
             course_id: course.id,
             is_free: form.is_free.checked,
         }
 
-        console.log(data)
         axios.post(route('api.modules.store'), data)
             .then(response => {
-                console.log('Success:', response.data);
+                setLoading(true);
+                setToastMessage({ success: 'Quiz Added successfully!' });
+                window.location.reload();
             })
             .catch(error => {
-                console.error('Error:', error);
+                 setToastMessage({ error: 'there is an error, please try again later' });
             });
 
 
@@ -141,6 +144,8 @@ const Edit = ({ course }) => {
 
     return (
         <AuthenticatedLayout>
+
+            <Toast success={toastMessage.success} error={toastMessage.error} />
 
             <h1 className="text-3xl font-bold mb-8 text-gray-800 border-b pb-4">Edit Course</h1>
 
@@ -199,7 +204,7 @@ const Edit = ({ course }) => {
                             theme="snow"
                             name="description"
                             value={description}
-                            onChange={setDescription} 
+                            onChange={setDescription}
                             style={{ height: '400px', marginBottom: '2rem' }}
                             className="bg-white"
                         />
@@ -263,6 +268,7 @@ const Edit = ({ course }) => {
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-semibold text-gray-800">Course Content</h2>
                     <button
+                        setLoading={true}
                         onClick={() => setIsModuleModalOpen(true)}
                         className="bg-green-600 text-white px-5 py-2.5 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all shadow-sm flex items-center font-medium"
                     >
