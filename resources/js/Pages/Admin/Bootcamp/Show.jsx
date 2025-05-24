@@ -4,6 +4,15 @@ import { Link } from '@inertiajs/react'
 import { ArrowLeft, Download } from 'lucide-react'
 
 const Show = ({ bootcamp, registrations }) => {
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
   return (
     <AuthenticatedLayout pageTitle={`${bootcamp.title} - Registrations`}>
       <div className="space-y-6">
@@ -41,12 +50,12 @@ const Show = ({ bootcamp, registrations }) => {
               <p className="font-medium">{bootcamp.main_theme}</p>
             </div>
             <div>
-              <p className="text-gray-600 dark:text-gray-400">Date</p>
-              <p className="font-medium">{bootcamp.date}</p>
+              <p className="text-gray-600 dark:text-gray-400">Start Date - End Date</p>
+              <p className="font-medium">{formatDate(bootcamp.date_start)} - {formatDate(bootcamp.date_end)}</p>
             </div>
             <div>
               <p className="text-gray-600 dark:text-gray-400">Time</p>
-              <p className="font-medium">{bootcamp.time}</p>
+              <p className="font-medium">{bootcamp.time_start} - {bootcamp.time_end}</p>
             </div>
           </div>
         </div>
@@ -81,7 +90,7 @@ const Show = ({ bootcamp, registrations }) => {
                 {registrations.data.map((registration) => (
                   <tr key={registration.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                      {registration.full_name}
+                      {registration.name}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                       {registration.email}

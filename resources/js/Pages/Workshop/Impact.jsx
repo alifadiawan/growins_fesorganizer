@@ -2,7 +2,7 @@ import GuestLayout from '@/Layouts/GuestLayout';
 import { Link, usePage } from '@inertiajs/react';
 import React, { useState } from 'react'
 
-const Connect = () => {
+const Impact = () => {
     const auth = usePage().props.auth;
 
     const [formData, setFormData] = useState({
@@ -657,4 +657,4 @@ const Connect = () => {
     )
 }
 
-export default Connect
+export default Impact

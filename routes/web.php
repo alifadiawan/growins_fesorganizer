@@ -42,9 +42,13 @@ require __DIR__ . '/auth.php';
 Route::prefix('oauth')->middleware(['web'])->name('oauth.')->group(function () {
     Route::get('/google', [OauthController::class, 'redirectToProvider'])->name('google');
     Route::get('/google/callback', [OauthController::class, 'handleProviderCallback'])->name('google.callback');
-    Route::get('/set-password', [OauthController::class, 'showForm'])->name('showForm')->middleware('auth');
+});
+
+Route::prefix('oauth')->middleware(['auth'])->name('oauth.')->group(function () {
+    Route::get('/set-password', [OauthController::class, 'showForm'])->name('showForm')->middleware(['auth', 'signed']);
     Route::post('/set-password', [OauthController::class, 'store'])->name('store')->middleware('auth');
 });
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -111,6 +115,6 @@ Route::prefix('dosen')->name('dosen.')->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::get('/workshop/connect', function () {
-    return Inertia::render('Workshop/Connect');
-})->name('workshop.index');
+Route::get('/workshop/impact', function () {
+    return Inertia::render('Workshop/Impact');
+})->name('workshop.impact');

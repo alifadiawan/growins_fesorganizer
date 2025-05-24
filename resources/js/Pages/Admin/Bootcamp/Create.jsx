@@ -7,7 +7,7 @@ import 'react-quill/dist/quill.snow.css'
 
 const Create = () => {
   const [errors, setErrors] = useState({});
- 
+
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -25,6 +25,7 @@ const Create = () => {
     province: '',
     nama: '',
     jurusan: '',
+    url: '',
     asal_kampus: '',
     username_ig: '',
     description: '',
@@ -111,7 +112,7 @@ const Create = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Title
+              Title <span className='text-red-500 opacity-70 text-sm'>*required</span>
             </label>
             <input
               name="title"
@@ -127,7 +128,23 @@ const Create = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Description
+              URL  <span className='text-red-500 opacity-70 text-sm'>*required</span>
+            </label>
+            <input
+              name="url"
+              placeholder="Enter bootcamp url ( /workshop/workshop-name /)"
+              value={form.url}
+              onChange={handleChange}
+              className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
+                         focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
+              required
+            />
+
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Description <span className='text-red-500 opacity-70 text-sm'>*required</span>
             </label>
             <ReactQuill
               modules={modules}
@@ -172,7 +189,7 @@ const Create = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Date Start
+                Date Start  <span className='text-red-500 opacity-70 text-sm'>*required</span>
               </label>
               <input
                 type="date"
@@ -217,7 +234,7 @@ const Create = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Normal Price
+                Normal Price  <span className='text-red-500 opacity-70 text-sm'>*required</span>
               </label>
               <input
                 type="number"
@@ -250,7 +267,7 @@ const Create = () => {
           {/* Cover Image Upload */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Cover Image
+              Cover Image 
             </label>
             <input
               type="file"
