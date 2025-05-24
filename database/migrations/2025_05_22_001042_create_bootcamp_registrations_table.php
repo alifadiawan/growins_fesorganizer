@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('bootcamp_registrations', function (Blueprint $table) {
-            $table->string('id')->primary;
+            $table->string('id')->primary();
             $table->string('bootcamp_id')->nullable(); // Foreign key to bootcamps
 
             $table->string('whatsapp_number')->nullable();
@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('province')->nullable();
 
             $table->string('nama')->nullable();              
+            $table->string('email')->nullable();              
             $table->string('jurusan')->nullable();           
             $table->string('asal_kampus')->nullable();       
             $table->string('nomor_telp')->nullable();       

@@ -101,6 +101,9 @@ Route::get('/about-us', function () {
 |--------------------------------------------------------------------------
 */
 
+Route::post('/admin/bootcamp-regis/store', [BootcampRegistrationController::class, 'store'])->name('admin.bootcamp_registrations.store');
+
+
 Route::name('user.')->middleware(['web', 'auth', 'middleware.student'])->group(function () {
 
 

@@ -2,6 +2,7 @@ import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Link } from '@inertiajs/react';
 import { Calendar, MapPin, Clock, Users } from 'lucide-react';
+import LogoGrowins from '../../../../../public/LOGOGROWINS.png';
 
 const WorkshopsIndex = ({ workshops }) => {
 
@@ -17,14 +18,14 @@ const WorkshopsIndex = ({ workshops }) => {
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {workshops.data.map((workshop) => (
-            <div 
-              key={workshop.id} 
+            <div
+              key={workshop.id}
               className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
             >
               <img
-                src={workshop.image_url}
+                src={workshop.cover && LogoGrowins}
                 alt={workshop.title}
-                className="w-full h-48 object-cover"
+                className="w-full h-48 object-contain"
               />
               <div className="p-6">
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
@@ -33,7 +34,7 @@ const WorkshopsIndex = ({ workshops }) => {
                 <p className="text-gray-600 mb-4 line-clamp-2">
                   {workshop.description}
                 </p>
-                
+
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center text-gray-600">
                     <Calendar className="w-4 h-4 mr-2" />

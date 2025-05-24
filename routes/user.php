@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BootcampRegistrationController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -30,4 +31,7 @@ Route::name('user.')->group(function () {
     Route::get('/quizzes/{quiz}/result', [StudentQuizAnswerController::class, 'showResult'])->name('student.quiz.result');
 
 });
+
+Route::get('/admin/bootcamp-regis/create', [BootcampRegistrationController::class, 'create'])->name('admin.bootcamp_registrations.create');
+
 

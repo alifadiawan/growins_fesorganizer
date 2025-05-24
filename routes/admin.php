@@ -76,8 +76,6 @@ Route::delete('/bootcamp/{id}', [BootcampController::class, 'destroy'])->name('b
 
 // bootcamp registration
 Route::get('/admin/bootcamp-regis', [BootcampRegistrationController::class, 'index'])->name('admin.bootcamp_registrations.index');
-Route::get('/admin/bootcamp-regis/create', [BootcampRegistrationController::class, 'create'])->name('admin.bootcamp_registrations.create');
-Route::post('/admin/bootcamp-regis/store', [BootcampRegistrationController::class, 'store'])->name('admin.bootcamp_registrations.store');
 
 Route::name('admin.')->group(function () {
     Route::resource('course', CourseController::class)->except(['destroy']);

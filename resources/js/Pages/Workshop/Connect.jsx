@@ -1,8 +1,10 @@
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import React, { useState } from 'react'
 
 const Connect = () => {
+    const auth = usePage().props.auth;
+
     const [formData, setFormData] = useState({
         full_name: "",
         jurusan: "",
@@ -98,15 +100,15 @@ const Connect = () => {
                         {/* Left Content */}
                         <div className="text-white">
                             <div className="inline-block px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-semibold mb-6 border border-green-500/30">
-                                GROWINS SELF DEVELOPMENT PROGRAM
+                                GROWINS IMPACT : Improving Public Speaking And Career Tool
                             </div>
                             <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
-                                <span className="text-green-400">CONNECT</span>
+                                <span className="text-green-400">IMPACT</span>
                                 <br />
-                                <span className="text-white">Self</span>{" "}
-                                <span className="inline-block bg-green-500 px-3 py-1 text-black rounded-md mt-2">DEVELOPMENT</span>
+                                <span className="text-white">Improving</span>{" "}
+                                <span className="inline-block bg-green-500 px-3 py-1 text-black rounded-md mt-2">Public Speaking</span>
                                 <br />
-                                <span className="text-white">Program</span>
+                                <span className="text-white">And Career Tools</span>
                             </h1>
                             <p className="text-xl mb-8 text-gray-300 max-w-xl">Communication & CV Optimization for New Career Track</p>
 
@@ -140,12 +142,21 @@ const Connect = () => {
                                 </p>
                             </div>
 
-                            <a
-                                href={route('login')}
-                                className="inline-block bg-green-500 hover:bg-green-600 text-black font-bold py-4 px-8 rounded-lg text-xl transition-all duration-300 shadow-lg shadow-green-500/30 hover:shadow-green-500/50 hover:translate-y-[-2px]"
-                            >
-                                DAFTAR SEKARANG
-                            </a>
+                            {auth.user ? (
+                                <a
+                                    href={route('user.workshops')}
+                                    className="inline-block bg-green-500 hover:bg-green-600 text-black font-bold py-4 px-8 rounded-lg text-xl transition-all duration-300 shadow-lg shadow-green-500/30 hover:shadow-green-500/50 hover:translate-y-[-2px]"
+                                >
+                                    DAFTAR SEKARANG
+                                </a>
+                            ) : (
+                                <a
+                                    href={route('login')}
+                                    className="inline-block bg-green-500 hover:bg-green-600 text-black font-bold py-4 px-8 rounded-lg text-xl transition-all duration-300 shadow-lg shadow-green-500/30 hover:shadow-green-500/50 hover:translate-y-[-2px]"
+                                >
+                                    DAFTAR SEKARANG
+                                </a>
+                            )}
                         </div>
 
                         {/* Right Content - Improved microphone visualization */}
@@ -384,9 +395,7 @@ const Connect = () => {
                             {/* Instructor - Improved with better layout and visual elements */}
                             <div className="bg-gray-800/70 p-8 rounded-xl border border-gray-700 shadow-xl backdrop-blur-sm">
                                 <div className="flex flex-col md:flex-row items-center gap-8">
-                                    <div className="w-32 h-32 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-4xl font-bold text-white shadow-lg shadow-green-500/30">
-                                        HK
-                                    </div>
+                                    <img src='https://media.licdn.com/dms/image/v2/D5603AQHKh4FBriuQ-A/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1704884229994?e=1753315200&v=beta&t=sxqJh9q4rueuj8XjDvMoPO13ZqEnrAbWNvhy3q0kEyQ' className="w-32 h-32 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-4xl font-bold text-white shadow-lg shadow-green-500/30" />
                                     <div className="text-left">
                                         <div className="inline-block px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-semibold mb-2">
                                             INSTRUCTOR
@@ -427,28 +436,53 @@ const Connect = () => {
                             <h3 className="text-2xl font-bold text-green-400 mb-8 text-center relative z-10">Formulir Pendaftaran</h3>
 
                             <div className="flex justify-center">
-                                <Link
-                                    href={route('login')}
-                                    className="inline-flex items-center justify-center w-full md:w-auto px-8 py-4 text-xl font-bold text-black bg-gradient-to-r from-green-400 to-green-500 rounded-lg transform transition-all duration-300 hover:scale-[1.02] hover:from-green-500 hover:to-green-600 active:scale-[0.98] relative group overflow-hidden shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_25px_rgba(34,197,94,0.5)]"
-                                >
-                                    <span className="relative z-10 flex items-center gap-2">
-                                        <span>DAFTAR SEKARANG</span>
-                                        <svg
-                                            className="w-5 h-5 transform transition-transform group-hover:translate-x-1"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M13 7l5 5m0 0l-5 5m5-5H6"
-                                            />
-                                        </svg>
-                                    </span>
-                                    <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
-                                </Link>
+                                {auth.user ? (
+                                    <Link
+                                        href={route('user.workshops')}
+                                        className="inline-flex items-center justify-center w-full md:w-auto px-8 py-4 text-xl font-bold text-black bg-gradient-to-r from-green-400 to-green-500 rounded-lg transform transition-all duration-300 hover:scale-[1.02] hover:from-green-500 hover:to-green-600 active:scale-[0.98] relative group overflow-hidden shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_25px_rgba(34,197,94,0.5)]"
+                                    >
+                                        <span className="relative z-10 flex items-center gap-2">
+                                            <span>DAFTAR SEKARANG</span>
+                                            <svg
+                                                className="w-5 h-5 transform transition-transform group-hover:translate-x-1"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                                                />
+                                            </svg>
+                                        </span>
+                                        <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+                                    </Link>
+                                ) : (
+                                    <Link
+                                        href={route('login')}
+                                        className="inline-flex items-center justify-center w-full md:w-auto px-8 py-4 text-xl font-bold text-black bg-gradient-to-r from-green-400 to-green-500 rounded-lg transform transition-all duration-300 hover:scale-[1.02] hover:from-green-500 hover:to-green-600 active:scale-[0.98] relative group overflow-hidden shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_25px_rgba(34,197,94,0.5)]"
+                                    >
+                                        <span className="relative z-10 flex items-center gap-2">
+                                            <span>DAFTAR SEKARANG</span>
+                                            <svg
+                                                className="w-5 h-5 transform transition-transform group-hover:translate-x-1"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                                                />
+                                            </svg>
+                                        </span>
+                                        <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+                                    </Link>
+                                )}
                             </div>
 
                             <div className="mt-6 text-center text-gray-400 text-sm relative z-10">
