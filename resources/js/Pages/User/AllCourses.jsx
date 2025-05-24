@@ -1,14 +1,19 @@
 import SidebarFilters from '@/Components/SidebarFilters';
 import GuestLayout from '@/Layouts/GuestLayout'
 import { Link } from '@inertiajs/react';
-import { Search, Filter, Clock, Star, ChevronDown, Grid, List, BookOpen } from 'lucide-react';
-import React, { useState } from 'react'
+import { Search, Filter, Clock, Star, ChevronDown, Grid, List, BookOpen, Loader2 } from 'lucide-react';
+import React, { useEffect, useState } from 'react'
 
 const AllCourses = ({ categories, courses }) => {
   const [viewMode, setViewMode] = useState('grid');
   const [filterOpen, setFilterOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState('all');
-  const [activeLevel, setActiveLevel] = useState('all');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (courses && courses.length > 0) {
+      setIsLoading(false);
+    }
+  }, [courses]);
 
   function formatRupiah(amount) {
     // Ensure the amount is a number and fix it to two decimal places
@@ -44,15 +49,45 @@ const AllCourses = ({ categories, courses }) => {
     <GuestLayout
       navbarProps={{
         isTransparent: false,
-        customBgColor: 'bg-gradient-to-r from-teal-900 to-teal-600 opacity-95',
+        customBgColor: 'bg-gradient-to-r from-teal-900 to-teal-600',
       }}
     >
       <div className="min-h-screen bg-gray-50">
         {/* Page Title */}
-        <div className="bg-gradient-to-r from-teal-900 to-teal-600 opacity-90 py-8">
-          <div className="container mx-auto px-6">
-            <h1 className="text-white text-3xl font-bold">Katalog Kursus</h1>
-            <p className="text-teal-100 mt-2">Temukan kursus terbaik untuk meningkatkan keterampilan Anda</p>
+        <div className="relative bg-gradient-to-r from-teal-900 to-teal-600">
+          <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-10"></div>
+          <div className="relative container mx-auto px-6 py-16">
+            <div className="max-w-3xl">
+              <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+                Katalog Kursus Online
+                <span className="block text-yellow-400">untuk Masa Depan Anda</span>
+              </h1>
+              <p className="text-teal-100 text-lg md:text-xl leading-relaxed mb-8">
+                Temukan kursus terbaik untuk meningkatkan keterampilan dan membuka peluang karir yang lebih baik
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <div className="relative flex-1 min-w-[280px]">
+                  <input
+                    type="text"
+                    placeholder="Cari kursus..."
+                    className="w-full px-4 py-3 rounded-lg pl-12 bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-teal-400"
+                  />
+                  <Search className="absolute left-4 top-3.5 w-5 h-5 text-white/60" />
+                </div>
+                <button className="px-6 py-3 bg-yellow-400 hover:bg-yellow-400 text-black font-medium rounded-lg transition duration-200 flex items-center gap-2">
+                  <Search className="w-5 h-5" />
+                  Cari Sekarang
+                </button>
+              </div>
+              <div className="mt-8 flex flex-wrap gap-4 items-center">
+                <span className="text-teal-100">Populer:</span>
+                {['Web Development', 'Digital Marketing', 'Design', 'Business'].map((tag) => (
+                  <span key={tag} className="px-3 py-1 bg-white/10 rounded-full text-sm text-white hover:bg-white/20 cursor-pointer">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -108,7 +143,19 @@ const AllCourses = ({ categories, courses }) => {
               </div>
 
               {/* Course Cards */}
-              {viewMode === 'grid' ? (
+              {courses.data.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+                  <div className="bg-gray-100 p-4 rounded-full mb-4">
+                    <BookOpen className="w-8 h-8 text-gray-400" />
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    Tidak ada kursus yang tersedia
+                  </h3>
+                  <p className="text-gray-500 max-w-md">
+                    Mohon maaf, saat ini belum ada kursus yang tersedia. Silakan coba lagi nanti atau ubah filter pencarian Anda.
+                  </p>
+                </div>
+              ) : viewMode === 'grid' ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {courses.data.map(course => (
                     <div key={course.id} className="bg-white rounded-lg shadow-sm overflow-hidden">

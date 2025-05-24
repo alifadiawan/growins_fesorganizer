@@ -39,7 +39,7 @@ Route::get('/courses/show/{slug}/{id}', [LandingPageController::class, 'detail_c
 require __DIR__ . '/auth.php';
 
 // OAuth routes
-Route::middleware(['web', 'auth'])->name('oauth.')->group(function () {
+Route::prefix('oauth')->middleware(['web'])->name('oauth.')->group(function () {
     Route::get('/google', [OauthController::class, 'redirectToProvider'])->name('google');
     Route::get('/google/callback', [OauthController::class, 'handleProviderCallback'])->name('google.callback');
     Route::get('/set-password', [OauthController::class, 'showForm'])->name('showForm')->middleware('auth');

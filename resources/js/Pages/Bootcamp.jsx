@@ -4,26 +4,17 @@ import { ClockIcon, CalendarIcon, AwardIcon, CheckCircleIcon, UserIcon, Briefcas
 import axios from 'axios';
 import { Link, usePage } from '@inertiajs/react';
 
-const Bootcamp = () => {
-    const [bootcamps, setBootcamps] = useState({ data: [] });
+const Bootcamp = ({ bootcamp }) => {
     const [isLoading, setIsLoading] = useState(true);
-    const { auth } = usePage().props;
 
     useEffect(() => {
-        const fetchBootcamps = async () => {
-            try {
-                setIsLoading(true);
-                const response = await axios.get(route('bootcamp.fetch'));
-                setBootcamps(response.data);
-            } catch (error) {
-                console.error('Error fetching bootcamps:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchBootcamps();
-    }, []);
+        // Simulate loading delay
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 1000);
 
+        return () => clearTimeout(timer);
+    }, []);
 
     const benefits = [
         { icon: <UserIcon className="w-6 h-6" />, title: "Komunikasi Efektif", description: "Kembangkan kemampuan komunikasi verbal dan non-verbal untuk membangun hubungan profesional yang kuat" },
@@ -48,31 +39,32 @@ const Bootcamp = () => {
 
     // Add Skeleton Loader Component
     const SkeletonCard = () => (
-        <div className="flex-shrink-0 w-full md:w-[400px] snap-start bg-white rounded-xl shadow-2xl overflow-hidden text-gray-800">
-            <div className="p-8 animate-pulse">
-                <div className="h-6 w-24 bg-gray-200 rounded-full mb-4"></div>
-                <div className="h-14 bg-gray-200 rounded-lg mb-3"></div>
-                <div className="h-[4.5rem] bg-gray-200 rounded-lg mb-6"></div>
+        <div className="flex-shrink-0 w-full md:w-[400px] bg-white rounded-xl shadow-2xl overflow-hidden">
+            <div className="h-48 bg-gray-200 animate-pulse"></div>
+            <div className="p-8">
+                <div className="h-6 w-24 bg-gray-200 rounded-full mb-4 animate-pulse"></div>
+                <div className="h-14 bg-gray-200 rounded-lg mb-3 animate-pulse"></div>
+                <div className="h-[4.5rem] bg-gray-200 rounded-lg mb-6 animate-pulse"></div>
 
                 <div className="space-y-4">
-                    <div className="h-10 bg-gray-200 rounded-lg"></div>
-                    <div className="h-10 bg-gray-200 rounded-lg"></div>
-                    <div className="h-10 bg-gray-200 rounded-lg"></div>
+                    {[1, 2, 3].map((i) => (
+                        <div key={i} className="h-10 bg-gray-200 rounded-lg animate-pulse"></div>
+                    ))}
                 </div>
 
                 <div className="mt-6 border-t pt-6">
-                    <div className="h-8 w-32 bg-gray-200 rounded-lg mb-4"></div>
-                    <div className="h-12 bg-gray-200 rounded-lg"></div>
+                    <div className="h-8 w-32 bg-gray-200 rounded-lg mb-4 animate-pulse"></div>
+                    <div className="h-12 bg-gray-200 rounded-lg animate-pulse"></div>
                 </div>
             </div>
         </div>
     );
 
     // Modify the bootcamp cards section to include loading state
-    const renderBootcampCards = () => {
+    const renderBootcamps = () => {
         if (isLoading) {
             return (
-                <div className="flex justify-center gap-8 px-4 py-6 min-w-full">
+                <div className="flex gap-8 overflow-x-auto pb-6 px-4">
                     {[1, 2, 3].map((index) => (
                         <SkeletonCard key={index} />
                     ))}
@@ -80,74 +72,66 @@ const Bootcamp = () => {
             );
         }
 
-        if (bootcamps.data?.length === 0) {
+        if (!bootcamp.data || bootcamp.data.length === 0) {
             return (
                 <div className="text-center py-12">
-                    <p className="text-xl text-gray-100">No bootcamps available at the moment.</p>
+                    <p className="text-xl text-gray-600">No bootcamps available at the moment.</p>
                 </div>
             );
         }
 
         return (
-            <div className="flex justify-center gap-8 px-4 py-6 min-w-full" style={{ scrollSnapType: 'x mandatory' }}>
-                {bootcamps.data?.map((bootcamp) => (
-                    <div
-                        key={bootcamp.id}
-                        className="flex-shrink-0 w-full md:w-[400px] snap-start bg-white rounded-xl shadow-2xl overflow-hidden text-gray-800 transform hover:scale-105 transition-transform duration-300"
-                    >
-                        {/* Add cover image */}
-                        <div className="w-full h-48 bg-gray-200 overflow-hidden">
+            <div className="flex justify-center gap-8 overflow-x-auto pb-6 px-4">
+                {bootcamp.data.map((item) => (
+                    <div key={item.id} className="flex-shrink-0 w-full md:w-[400px] bg-white rounded-xl shadow-2xl overflow-hidden transition-transform hover:scale-105">
+                        {/* Bootcamp card content */}
+                        <div className="h-48 bg-gray-200 overflow-hidden">
                             <img
-                                src={`/storage/${bootcamp.cover}`}
-                                alt={bootcamp.title}
+                                src={`/storage/${item.cover}`}
+                                alt={item.title}
                                 className="w-full h-full object-cover"
                                 onError={(e) => {
-                                    e.target.src = '/images/default-cover.jpg'; // Add a default fallback image
-                                    e.target.onerror = null;
+                                    e.target.src = '/images/default-cover.jpg';
                                 }}
                             />
                         </div>
                         <div className="p-8">
-                            <div className="inline-block px-4 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-semibold mb-4">
+                            <span className="inline-block px-4 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-semibold mb-4">
                                 #Bootcamp
-                            </div>
-                            <h2 className="text-2xl font-bold mb-3 line-clamp-2 h-14">{bootcamp.title}</h2>
-
-                            <div
-                                className="text-gray-600 mb-6 line-clamp-3 h-[4.5rem] overflow-hidden"
-                                dangerouslySetInnerHTML={{ __html: bootcamp.description }}
-                            ></div>
+                            </span>
+                            <h3 className="text-2xl font-bold mb-3 line-clamp-2 text-black">{item.title}</h3>
+                            <div className="text-gray-600 mb-6 line-clamp-3" dangerouslySetInnerHTML={{ __html: item.description }}></div>
 
                             <div className="space-y-4 text-sm">
                                 <div className="flex items-center p-2 bg-gray-50 rounded-lg">
                                     <ClockIcon className="w-5 h-5 mr-3 text-teal-600" />
-                                    <span className="font-medium flex flex-row ">{bootcamp.time_start} - {bootcamp.time_end}</span>
+                                    <span className="font-medium flex flex-row text-gray-600">{item.time_start} - {item.time_end}</span>
                                 </div>
                                 <div className="flex items-center p-2 bg-gray-50 rounded-lg">
                                     <CalendarIcon className="w-5 h-5 mr-3 text-teal-600" />
-                                    <span className="font-medium flex flex-row">{bootcamp.date_start} - {bootcamp.date_end}</span>
+                                    <span className="font-medium flex flex-row text-gray-600">{item.date_start} - {item.date_end}</span>
                                 </div>
                                 <div className="flex items-center p-2 bg-gray-50 rounded-lg">
                                     <AwardIcon className="w-5 h-5 mr-3 text-teal-600" />
-                                    <span className="font-medium">{bootcamp.main_theme}</span>
+                                    <span className="font-medium text-gray-600">{item.main_theme}</span>
                                 </div>
                             </div>
 
                             <div className="mt-6 border-t pt-6">
                                 <div className="text-2xl font-bold text-teal-600 mb-4">
-                                    {bootcamp.discounted_price ? (
+                                    {item.discounted_price ? (
                                         <>
                                             <span className="line-through text-gray-400 text-lg mr-2">
-                                                Rp {bootcamp.normal_price.toLocaleString()}
+                                                Rp {item.normal_price.toLocaleString()}
                                             </span>
                                             <br />
-                                            Rp {bootcamp.discounted_price.toLocaleString()}
+                                            Rp {item.discounted_price.toLocaleString()}
                                         </>
                                     ) : (
-                                        bootcamp.normal_price == 0 ? (
+                                        item.normal_price == 0 ? (
                                             <span className="text-teal-600">Gratis</span>
                                         ) : (
-                                            <span>Rp {bootcamp.normal_price.toLocaleString()}</span>
+                                            <span>Rp {item.normal_price.toLocaleString()}</span>
                                         )
                                     )}
                                 </div>
@@ -172,22 +156,22 @@ const Bootcamp = () => {
         <GuestLayout
             navbarProps={{
                 isTransparent: false,
-                customBgColor: 'bg-gradient-to-r from-teal-900 to-teal-600 opacity-95',
+                customBgColor: 'bg-gradient-to-r from-teal-900 to-teal-600 opacity-90',
             }}
         >
             {/* Hero Section with improved styling */}
             <div className="bg-gradient-to-r from-teal-900 to-teal-600 opacity-90 text-white">
                 <div className="container mx-auto px-4 py-20">
                     <h1 className="text-5xl md:text-6xl font-bold mb-6 text-center leading-tight">
-                        Enhance Your <span className="text-teal-300">Professional Skills</span>
+                        Siap Naik Level dalam <span className="text-yellow-400">Karier</span> ?
                     </h1>
                     <p className="text-xl text-center max-w-2xl mx-auto mb-12 text-teal-100">
-                        Join our intensive bootcamps designed to transform your career potential
+                        Ikuti program bootcamp kami yang dirancang khusus untuk pengembangan profesional Anda.
                     </p>
 
                     {/* Bootcamp Cards with loading state */}
-                    <div className="w-full max-w-7xl mx-auto overflow-x-auto scrollbar-hide">
-                        {renderBootcampCards()}
+                    <div className="w-full max-w-7xl mx-auto">
+                        {renderBootcamps()}
                     </div>
                 </div>
             </div>

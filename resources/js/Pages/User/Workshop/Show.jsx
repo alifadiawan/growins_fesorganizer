@@ -1,7 +1,7 @@
 import React from 'react';
-import { router, useForm } from '@inertiajs/react';
+import { Link, router, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { CheckCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle } from 'lucide-react';
 
 const Show = ({ bootcamp, bootcampRegistration }) => {
     const { data, setData, post, processing, errors } = useForm({
@@ -54,14 +54,25 @@ const Show = ({ bootcamp, bootcampRegistration }) => {
         return (
             <AuthenticatedLayout>
                 <div className=" mx-auto py-8 px-4 sm:px-6 lg:px-8">
+                    <div className="mb-8">
+                        <Link
+                            href={route('user.workshops')}
+                            className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                        >
+                            <ArrowLeft className="h-4 w-4 mr-1" />
+                            Back
+                        </Link>
+                    </div>
+
                     <div className="bg-white shadow sm:rounded-lg">
                         <div className="px-4 py-5 sm:p-6">
-                            <div className="flex items-center justify-center">
-                                <CheckCircle className="h-12 w-12 text-green-500" />
-                            </div>
                             <div className="mt-3 text-center sm:mt-5">
-                                <h3 className="text-lg leading-6 font-medium text-gray-900">
-                                    You're registered for {bootcamp.title}
+                                <div className="py-3 flex justify-center">
+                                    <img src={`/storage/${bootcamp.cover}`} alt={bootcamp.title} className="w-52 rounded-md" />
+                                </div>
+                                <h3 className="text-lg leading-6 font-medium flex flex-row gap-2 justify-center items-center text-gray-900">
+                                    <CheckCircle className="h-12 w-12 text-green-500" />
+                                    Berhasil Mendaftar untuk : {bootcamp.title}
                                 </h3>
                                 <div className="mt-4 border-t border-gray-200 pt-4">
                                     <h4 className="text-sm font-medium text-gray-900">Registration Details</h4>
@@ -88,8 +99,7 @@ const Show = ({ bootcamp, bootcampRegistration }) => {
                                 </div>
                                 <div className="mt-6">
                                     <p className="text-sm text-gray-500">
-                                        We'll send you updates about the workshop through this website, WhatsApp or email.
-                                        Please make sure to check your messages regularly.
+                                        Tim kami akan menghubungi Anda lewat website, email, atau WhatsApp untuk memberikan detail lebih lanjut.
                                     </p>
                                 </div>
                             </div>
@@ -99,8 +109,8 @@ const Show = ({ bootcamp, bootcampRegistration }) => {
                     {/* detail workshop */}
                     <div className="bg-white shadow sm:rounded-lg">
                         <div className="px-4 py-5 sm:p-6">
-                            
-                        </div>  
+
+                        </div>
                     </div>
                 </div>
             </AuthenticatedLayout>
