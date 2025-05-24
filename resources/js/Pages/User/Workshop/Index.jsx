@@ -23,7 +23,7 @@ const WorkshopsIndex = ({ workshops }) => {
               className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
             >
               <img
-                src={workshop.cover && LogoGrowins}
+                src={`/storage/${workshop.cover}` && LogoGrowins}
                 alt={workshop.title}
                 className="w-full h-48 object-contain"
               />

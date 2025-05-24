@@ -57,7 +57,7 @@ Route::put('/user/update/{id}', [ManageUserController::class, 'update'])->name('
 
 Route::get('/bootcamp-softskill/all', [BootcampController::class, 'index'])->name('bootcamp.index');
 Route::get('/bootcamp-softskill/create', [BootcampController::class, 'create'])->name('bootcamp.create');
-Route::get('/bootcamp-softskill/store', [BootcampController::class, 'store'])->name('bootcamp.store');
+Route::post('/bootcamp-softskill/store', [BootcampController::class, 'store'])->name('bootcamp.store');
 
 /*
 |--------------------------------------------------------------------------

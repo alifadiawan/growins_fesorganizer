@@ -46,6 +46,7 @@ class BootcampController extends Controller
             'date_start' => 'nullable',
             'date_end' => 'nullable',
             'main_theme' => 'required',
+            'url' => 'required',
             'normal_price' => 'nullable|integer',
             'cover' => 'nullable|mimes:jpeg,png,jpg|max:5120',
             'discounted_price' => 'nullable|integer',
@@ -83,14 +84,14 @@ class BootcampController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->validate([
-            'title' => 'nullable',
-            'description' => 'nullable',
+            'title' => 'required',
+            'description' => 'required',
             'time_start' => 'nullable',
             'time_end' => 'nullable',
-            'date_start' => 'nullable',
+            'date_start' => 'required',
             'date_end' => 'nullable',
             'main_theme' => 'nullable',
-            'normal_price' => 'nullable|integer',
+            'normal_price' => 'required|integer',
             'cover' => 'nullable|mimes:jpeg,png,jpg|max:5120',
             'discounted_price' => 'nullable|integer',
         ]);

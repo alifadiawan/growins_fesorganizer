@@ -9,6 +9,7 @@ const Edit = ({ bootcamp }) => {
   const [errors, setErrors] = useState({})
   const [form, setForm] = useState({
     title: bootcamp.title || '',
+    url: bootcamp.url || '',
     description: bootcamp.description || '',
     time_start: bootcamp.time_start || '',
     time_end: bootcamp.time_end || '',
@@ -47,14 +48,18 @@ const Edit = ({ bootcamp }) => {
     e.preventDefault()
 
     const formData = new FormData()
+    formData.append('_method', 'PUT');
     Object.keys(form).forEach(key => {
-      if (form[key] !== null && form[key] !== '') {
-        formData.append(key, form[key])
+      if (key === 'cover') {// Only append if it's a File (user selected a new file)
+        if (form.cover && form.cover instanceof File) {
+          formData.append('cover', form.cover);
+        }
+      } else if (form[key] !== null && form[key] !== '') {
+        formData.append(key, form[key]);
       }
     })
 
-    router.put(route('bootcamp.update', bootcamp.id), formData, {
-      _method: 'PUT',
+    router.post(route('bootcamp.update', bootcamp.id), formData, {
       forceFormData: true,
       onError: errors => {
         setErrors(errors);
@@ -94,12 +99,12 @@ const Edit = ({ bootcamp }) => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Title
+              Title <span className='text-red-500 opacity-70 text-sm'>*required</span>
             </label>
             <input
               name="title"
               placeholder="Enter bootcamp title"
-              value={form.title || bootcamp.title || ''}
+              value={form.title}
               onChange={handleChange}
               className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
                          focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
@@ -109,7 +114,22 @@ const Edit = ({ bootcamp }) => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Description
+              URL  <span className='text-red-500 opacity-70 text-sm'>*required</span>
+            </label>
+            <input
+              name="url"
+              placeholder="Enter bootcamp url ( /workshop/workshop-name /)"
+              value={form.url}
+              onChange={handleChange}
+              className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
+                         focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Description <span className='text-red-500 opacity-70 text-sm'>*required</span>
             </label>
             <ReactQuill
               modules={modules}
@@ -131,7 +151,7 @@ const Edit = ({ bootcamp }) => {
                 value={form.time_start}
                 onChange={handleChange}
                 className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                         focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
+                 focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
               />
             </div>
             <div>
@@ -144,7 +164,7 @@ const Edit = ({ bootcamp }) => {
                 value={form.time_end}
                 onChange={handleChange}
                 className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                         focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
+                 focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
               />
             </div>
           </div>
@@ -152,7 +172,7 @@ const Edit = ({ bootcamp }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Date Start
+                Date Start  <span className='text-red-500 opacity-70 text-sm'>*required</span>
               </label>
               <input
                 type="date"
@@ -160,7 +180,8 @@ const Edit = ({ bootcamp }) => {
                 value={form.date_start}
                 onChange={handleChange}
                 className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                         focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
+                 focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
+                required
               />
             </div>
             <div>
@@ -173,7 +194,7 @@ const Edit = ({ bootcamp }) => {
                 value={form.date_end}
                 onChange={handleChange}
                 className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                         focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
+                 focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
               />
             </div>
           </div>
@@ -196,7 +217,7 @@ const Edit = ({ bootcamp }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Normal Price
+                Normal Price  <span className='text-red-500 opacity-70 text-sm'>*required</span>
               </label>
               <input
                 type="number"

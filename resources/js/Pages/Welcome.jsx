@@ -1,15 +1,18 @@
 import Card from '@/Components/Card';
 import { Categories } from '@/Components/Categories';
+import Toast from '@/Components/Toast';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Link, usePage } from '@inertiajs/react';
 import { Award, Calendar, Clock, ChevronLeft, ChevronRight, ArrowRight, Star } from "lucide-react";
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function Welcome({ courseList, categories }) {
     const [scrollPosition, setScrollPosition] = useState(0);
+    const [toastMessage, setToastMessage] = useState({ success: '', error: '' });
     const scrollContainerRef = useRef(null);
     const [isLoading, setIsLoading] = useState(true);
     const course = courseList?.data || [];
+    const { success, error } = usePage().props;
 
 
     const scrollLeft = () => {
@@ -44,6 +47,18 @@ export default function Welcome({ courseList, categories }) {
         document.getElementById('background')?.classList.add('!hidden');
     };
 
+    useEffect(() => {
+        if (success || error) {
+            setToastMessage({ success: success || '', error: error || '' });
+
+            const timer = setTimeout(() => {
+                setToastMessage({ success: '', error: '' });
+            }, 2000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [success, error]);
+
     return (
         <GuestLayout
             navbarProps={{
@@ -51,8 +66,11 @@ export default function Welcome({ courseList, categories }) {
                 customBgColor: 'bg-gradient-to-r from-teal-900 to-teal-600 opacity-95',
             }}
         >
+
+
             {/* Hero Section - Updated with more modern design */}
             <section className="relative overflow-hidden">
+            <Toast success={toastMessage.success} error={toastMessage.error} />
                 {/* Enhanced background with subtle pattern */}
                 <div className="absolute inset-0 bg-gradient-to-r from-teal-900 to-teal-600 opacity-95"></div>
                 <div className="absolute inset-0 bg-[url('/bg-pattern.png')] opacity-10 bg-repeat mix-blend-overlay"></div>

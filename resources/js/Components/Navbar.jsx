@@ -89,7 +89,7 @@ export function Navbar({ isTransparent = true, customBgColor = "" }) {
                     {user.user ? (
                         user.user.role === "student" ? (
                             <Link
-                                href={route("user.dashboard", user.user.id)}
+                                href={route("user.dashboard")}
                                 className="flex flex-row items-center gap-2 rounded-md px-5 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-yellow-500 hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0"
                             >
                                 <User /> {user.user.name}

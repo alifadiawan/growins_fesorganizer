@@ -1,8 +1,9 @@
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Link, usePage } from '@inertiajs/react';
 import React, { useState } from 'react'
+import publicSpeaking from '../../../../public/publicspeaking.png'
 
-const Connect = () => {
+const Impact = () => {
     const auth = usePage().props.auth;
 
     const [formData, setFormData] = useState({
@@ -69,30 +70,6 @@ const Connect = () => {
             }}
         >
             <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-green-900 font-sans">
-                {/* Header - Improved with better spacing and shadow
-                <header className="sticky top-0 z-50 bg-black/70 backdrop-blur-md py-4 shadow-lg">
-                    <div className="container mx-auto px-4">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center">
-                                <div className="w-10 h-10 bg-green-500 rounded-full mr-3 flex items-center justify-center shadow-lg shadow-green-500/30">
-                                    <span className="text-black font-bold text-lg">G</span>
-                                </div>
-                                <span className="text-white text-xl font-bold tracking-tight">Grow Insight</span>
-                            </div>
-                            <nav className="hidden md:flex space-x-6">
-                                <a href="#benefits" className="text-gray-300 hover:text-green-400 transition-colors">
-                                    Benefits
-                                </a>
-                                <a href="#details" className="text-gray-300 hover:text-green-400 transition-colors">
-                                    Details
-                                </a>
-                                <a href="#register" className="text-gray-300 hover:text-green-400 transition-colors">
-                                    Register
-                                </a>
-                            </nav>
-                        </div>
-                    </div>
-                </header> */}
 
                 {/* Hero Section - Improved with better typography and visual hierarchy */}
                 <div className="container mx-auto px-4 py-16 md:py-24">
@@ -110,7 +87,6 @@ const Connect = () => {
                                 <br />
                                 <span className="text-white">And Career Tools</span>
                             </h1>
-                            <p className="text-xl mb-8 text-gray-300 max-w-xl">Communication & CV Optimization for New Career Track</p>
 
                             <div className="bg-gray-800/70 p-6 rounded-xl mb-8 border border-gray-700 shadow-xl backdrop-blur-sm">
                                 <h2 className="text-2xl font-bold text-green-400 mb-4 flex items-center">
@@ -160,36 +136,14 @@ const Connect = () => {
                         </div>
 
                         {/* Right Content - Improved microphone visualization */}
-                        <div className="flex justify-center">
-                            <div className="w-80 h-80 bg-gradient-to-b from-gray-700 to-gray-900 rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(34,197,94,0.3)] relative group">
-                                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-500/10 to-transparent opacity-60 animate-pulse"></div>
-                                <div className="w-24 h-64 bg-gradient-to-b from-gray-400 to-gray-600 rounded-full relative overflow-hidden group-hover:shadow-[0_0_20px_rgba(34,197,94,0.5)] transition-all duration-500">
-                                    <div className="absolute top-4 left-2 right-2 space-y-2">
-                                        {[...Array(8)].map((_, i) => (
-                                            <div
-                                                key={i}
-                                                className="h-2 bg-gray-300 rounded animate-pulse"
-                                                style={{ animationDelay: `${i * 0.1}s` }}
-                                            ></div>
-                                        ))}
-                                    </div>
-                                    <div className="absolute bottom-4 left-0 right-0 flex justify-center">
-                                        <div className="w-8 h-8 rounded-full bg-green-500 shadow-lg shadow-green-500/50"></div>
-                                    </div>
-                                </div>
-                                {/* Sound waves animation */}
-                                {[...Array(3)].map((_, i) => (
-                                    <div
-                                        key={i}
-                                        className="absolute rounded-full border border-green-500/30 animate-ping"
-                                        style={{
-                                            width: `${(i + 1) * 30}%`,
-                                            height: `${(i + 1) * 30}%`,
-                                            animationDuration: `${3 + i}s`,
-                                            animationDelay: `${i * 0.5}s`,
-                                        }}
-                                    ></div>
-                                ))}
+                        <div className="flex justify-center lg:justify-end relative">
+                            <div className="relative w-full max-w-xl">
+                                <div className="absolute -inset-1 rounded-full bg-green-500/30 blur-xl"></div>
+                                <img
+                                    src={publicSpeaking}
+                                    alt="Public Speaking Workshop"
+                                    className="relative w-full h-auto object-cover rounded-full"
+                                />
                             </div>
                         </div>
                     </div>
@@ -346,7 +300,7 @@ const Connect = () => {
                                         </svg>
                                     </div>
                                     <h3 className="text-xl font-bold text-white mb-2">Tanggal</h3>
-                                    <p className="text-green-400 text-lg">11-12 Juli 2025</p>
+                                    <p className="text-green-400 text-lg">12-13 Juli 2025</p>
                                 </div>
 
                                 <div className="bg-gray-800/70 p-6 rounded-xl border border-gray-700 hover:border-green-500/50 transition-all duration-300 group">
@@ -596,65 +550,10 @@ const Connect = () => {
                     </div>
                 </div>
 
-                {/* Footer - Improved with better layout and social links */}
-                <footer className="bg-black py-12">
-                    <div className="container mx-auto px-4">
-                        <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-                            <div className="flex items-center mb-6 md:mb-0">
-                                <div className="w-10 h-10 bg-green-500 rounded-full mr-3 flex items-center justify-center shadow-lg shadow-green-500/30">
-                                    <span className="text-black font-bold text-lg">G</span>
-                                </div>
-                                <span className="text-white text-xl font-bold tracking-tight">Grow Insight</span>
-                            </div>
-                            <div className="flex space-x-6">
-                                <a
-                                    href="#"
-                                    className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-300 hover:bg-green-500 hover:text-black transition-colors"
-                                >
-                                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.073-1.689-.073-4.948 0-3.204.013-3.583.072-4.948.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
-                                    </svg>
-                                </a>
-                                <a
-                                    href="#"
-                                    className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-300 hover:bg-green-500 hover:text-black transition-colors"
-                                >
-                                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                                    </svg>
-                                </a>
-                                <a
-                                    href="#"
-                                    className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-300 hover:bg-green-500 hover:text-black transition-colors"
-                                >
-                                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
 
-                        <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between">
-                            <p className="text-gray-400 text-center md:text-left mb-4 md:mb-0">
-                                © 2025 Grow Insight. All rights reserved.
-                            </p>
-                            <div className="flex justify-center md:justify-end space-x-6">
-                                <a href="#" className="text-gray-400 hover:text-green-400 transition-colors">
-                                    Terms
-                                </a>
-                                <a href="#" className="text-gray-400 hover:text-green-400 transition-colors">
-                                    Privacy
-                                </a>
-                                <a href="#" className="text-gray-400 hover:text-green-400 transition-colors">
-                                    Contact
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
             </div>
         </GuestLayout>
     )
 }
 
-export default Connect
+export default Impact

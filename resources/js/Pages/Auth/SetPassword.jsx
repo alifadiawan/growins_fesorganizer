@@ -11,7 +11,7 @@ const SetPassword = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post('/set-password');
+        post(route('oauth.store'));
     };
 
     return (

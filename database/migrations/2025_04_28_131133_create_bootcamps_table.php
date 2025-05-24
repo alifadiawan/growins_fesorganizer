@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('main_theme')->nullable();
             $table->string('quota')->nullable();
             $table->string('cover')->nullable();
+            $table->string('url')->nullable();
             $table->integer('normal_price');
             $table->integer('discounted_price')->nullable();
             $table->timestamps();

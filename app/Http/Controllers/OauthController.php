@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\URL;
 
 class OauthController extends Controller
 {
@@ -65,10 +66,14 @@ class OauthController extends Controller
                 Auth::login($newUser);
 
                 if (!$user->password) {
-                    return redirect('/set-password');
+                    $signedUrl = URL::temporarySignedRoute(
+                        'oauth.showForm',
+                        now()->addMinutes(5)
+                    );
+                    return redirect($signedUrl);
                 }
 
-                return redirect('/');
+                return redirect('/')->with('success', 'Account created successfully.');
             }
 
         } catch (Exception $e) {
