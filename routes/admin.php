@@ -11,7 +11,11 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuizController;
 use App\Models\Transaction;
 
-// **** Views Routes **** // 
+/*
+|--------------------------------------------------------------------------
+| Views Routes
+|--------------------------------------------------------------------------
+*/
 Route::get('/dashboard', function () {
     return Inertia::render('Admin/Dashboard');
 })->name('admin.dashboard');
@@ -35,35 +39,52 @@ Route::get('/transactions/detail/{order_id}', function ($order_id) {
 
 
 
+/*
+|--------------------------------------------------------------------------
+| Users Management Routes
+|--------------------------------------------------------------------------
+*/
 
-
-// **** Controllers **** // 
-// Admin course management
-
-// Manage User
 Route::get('/user/all', [ManageUserController::class, 'index'])->name('admin.user.index');
 Route::get('/user/detail/{id}', [ManageUserController::class, 'index'])->name('admin.user.detail');
 Route::put('/user/update/{id}', [ManageUserController::class, 'update'])->name('admin.user.update');
 
-// Bootcamp CRUD
+/*
+|--------------------------------------------------------------------------
+| Bootcamp & Workshop Routes
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/bootcamp-softskill/all', [BootcampController::class, 'index'])->name('bootcamp.index');
 Route::get('/bootcamp-softskill/create', [BootcampController::class, 'create'])->name('bootcamp.create');
 Route::get('/bootcamp-softskill/store', [BootcampController::class, 'store'])->name('bootcamp.store');
 
-// Question
+/*
+|--------------------------------------------------------------------------
+| Question Routes
+|--------------------------------------------------------------------------
+*/
 Route::get('/quizzes/{quiz}/questions', [QuestionController::class, 'index'])->name('quiz.index');
 Route::get('/quizzes/{quiz}/questions/create', [QuestionController::class, 'create'])->name('quiz.create');
 Route::post('/quizzes/{quiz}/questions', [QuestionController::class, 'store'])->name('quiz.store');
 Route::put('/questions/{question}', [QuestionController::class, 'update']);
 Route::delete('/questions/{question}', [QuestionController::class, 'destroy']);
 
-// Quiz
+/*
+|--------------------------------------------------------------------------
+| Quizzes Routes
+|--------------------------------------------------------------------------
+*/
 Route::post('/lessons/{lesson}/quizzes', [QuizController::class, 'store'])->name('quizzes.store');
 Route::get('/quizzes/{quiz}/edit', [QuizController::class, 'edit'])->name('quizzes.edit');
 Route::put('/quizzes/{quiz}', [QuizController::class, 'update'])->name('quizzes.update');
 Route::delete('/quizzes/{quiz}', [QuizController::class, 'destroy'])->name('quizzes.destroy');
 
-// Bootcamp Registration
+/*
+|--------------------------------------------------------------------------
+| Bootcamp Registration Routes
+|--------------------------------------------------------------------------
+*/
 Route::get('/bootcamp', [BootcampController::class, 'index'])->name('bootcamp.index');
 Route::get('/bootcamp/create', [BootcampController::class, 'create'])->name('bootcamp.create');
 Route::post('/bootcamp', [BootcampController::class, 'store'])->name('bootcamp.store');
