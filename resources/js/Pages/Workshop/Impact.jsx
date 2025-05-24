@@ -2,6 +2,7 @@ import GuestLayout from '@/Layouts/GuestLayout';
 import { Link, usePage } from '@inertiajs/react';
 import React, { useState } from 'react'
 import publicSpeaking from '../../../../public/publicspeaking.png'
+import posterIMPACT from '../../../../public/posterIMPACT.png'
 
 const Impact = () => {
     const auth = usePage().props.auth;
@@ -388,6 +389,8 @@ const Impact = () => {
                             <div className="absolute -right-20 -top-20 w-64 h-64 bg-green-500/5 rounded-full blur-3xl"></div>
 
                             <h3 className="text-2xl font-bold text-green-400 mb-8 text-center relative z-10">Formulir Pendaftaran</h3>
+
+                            <img src={posterIMPACT} alt="impact-poster" className="rounded-lg mb-5" />
 
                             <div className="flex justify-center">
                                 {auth.user ? (
