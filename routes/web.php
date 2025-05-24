@@ -49,7 +49,6 @@ Route::prefix('oauth')->middleware(['auth'])->name('oauth.')->group(function () 
     Route::post('/set-password', [OauthController::class, 'store'])->name('store')->middleware('auth');
 });
 
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

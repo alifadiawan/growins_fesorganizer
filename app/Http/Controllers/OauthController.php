@@ -73,7 +73,7 @@ class OauthController extends Controller
                     return redirect($signedUrl);
                 }
 
-                return redirect('/');
+                return redirect('/')->with('success', 'Account created successfully.');
             }
 
         } catch (Exception $e) {

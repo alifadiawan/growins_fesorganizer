@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 
 Route::name('user.')->group(function () {
     // dashboards
-    Route::get('/user/dashboard/{id}', [DashboardController::class, 'user'])->middleware(['auth.token', 'verified'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'user'])->middleware(['auth.token', 'verified'])->name('dashboard');
 
 
     // users courses

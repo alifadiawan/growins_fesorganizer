@@ -95,7 +95,7 @@ const UserSidebar = () => {
 
             {/* Dashboard */}
             <Link
-              href={route('user.dashboard', user.id)}
+              href={route('user.dashboard')}
               className={`flex items-center p-2 rounded-md ${
                 isActive(`/user/${user.id}/dashboard`) 
                   ? 'bg-gray-100 dark:bg-zinc-800' 
