@@ -115,7 +115,7 @@ const Impact = () => {
                                     <strong className="text-green-400 text-lg">Gak usah takut, kamu gak sendiri kok!</strong> Dikutip dari
                                     CNBC News, <strong className="text-white">75% orang dewasa</strong> masih merasakan{" "}
                                     <strong className="text-white">KETAKUTAN DI DEPAN UMUM!</strong> Saatnya kamu{" "}
-                                    <strong className="text-white">JADI LEBIH BAIK</strong> bersama CONNECTION SELF DEVELOPMENT PROGRAM!
+                                    <strong className="text-white">JADI LEBIH BAIK</strong> bersama IMPACT PROGRAM!
                                 </p>
                             </div>
 
