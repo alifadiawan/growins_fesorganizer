@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->string('title');
             $table->string('slug')->unique();
-            $table->text('description')->nullable();
+            $table->mediumText('description')->nullable();
             $table->text('thumbnail')->nullable();
             $table->decimal('price')->default(0);
             $table->enum('status', ['draft', 'published'])->default('draft');

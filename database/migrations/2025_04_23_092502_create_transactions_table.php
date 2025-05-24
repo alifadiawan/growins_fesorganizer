@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->string('order_id', 255)->unique();
             $table->string('course_id');
             $table->string('user_id');
+            $table->integer('amount');
             $table->enum('status', ['pending', 'processing', 'completed', 'cancelled'])->default('pending');
             $table->enum('payment_status', ['unpaid', 'paid', 'failed'])->default('unpaid');
             $table->timestamps();

@@ -52,6 +52,7 @@ class TransactionController extends Controller
             'order_id' => $parameter['transaction_details']['order_id'],
             'course_id' => $course_id,
             'user_id' => $user->id,
+            'amount' => $course->price,
             'payment_status' => 1 // pending
         ]);
 

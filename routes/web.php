@@ -74,11 +74,11 @@ Route::prefix('payment')->group(function () {
             'userId' => $user_id,
             'midtransClientKey' => env('MIDTRANS_CLIENTKEY')
         ]);
-    })->name('checkout');
+    })->name('user.checkout');
 
     Route::get('/processing-order/{order_id}', function ($order_id) {
         return Inertia::render('PaymentSuccess', ['orderId' => $order_id]);
-    })->name('process.order');
+    })->name('user.process.order');
 });
 
 /*

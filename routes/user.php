@@ -3,17 +3,13 @@
 use App\Http\Controllers\BootcampRegistrationController;
 use App\Http\Controllers\DashboardController;
 use App\Models\BootcampRegistration;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StudentQuizAnswerController;
 use App\Models\Bootcamp;
-use App\Models\CategoryModel;
-use App\Models\CourseModel;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 Route::name('user.')->group(function () {
     // dashboards
