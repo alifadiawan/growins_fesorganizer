@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, router, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
 
 const Show = ({ bootcamp, bootcampRegistration }) => {
+    const [loading, setLoading] = useState(false);
+
     const { data, setData, post, processing, errors } = useForm({
         bootcamp_id: bootcamp.id ?? '',
         nama: '',
@@ -21,6 +23,7 @@ const Show = ({ bootcamp, bootcampRegistration }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         const formData = new FormData();
         formData.append('bootcamp_id', data.bootcamp_id);
@@ -37,15 +40,15 @@ const Show = ({ bootcamp, bootcampRegistration }) => {
 
         try {
             const response = await axios.post(
-                route('bootcamp_registrations.store'),
+                route('user.bootcamp_registrations.store'),
                 formData,
             );
 
-            alert('Success!');
-            console.log('Server response:', response.data);
+            setLoading(false);
+
         } catch (error) {
             console.error('Submission error:', error);
-            alert('Submission failed. Check console for details.');
+            alert('Submission failed.');
         }
     };
 

@@ -13,8 +13,12 @@ use Illuminate\Support\Facades\URL;
 
 class OauthController extends Controller
 {
-    public function redirectToProvider()
+    public function redirectToProvider(Request $request)
     {
+        if ($request->has('redirect_to')) {
+            session(['custom_redirect' => $request->input('redirect_to')]);
+        }
+
         return Socialite::driver('google')->redirect();
     }
 
@@ -38,7 +42,7 @@ class OauthController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
 
-        return redirect('/')->with('success', 'Password set successfully.');
+        return redirect()->intended()->with('success', 'Password set successfully.');
     }
     public function handleProviderCallback()
     {
@@ -51,8 +55,9 @@ class OauthController extends Controller
             if ($finduser) {
 
                 Auth::login($finduser);
+                $redirectUrl = session()->pull('custom_redirect', '/');
 
-                return redirect('/');
+                return redirect($redirectUrl);
 
             } else {
                 $newUser = User::create([
@@ -73,7 +78,9 @@ class OauthController extends Controller
                     return redirect($signedUrl);
                 }
 
-                return redirect('/')->with('success', 'Account created successfully.');
+                $redirectUrl = session()->pull('custom_redirect', '/');
+
+                return redirect($redirectUrl)->with('success', 'Account created successfully.');
             }
 
         } catch (Exception $e) {

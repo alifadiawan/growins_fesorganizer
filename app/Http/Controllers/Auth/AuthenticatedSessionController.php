@@ -18,8 +18,12 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
+        if ($request->has('redirect_to')) {
+            session(['custom_redirect' => $request->input('redirect_to')]);
+        }
+        
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
@@ -31,6 +35,10 @@ class AuthenticatedSessionController extends Controller
      */
     public function login(Request $request)
     {
+        if ($request->has('redirect_to')) {
+            session(['custom_redirect' => $request->input('redirect_to')]);
+        }
+
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -43,10 +51,17 @@ class AuthenticatedSessionController extends Controller
                 'email' => 'Invalid credentials.', // or use 'general' if preferred
             ]);
         }
-
         Auth::login($user);
 
-        return redirect()->intended('/')->with('success', 'Login successful.');
+        // Pull from session (set during GET)
+        $redirectUrl = session()->pull('custom_redirect', '/');
+
+        $allowedRedirects = ['/workshop/impact'];
+        if (!in_array($redirectUrl, $allowedRedirects)) {
+            $redirectUrl = '/';
+        }
+
+        return redirect($redirectUrl)->with('success', 'Login successful.');
 
     }
 
