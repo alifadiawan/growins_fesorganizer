@@ -3,7 +3,7 @@ import { ChevronDown, ChevronRight, Home, Settings, Users, FileText, Mail, Menu,
 import React, { useState } from 'react'
 
 const UserSidebar = () => {
-
+  const { url } = usePage()
   const user = usePage().props.auth.user
 
   const [isOpen, setIsOpen] = useState(true)
@@ -43,6 +43,10 @@ const UserSidebar = () => {
     const html = document.documentElement;
     html.classList.toggle('dark');
   };
+
+  const isActive = (path) => {
+    return url.startsWith(path)
+  }
 
   return (
     <>
@@ -92,36 +96,64 @@ const UserSidebar = () => {
             {/* Dashboard */}
             <Link
               href={route('user.dashboard', user.id)}
-              className={`flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 ${isOpen ? "" : "justify-center"
-                }`}
+              className={`flex items-center p-2 rounded-md ${
+                isActive(`/user/${user.id}/dashboard`) 
+                  ? 'bg-gray-100 dark:bg-zinc-800' 
+                  : 'hover:bg-gray-100 dark:hover:bg-zinc-800'
+              } ${isOpen ? "" : "justify-center"}`}
             >
-              <Home className="h-5 w-5 text-gray-500 dark:text-gray-300" />
-              {isOpen && <span className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200">Dashboard</span>}
+              <Home className={`h-5 w-5 ${
+                isActive(`/user/${user.id}/dashboard`) 
+                  ? 'text-blue-500 dark:text-blue-400' 
+                  : 'text-gray-500 dark:text-gray-300'
+              }`} />
+              {isOpen && <span className={`ml-3 text-sm font-medium ${
+                isActive(`/user/${user.id}/dashboard`) 
+                  ? 'text-blue-500 dark:text-blue-400' 
+                  : 'text-gray-700 dark:text-gray-200'
+              }`}>Dashboard</span>}
             </Link>
 
             {/* My Courses */}
             <Link
               href={route('user.myCourse')}
-              className={`flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 ${isOpen ? "" : "justify-center"
-                }`}
+              className={`flex items-center p-2 rounded-md ${
+                isActive('/my-courses') 
+                  ? 'bg-gray-100 dark:bg-zinc-800' 
+                  : 'hover:bg-gray-100 dark:hover:bg-zinc-800'
+              } ${isOpen ? "" : "justify-center"}`}
             >
-              <Video className="h-5 w-5 text-gray-500 dark:text-gray-300" />
-              {isOpen && <span className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200">My Courses</span>}
+              <Video className={`h-5 w-5 ${
+                isActive('/my-courses') 
+                  ? 'text-blue-500 dark:text-blue-400' 
+                  : 'text-gray-500 dark:text-gray-300'
+              }`} />
+              {isOpen && <span className={`ml-3 text-sm font-medium ${
+                isActive('/my-courses') 
+                  ? 'text-blue-500 dark:text-blue-400' 
+                  : 'text-gray-700 dark:text-gray-200'
+              }`}>My Courses</span>}
             </Link>
 
             {/* Workshop & Bootcamp */}
             <Link
               href={route('user.workshops')}
-              className={`flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800 ${
-                isOpen ? "" : "justify-center"
-              }`}
+              className={`flex items-center p-2 rounded-md ${
+                isActive('/workshops') 
+                  ? 'bg-gray-100 dark:bg-zinc-800' 
+                  : 'hover:bg-gray-100 dark:hover:bg-zinc-800'
+              } ${isOpen ? "" : "justify-center"}`}
             >
-              <Briefcase className="h-5 w-5 text-gray-500 dark:text-gray-300" />
-              {isOpen && (
-                <span className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200">
-                  Workshop & Bootcamp
-                </span>
-              )}
+              <Briefcase className={`h-5 w-5 ${
+                isActive('/workshops') 
+                  ? 'text-blue-500 dark:text-blue-400' 
+                  : 'text-gray-500 dark:text-gray-300'
+              }`} />
+              {isOpen && <span className={`ml-3 text-sm font-medium ${
+                isActive('/workshops') 
+                  ? 'text-blue-500 dark:text-blue-400' 
+                  : 'text-gray-700 dark:text-gray-200'
+              }`}>Workshop & Bootcamp</span>}
             </Link>
 
             {/* Settings Section */}

@@ -1,6 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Link, usePage } from '@inertiajs/react'
-import { PenIcon, VideoIcon } from 'lucide-react'
+import { Hammer, PenIcon, VideoIcon } from 'lucide-react'
 import React from 'react'
 
 const Dashboard = ({ course, myCourse, progress }) => {
@@ -23,6 +23,19 @@ const Dashboard = ({ course, myCourse, progress }) => {
           <div>
             <span>
               <VideoIcon />
+            </span>
+          </div>
+        </div>
+        <div className="flex items-center shadow justify-between p-4 bg-white rounded-md min-w-64">
+          <div>
+            <h6 className="text-xs font-medium leading-none tracking-wider text-gray-500 uppercase">
+              My Workshop & Bootcamp
+            </h6>
+            <span className="text-xl font-semibold">{course}</span>
+          </div>
+          <div>
+            <span>
+              <Hammer />
             </span>
           </div>
         </div>

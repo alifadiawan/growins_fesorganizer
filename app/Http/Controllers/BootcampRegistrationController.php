@@ -32,16 +32,18 @@ class BootcampRegistrationController extends Controller
     {
         $validated = $request->validate([
             'bootcamp_id' => 'nullable|string|exists:bootcamps,id',
-            'whatsapp_number' => 'nullable|string|max:20',
+            'whatsapp_number' => 'required|string|max:20',
             'city' => 'nullable|string|max:100',
             'province' => 'nullable|string|max:100',
 
             // Additional fields
-            'nama' => 'nullable|string|max:255',
+            'nama' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
             'jurusan' => 'nullable|string|max:255',
             'asal_kampus' => 'nullable|string|max:255',
             'username_ig' => 'nullable|string|max:255',
             'cv_path' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Add this line
         ]);
 
         // Handle CV upload if exists
@@ -49,11 +51,16 @@ class BootcampRegistrationController extends Controller
             $validated['cv_path'] = $request->file('cv')->store('cv_uploads', 'public');
         }
 
+        // Handle cover image upload if exists
+        if ($request->hasFile('cover')) {
+            $validated['cover'] = $request->file('cover')->store('cover', 'public');
+        }
+
         $validated['user_id'] = Auth::id();
 
         BootcampRegistration::create($validated);
 
-        return redirect()->back()->with('success', 'Registration successful!');
+        return redirect()->route('user.workshops')->with('success', 'Registration successful! We will contact you soon.');
     }
 
     // Edit registration (admin)

@@ -14,13 +14,14 @@ return new class extends Migration
         Schema::create('bootcamps', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('title');
-            $table->text('description');
+            $table->mediumText('description');
             $table->string('time_start')->nullable();
             $table->string('time_end')->nullable();
             $table->string('date_start')->nullable();
             $table->string('date_end')->nullable();
             $table->string('main_theme')->nullable();
             $table->string('quota')->nullable();
+            $table->string('cover')->nullable();
             $table->integer('normal_price');
             $table->integer('discounted_price')->nullable();
             $table->timestamps();

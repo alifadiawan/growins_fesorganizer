@@ -1,12 +1,12 @@
 import React from 'react';
-import { useForm } from '@inertiajs/react';
+import { Link, router, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { CheckCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle } from 'lucide-react';
 
 const Show = ({ bootcamp, bootcampRegistration }) => {
     const { data, setData, post, processing, errors } = useForm({
-        bootcamp_id: bootcamp.id,
-        full_name: '',
+        bootcamp_id: bootcamp.id ?? '',
+        nama: '',
         email: '',
         whatsapp_number: '',
         city: '',
@@ -14,34 +14,65 @@ const Show = ({ bootcamp, bootcampRegistration }) => {
         jurusan: '',
         asal_kampus: '',
         username_ig: '',
-        cv: null
+        cv: null,
+        cover: null
     });
 
-    const handleSubmit = (e) => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        post(route('admin.bootcamp_registrations.store', bootcamp.id), {
-            onSuccess: () => {
-                console.log(success);// Handle success, e.g., show a success message or redirect
-            },
-            onError: (error) => {
-                console.log(error);// Handle error, e.g., show an error message
-            }
-        });
+
+        const formData = new FormData();
+        formData.append('bootcamp_id', data.bootcamp_id);
+        formData.append('nama', data.nama);
+        formData.append('email', data.email);
+        formData.append('whatsapp_number', data.whatsapp_number);
+        formData.append('city', data.city);
+        formData.append('province', data.province);
+        formData.append('jurusan', data.jurusan);
+        formData.append('asal_kampus', data.asal_kampus);
+        formData.append('username_ig', data.username_ig);
+        if (data.cv) formData.append('cv', data.cv);
+        if (data.cover) formData.append('cover', data.cover);
+
+        try {
+            const response = await axios.post(
+                route('bootcamp_registrations.store'),
+                formData,
+            );
+
+            alert('Success!');
+            console.log('Server response:', response.data);
+        } catch (error) {
+            console.error('Submission error:', error);
+            alert('Submission failed. Check console for details.');
+        }
     };
 
     // If user has already registered, show registration status
     if (bootcampRegistration) {
         return (
             <AuthenticatedLayout>
-                <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+                <div className=" mx-auto py-8 px-4 sm:px-6 lg:px-8">
+                    <div className="mb-8">
+                        <Link
+                            href={route('user.workshops')}
+                            className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                        >
+                            <ArrowLeft className="h-4 w-4 mr-1" />
+                            Back
+                        </Link>
+                    </div>
+
                     <div className="bg-white shadow sm:rounded-lg">
                         <div className="px-4 py-5 sm:p-6">
-                            <div className="flex items-center justify-center">
-                                <CheckCircle className="h-12 w-12 text-green-500" />
-                            </div>
                             <div className="mt-3 text-center sm:mt-5">
-                                <h3 className="text-lg leading-6 font-medium text-gray-900">
-                                    You're registered for {bootcamp.title}
+                                <div className="py-3 flex justify-center">
+                                    <img src={`/storage/${bootcamp.cover}`} alt={bootcamp.title} className="w-52 rounded-md" />
+                                </div>
+                                <h3 className="text-lg leading-6 font-medium flex flex-row gap-2 justify-center items-center text-gray-900">
+                                    <CheckCircle className="h-12 w-12 text-green-500" />
+                                    Berhasil Mendaftar untuk : {bootcamp.title}
                                 </h3>
                                 <div className="mt-4 border-t border-gray-200 pt-4">
                                     <h4 className="text-sm font-medium text-gray-900">Registration Details</h4>
@@ -68,11 +99,17 @@ const Show = ({ bootcamp, bootcampRegistration }) => {
                                 </div>
                                 <div className="mt-6">
                                     <p className="text-sm text-gray-500">
-                                        We'll send you updates about the workshop through WhatsApp and email.
-                                        Please make sure to check your messages regularly.
+                                        Tim kami akan menghubungi Anda lewat website, email, atau WhatsApp untuk memberikan detail lebih lanjut.
                                     </p>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    {/* detail workshop */}
+                    <div className="bg-white shadow sm:rounded-lg">
+                        <div className="px-4 py-5 sm:p-6">
+
                         </div>
                     </div>
                 </div>
@@ -95,20 +132,20 @@ const Show = ({ bootcamp, bootcampRegistration }) => {
                             />
                         </div>
 
-                        <form onSubmit={handleSubmit} className="space-y-6">
+                        <form onSubmit={handleSubmit} className="space-y-6" encType="multipart/form-data">
                             <div>
-                                <label htmlFor="full_name" className="block text-sm font-medium text-gray-700">
+                                <label htmlFor="nama" className="block text-sm font-medium text-gray-700">
                                     Full Name
                                 </label>
                                 <input
                                     type="text"
-                                    id="full_name"
-                                    value={data.full_name}
-                                    onChange={e => setData('full_name', e.target.value)}
+                                    id="nama"
+                                    value={data.nama} // Match with useForm's "nama"
+                                    onChange={e => setData('nama', e.target.value)} // Update "nama"
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
                                 />
-                                {errors.full_name && (
-                                    <p className="mt-1 text-sm text-red-600">{errors.full_name}</p>
+                                {errors.nama && (
+                                    <p className="mt-1 text-sm text-red-600">{errors.nama}</p> // Match with "nama"
                                 )}
                             </div>
 
@@ -138,6 +175,7 @@ const Show = ({ bootcamp, bootcampRegistration }) => {
                                     value={data.whatsapp_number}
                                     onChange={e => setData('whatsapp_number', e.target.value)}
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                                    required
                                 />
                                 {errors.whatsapp_number && (
                                     <p className="mt-1 text-sm text-red-600">{errors.whatsapp_number}</p>
@@ -218,6 +256,7 @@ const Show = ({ bootcamp, bootcampRegistration }) => {
                                     value={data.username_ig}
                                     onChange={e => setData('username_ig', e.target.value)}
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                                    name='username_ig'
                                 />
                                 {errors.username_ig && (
                                     <p className="mt-1 text-sm text-red-600">{errors.username_ig}</p>
@@ -234,6 +273,7 @@ const Show = ({ bootcamp, bootcampRegistration }) => {
                                     onChange={e => setData('cv', e.target.files[0])}
                                     accept=".pdf,.doc,.docx"
                                     className="mt-1 block w-full"
+                                    name='cv'
                                 />
                                 {errors.cv && (
                                     <p className="mt-1 text-sm text-red-600">{errors.cv}</p>

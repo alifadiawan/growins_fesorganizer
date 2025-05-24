@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 class BootcampRegistration extends Model
 {
-
+    protected $table = 'bootcamp_registrations';
     protected $guarded = [];
     protected static function booted()
     {
