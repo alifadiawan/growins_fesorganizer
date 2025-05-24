@@ -2,6 +2,7 @@ import GuestLayout from '@/Layouts/GuestLayout';
 import { Link, usePage } from '@inertiajs/react';
 import React, { useState } from 'react'
 import publicSpeaking from '../../../../public/publicspeaking.png'
+import posterIMPACT from '../../../../public/posterIMPACT.png'
 
 const Impact = () => {
     const auth = usePage().props.auth;
@@ -114,7 +115,7 @@ const Impact = () => {
                                     <strong className="text-green-400 text-lg">Gak usah takut, kamu gak sendiri kok!</strong> Dikutip dari
                                     CNBC News, <strong className="text-white">75% orang dewasa</strong> masih merasakan{" "}
                                     <strong className="text-white">KETAKUTAN DI DEPAN UMUM!</strong> Saatnya kamu{" "}
-                                    <strong className="text-white">JADI LEBIH BAIK</strong> bersama CONNECTION SELF DEVELOPMENT PROGRAM!
+                                    <strong className="text-white">JADI LEBIH BAIK</strong> bersama IMPACT PROGRAM!
                                 </p>
                             </div>
 
@@ -127,7 +128,7 @@ const Impact = () => {
                                 </a>
                             ) : (
                                 <a
-                                    href={route('login')}
+                                    href={route('login', { redirect_to: window.location.pathname })}
                                     className="inline-block bg-green-500 hover:bg-green-600 text-black font-bold py-4 px-8 rounded-lg text-xl transition-all duration-300 shadow-lg shadow-green-500/30 hover:shadow-green-500/50 hover:translate-y-[-2px]"
                                 >
                                     DAFTAR SEKARANG
@@ -389,6 +390,8 @@ const Impact = () => {
 
                             <h3 className="text-2xl font-bold text-green-400 mb-8 text-center relative z-10">Formulir Pendaftaran</h3>
 
+                            <img src={posterIMPACT} alt="impact-poster" className="rounded-lg mb-5" />
+
                             <div className="flex justify-center">
                                 {auth.user ? (
                                     <Link
@@ -415,7 +418,7 @@ const Impact = () => {
                                     </Link>
                                 ) : (
                                     <Link
-                                        href={route('login')}
+                                        href={route('login', { redirect_to: window.location.pathname })}
                                         className="inline-flex items-center justify-center w-full md:w-auto px-8 py-4 text-xl font-bold text-black bg-gradient-to-r from-green-400 to-green-500 rounded-lg transform transition-all duration-300 hover:scale-[1.02] hover:from-green-500 hover:to-green-600 active:scale-[0.98] relative group overflow-hidden shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_25px_rgba(34,197,94,0.5)]"
                                     >
                                         <span className="relative z-10 flex items-center gap-2">
