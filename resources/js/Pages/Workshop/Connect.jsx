@@ -39,7 +39,7 @@ const Connect = () => {
         }
 
         try {
-            const response = await axios.post(route('admin.bootcamp_registrations.store'), form, {
+            const response = await axios.post(route('bootcamp_registrations.store'), form, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

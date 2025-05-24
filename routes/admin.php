@@ -40,8 +40,6 @@ Route::get('/transactions/detail/{order_id}', function ($order_id) {
 // **** Controllers **** // 
 // Admin course management
 
-
-
 // Manage User
 Route::get('/user/all', [ManageUserController::class, 'index'])->name('admin.user.index');
 Route::get('/user/detail/{id}', [ManageUserController::class, 'index'])->name('admin.user.detail');

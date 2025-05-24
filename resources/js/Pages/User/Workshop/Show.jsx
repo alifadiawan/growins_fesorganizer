@@ -37,7 +37,7 @@ const Show = ({ bootcamp, bootcampRegistration }) => {
 
         try {
             const response = await axios.post(
-                route('admin.bootcamp_registrations.store'),
+                route('bootcamp_registrations.store'),
                 formData,
             );
 

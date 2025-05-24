@@ -38,7 +38,7 @@ const WorkshopsIndex = ({ workshops }) => {
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center text-gray-600">
                     <Calendar className="w-4 h-4 mr-2" />
-                    {workshop.date}
+                    {workshop.date_start} - {workshop.date_end}
                   </div>
                   <div className="flex items-center text-gray-600">
                     <MapPin className="w-4 h-4 mr-2" />
@@ -46,7 +46,7 @@ const WorkshopsIndex = ({ workshops }) => {
                   </div>
                   <div className="flex items-center text-gray-600">
                     <Clock className="w-4 h-4 mr-2" />
-                    {workshop.time}
+                    {workshop.time_start} - {workshop.time_end}
                   </div>
                   <div className="flex items-center text-gray-600">
                     <Users className="w-4 h-4 mr-2" />
