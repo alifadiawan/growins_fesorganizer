@@ -13,6 +13,7 @@
         "laravel/socialite": "^5.20",
         "laravel/tinker": "^2.10.1",
         "mailersend/laravel-driver": "^2.9",
+        "mailjet/laravel-mailjet": "^3.1",
         "midtrans/midtrans-php": "^2.6",
         "tightenco/ziggy": "^2.0"
     },

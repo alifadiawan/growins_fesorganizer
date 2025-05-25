@@ -380,7 +380,7 @@ const Impact = () => {
                             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
                                 Siap Jadi Mahasiswa yang Lebih Siap Kerja?
                             </h2>
-                            <p className="text-green-400 text-xl">Kuota hanya untuk 100 peserta pertama!</p>
+                            <p className="text-green-400 text-xl">Kuota hanya untuk 50 peserta pertama!</p>
                             <div className="w-24 h-1 bg-green-500 mx-auto rounded-full mt-6"></div>
                         </div>
 
