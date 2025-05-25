@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\Admin\AdminDashboardController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -16,27 +18,11 @@ use App\Models\Transaction;
 | Views Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/dashboard', function () {
-    return Inertia::render('Admin/Dashboard');
-})->name('admin.dashboard');
 
-// Transaction View
-Route::get('/transactions/all', function () {
-    $allTransactions = Transaction::paginate(20);
+Route::get('/dashboard', [AdminDashboardController::class, 'dashboard'])->name('admin.dashboard');
 
-    return Inertia('Admin/Transactions/Index', ['transactions' => $allTransactions]);
-})->name('admin.transactions.index');
-
-Route::get('/transactions/detail/{order_id}', function ($order_id) {
-    $transaction = Transaction::with(['course', 'user'])->where('order_id', '=', $order_id)->get();
-
-    if (!$transaction) {
-        return redirect()->back()->with('error', 'Not found');
-    }
-
-    return Inertia('Admin/Transactions/Detail', ['transaction' => $transaction[0]]);
-})->name('admin.transactions.detail');
-
+Route::get('/transactions/all', [AdminDashboardController::class, 'transaction_view'])->name('admin.transactions.index');
+Route::get('/transactions/detail/{order_id}', [AdminDashboardController::class, 'transaction_detail'])->name('admin.transactions.detail');
 
 
 /*

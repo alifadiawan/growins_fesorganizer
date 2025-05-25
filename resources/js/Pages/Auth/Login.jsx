@@ -10,6 +10,8 @@ import { useState } from 'react';
 
 export default function Login({ status, canResetPassword }) {
     const [generalError, setGeneralError] = useState('');
+    const [loading, setLoading] = useState(false);
+
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -22,9 +24,12 @@ export default function Login({ status, canResetPassword }) {
 
     const submit = (e) => {
         e.preventDefault();
+        setLoading(true);
 
         post('/login', {
             onError: (error) => {
+                setLoading(false);
+
                 // Custom error handling for 401 and other messages
                 if (error.message) {
                     setData((data) => ({
@@ -130,15 +135,23 @@ export default function Login({ status, canResetPassword }) {
 
 
                         <button
-                            disabled={processing}
+                            disabled={loading}
                             type="submit"
-                            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-black font-bold bg-[#ffcc00] hover:bg-[#e6b800] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ffcc00] transition-colors"
+                            className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-black font-bold 
+                                    bg-[#ffcc00] hover:bg-[#e6b800] 
+                                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ffcc00] 
+                                    transition-colors
+                                    disabled:bg-yellow-200 disabled:text-yellow-500 disabled:hover:bg-yellow-200 disabled:cursor-not-allowed disabled:opacity-70`}
                         >
                             Masuk
                         </button>
 
 
-                        <Link onClick={() => loginWithGoogle()} className="w-full flex items-center justify-center gap-x-3 py-2.5 border rounded-lg bg-white hover:bg-gray-100 duration-150 active:bg-gray-100">
+                        <Link onClick={() => loginWithGoogle()} className={`w-full flex items-center justify-center gap-x-3 py-2.5 border rounded-lg duration-150 active:bg-gray-100
+                                 ${loading
+                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed pointer-events-none opacity-70'
+                                : 'bg-white text-gray-700 hover:bg-gray-100' // Assuming default text color is dark gray/black for Google button
+                            }`}>
                             <svg className="w-5 h-5" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g clipPath="url(#clip0_17_40)">
                                     <path d="M47.532 24.5528C47.532 22.9214 47.3997 21.2811 47.1175 19.6761H24.48V28.9181H37.4434C36.9055 31.8988 35.177 34.5356 32.6461 36.2111V42.2078H40.3801C44.9217 38.0278 47.532 31.8547 47.532 24.5528Z" fill="#4285F4" />
