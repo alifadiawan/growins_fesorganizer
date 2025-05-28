@@ -120,12 +120,20 @@ const Impact = () => {
                             </div>
 
                             {auth.user ? (
-                                <a
-                                    href={route('user.workshops')}
-                                    className="inline-block bg-green-500 hover:bg-green-600 text-black font-bold py-4 px-8 rounded-lg text-xl transition-all duration-300 shadow-lg shadow-green-500/30 hover:shadow-green-500/50 hover:translate-y-[-2px]"
-                                >
-                                    DAFTAR SEKARANG
-                                </a>
+                                <div className="flex flex-row gap-3">
+                                    <Link
+                                        href={route('user.workshops')}
+                                        className="inline-block bg-gradient-to-r from-green-400 via-emerald-500 to-teal-500 hover:from-green-300 hover:via-emerald-400 hover:to-teal-400 text-white font-bold py-4 px-8 rounded-lg text-xl transition-all duration-300 hover:translate-y-[-2px] shadow-lg hover:shadow-xl transform hover:scale-105"
+                                    >
+                                        DAFTAR BERBAYAR
+                                    </Link>
+                                    <Link
+                                        href={route('user.workshops')}
+                                        className="inline-block border border-green-200 hover:border-green-300 bg-transparent hover:bg-green-50 text-white hover:text-green-700 font-normal py-4 px-8 rounded-lg transition-all duration-300 opacity-70 hover:opacity-90"
+                                    >
+                                        DAFTAR GRATIS
+                                    </Link>
+                                </div>
                             ) : (
                                 <a
                                     href={route('login', { redirect_to: window.location.pathname })}

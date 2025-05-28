@@ -1,7 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import React from 'react'
 import { router, Link } from '@inertiajs/react'
-import { PlusCircle, Pencil, Trash2, Eye } from 'lucide-react'
+import { PlusCircle, Pencil, Trash2, Eye, PenTool, NotebookTabs } from 'lucide-react'
 
 const Index = ({ bootcamps }) => {
   const data = bootcamps.data;
@@ -42,7 +42,7 @@ const Index = ({ bootcamps }) => {
                     Cover
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-1/6">
-                    Main Theme
+                    Poster
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-1/12">
                     Normal Price
@@ -74,7 +74,16 @@ const Index = ({ bootcamps }) => {
                       )}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300 break-words">
-                      {b.main_theme}
+                      {b.poster ? (
+                        <img
+                          src={`/storage/${b.poster}`}
+                          alt="poster"
+                          className="w-24 h-auto rounded object-cover"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <span className="italic text-gray-400">No poster</span>
+                      )}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
                       Rp {b.normal_price.toLocaleString()}
@@ -85,20 +94,29 @@ const Index = ({ bootcamps }) => {
                     <td className="px-6 py-4 text-right text-sm font-medium">
                       <div className="flex flex-col gap-2">
                         <Link
+                          href={`/admin/bootcamp/${b.id}`}
+                          className="inline-flex items-center px-3 py-1.5 bg-green-500 text-white rounded-md 
+                                   hover:bg-green-600 transition-colors"
+                        >
+                          <NotebookTabs className="h-4 w-4 mr-1" />
+                          Submissions
+                        </Link>
+                        <Link
+                          href={route('bootcamp.show.public', b.slug)}
+                          target='_blank'
+                          className="inline-flex items-center px-3 py-1.5 bg-blue-500 text-white rounded-md 
+                                   hover:bg-blue-600 transition-colors"
+                        >
+                          <Eye className="h-4 w-4 mr-1" />
+                          View
+                        </Link>
+                        <Link
                           href={`/admin/bootcamp/${b.id}/edit`}
                           className="inline-flex items-center px-3 py-1.5 bg-amber-500 text-white rounded-md 
                                    hover:bg-amber-600 transition-colors"
                         >
                           <Pencil className="h-4 w-4 mr-1" />
                           Edit
-                        </Link>
-                        <Link
-                          href={`/admin/bootcamp/${b.id}`}
-                          className="inline-flex items-center px-3 py-1.5 bg-blue-500 text-white rounded-md 
-                                   hover:bg-blue-600 transition-colors"
-                        >
-                          <Eye className="h-4 w-4 mr-1" />
-                          View
                         </Link>
                         <button
                           onClick={() => handleDelete(b.id)}

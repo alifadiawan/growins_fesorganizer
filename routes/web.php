@@ -12,6 +12,7 @@ use App\Models\{
 };
 
 use App\Http\Controllers\Public\LandingPageController;
+use App\Http\Controllers\User\BootcampController;
 use Illuminate\Support\Facades\{Auth, DB, Route};
 use Inertia\Inertia;
 
@@ -26,10 +27,15 @@ Route::get('/', [LandingPageController::class, 'index'])->name('welcome');
 Route::get('/bootcamp-softskill', [LandingPageController::class, 'bootcamp_softskill'])->name('bootcamp.softskill');
 Route::get('/about-us', [LandingPageController::class, 'about'])->name('about.us');
 
+Route::get('/show/test', function(){
+    return Inertia::render('Workshop/Show');
+});
+
 // Courses Routes
 Route::get('/courses/all', [LandingPageController::class, 'all_course'])->name('user.allCourse.index');
 Route::get('/courses/show/{slug}/{id}', [LandingPageController::class, 'detail_course'])->name('user.allCourse.detail');
 
+Route::get('/workshops/{slug}', [BootcampController::class, 'show'])->name('bootcamp.show.public');
 
 /*
 |--------------------------------------------------------------------------

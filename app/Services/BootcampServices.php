@@ -29,6 +29,10 @@ class BootcampServices
     {
         return Bootcamp::findOrFail($id);
     }
+    public function getBootcampBySlug($slug)
+    {
+        return Bootcamp::where('slug', $slug)->firstOrFail();
+    }
 
     public function updateBootcamp($id, $data)
     {

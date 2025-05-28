@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\BootcampClassController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -78,6 +79,16 @@ Route::get('/bootcamp/{id}', [BootcampController::class, 'show'])->name('bootcam
 Route::get('/bootcamp/{id}/edit', [BootcampController::class, 'edit'])->name('bootcamp.edit');
 Route::put('/bootcamp/{id}', [BootcampController::class, 'update'])->name('bootcamp.update');
 Route::delete('/bootcamp/{id}', [BootcampController::class, 'destroy'])->name('bootcamp.destroy');
+
+// Bootcamp Class Routes
+Route::get('/bootcamp-class', [BootcampClassController::class, 'index'])->name('bootcampClass.index');
+Route::get('/bootcamp-class/create', [BootcampClassController::class, 'create'])->name('bootcampClass.create');
+Route::post('/bootcamp-class', [BootcampClassController::class, 'store'])->name('bootcampClass.store');
+Route::get('/bootcamp-class/{id}', [BootcampClassController::class, 'show'])->name('bootcampClass.show');
+Route::get('/bootcamp-class/{id}/edit', [BootcampClassController::class, 'edit'])->name('bootcampClass.edit');
+Route::put('/bootcamp-class/{id}', [BootcampClassController::class, 'update'])->name('bootcampClass.update');
+Route::delete('/bootcamp-class/{id}', [BootcampClassController::class, 'destroy'])->name('bootcampClass.destroy');
+
 
 // bootcamp registration
 Route::get('/admin/bootcamp-regis', [BootcampRegistrationController::class, 'index'])->name('admin.bootcamp_registrations.index');

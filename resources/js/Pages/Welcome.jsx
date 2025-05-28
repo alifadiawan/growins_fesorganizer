@@ -117,7 +117,7 @@ export default function Welcome({ courseList, categories }) {
 
             {/* Categories section */}
             <div className="pt-10">
-                <Categories categories={categories} />
+                <Categories />
             </div>
 
             {/* Testimonials Section - New */}
@@ -136,19 +136,19 @@ export default function Welcome({ courseList, categories }) {
                             {
                                 name: "Anisa Putri",
                                 role: "Product Manager",
-                                image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+                                image: "https://smb.telkomuniversity.ac.id/wp-content/uploads/2024/08/5-Tipe-Mahasiswa-di-Kampus-Kupu-kupu-hingga-Kunang-kunang.jpg",
                                 quote: "Workshop komunikasi dari GROW membantu saya meningkatkan kepercayaan diri dalam memimpin tim. Sangat direkomendasikan!"
                             },
                             {
                                 name: "Budi Santoso",
                                 role: "Marketing Specialist",
-                                image: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+                                image: "https://instiki.ac.id/wp-content/uploads/2023/07/Bangga-Mahasiswa-INSTIKI-Jadi-Lulusan-Terbaik-20-Tim-Terbaik-dalam-Bangkit-2023-se-Indonesia.jpg",
                                 quote: "Pengalaman belajar yang menyenangkan dengan mentor yang profesional. Materi pelatihan relevan dengan tantangan dunia kerja saat ini."
                             },
                             {
                                 name: "Citra Dewi",
                                 role: "Freelance Designer",
-                                image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+                                image: "https://soc.uir.ac.id/wp-content/uploads/2024/01/REY06830-scaled.jpg",
                                 quote: "Bootcamp soft skills dari GROW memberi saya perspektif baru tentang pentingnya keterampilan interpersonal dalam karir saya sebagai freelancer."
                             }
                         ].map((testimonial, index) => (

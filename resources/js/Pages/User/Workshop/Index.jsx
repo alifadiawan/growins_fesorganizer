@@ -31,9 +31,10 @@ const WorkshopsIndex = ({ workshops }) => {
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
                   {workshop.title}
                 </h3>
-                <p className="text-gray-600 mb-4 line-clamp-2">
-                  {workshop.description}
-                </p>
+                <p
+                  className="text-gray-600 mb-4 line-clamp-2"
+                  dangerouslySetInnerHTML={{ __html: workshop.description }}
+                ></p>
 
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center text-gray-600">
