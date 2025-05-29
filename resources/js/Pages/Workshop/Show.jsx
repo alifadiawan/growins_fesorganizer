@@ -63,11 +63,10 @@ export default function Show({ bootcamp }) {
         time_end = '00:00',
         date_start = null,
         date_end = null,
-        location = 'Default Location',
+        location = 'Default Location' && 'Zoom Meeting',
         normal_price = 0,
         discounted_price = null,
-        currency = 'USD',
-        early_bird_deadline = null,
+        currency = 'Rp.',
         meta_description = null,
         cta_button_text = 'Register Now',
         features = [],
@@ -78,6 +77,52 @@ export default function Show({ bootcamp }) {
     const heroBgStyle = {
         backgroundImage: `url('${cover}')`,
     };
+
+    const CheckIcon = () => (
+        <svg className="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+        </svg>
+    );
+
+    // SVG Info/Requirement Icon (optional, for free tier requirements)
+    const InfoIcon = () => (
+        <svg className="w-5 h-5 text-blue-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path>
+        </svg>
+    );
+
+    const cards = [
+        {
+            id: 1,
+            title: "Free Plan",
+            description: "Perfect for getting started with basic features and exploring our platform without any cost",
+            price: 0,
+            features: [
+                "Basic access to courses",
+                "Community support",
+                "Limited resources",
+                "Standard templates"
+            ],
+            type: "free",
+            popular: false
+        },
+        {
+            id: 2,
+            title: "Premium Plan",
+            description: "Unlock full potential with advanced features, priority support, and exclusive content",
+            price: 500000,
+            features: [
+                "Full access to all courses",
+                "Priority support",
+                "Unlimited resources",
+                "Premium templates",
+                "1-on-1 mentoring",
+                "Certificate of completion"
+            ],
+            type: "paid",
+            popular: true
+        }
+    ];
 
     return (
         <div className="bg-gradient-to-r from-teal-900 to-teal-600 font-inter">
@@ -96,7 +141,7 @@ export default function Show({ bootcamp }) {
                         transition={{ duration: 0.8 }}
                         className="order-2 lg:order-1 space-y-8"
                     >
-                        <h1 className="text-4xl md:text-6xl lg:text-7xl text-white leading-tight">
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl text-white leading-tight">
                             {title}
                         </h1>
                         <div
@@ -105,7 +150,7 @@ export default function Show({ bootcamp }) {
                         />
                         <div className="flex lg:flex-row flex-col gap-5">
                             <Link
-                                href={route('user.workshops')}
+                                href="#ticket_information"
                                 className="inline-block bg-gradient-to-r from-green-400 via-emerald-500 to-teal-500 hover:from-green-300 hover:via-emerald-400 hover:to-teal-400 text-white font-bold py-4 px-8 rounded-lg text-xl transition-all duration-300 hover:translate-y-[-2px] shadow-lg hover:shadow-xl transform hover:scale-105"
                             >
                                 DAFTAR BERBAYAR
@@ -144,7 +189,7 @@ export default function Show({ bootcamp }) {
                                 <img
                                     src={`/storage/${poster}`}
                                     alt={title}
-                                    className="w-full h-[300px] md:h-[400px] lg:h-[500px] object-cover"
+                                    className="w-full h-[300px] md:h-[400px] lg:h-[550px] object-cover"
                                 />
                                 {/* Subtle overlay for better text contrast if needed */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -304,46 +349,180 @@ export default function Show({ bootcamp }) {
             )}
 
             {/* Pricing Section */}
-            <section id="pricing" className="py-16 bg-white">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+            <section id="ticket_information" className="py-20 md:py-28 bg-gradient-to-r from-teal-900 to-teal-600 relative overflow-hidden">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div className="text-center mb-16 md:mb-20">
+                        <h2 className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-white mb-6">
                             Ticket Informations
                         </h2>
-                        <div className="w-24 h-1 bg-gradient-to-r from-green-500 to-emerald-600 mx-auto rounded-full" />
+                        <div className="w-32 h-2 bg-gradient-to-r from-green-500 to-green-600 mx-auto rounded-full shadow-lg"></div>
+                        <p className="mt-6 text-lg text-gray-300 max-w-2xl mx-auto">Choose the perfect plan that fits your career growth journey</p>
                     </div>
-                    <div className="flex justify-center">
-                        <div className="bg-gray-100 p-8 rounded-lg shadow-xl max-w-md w-full">
-                            <h3 className="text-2xl font-semibold text-gray-900 mb-2">Standard Access</h3>
-                            {discounted_price !== null && discounted_price < normal_price ? (
-                                <div>
-                                    <p className="text-4xl font-bold text-green-600">
-                                        {currency} {discounted_price}
-                                        <span className="text-xl text-gray-500 line-through ml-2">{currency} {normal_price}</span>
-                                    </p>
-                                    {early_bird_deadline && <p className="mt-1 text-sm text-green-700">Early Bird Discount until {formatDate(early_bird_deadline)}!</p>}
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-10 items-stretch">
+
+                        {/* Card 1: Member FEST - Premium Look */}
+                        <div className="relative group">
+                            {/* Animated gradient border */}
+                            <div className="absolute -inset-1 bg-gradient-to-r from-green-400 via-emerald-500 to-teal-500 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+                            <div className="relative bg-white p-8 rounded-xl shadow-2xl hover:shadow-3xl transition-all duration-500 flex flex-col transform hover:-translate-y-2 hover:scale-105 border border-green-100">
+                                {/* Premium badge */}
+                                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                                    <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
+                                        🌟 MOST POPULAR
+                                    </div>
                                 </div>
-                            ) : (
-                                <p className="text-4xl font-bold text-green-600">{currency} {normal_price}</p>
-                            )}
-                            <p className="mt-4 text-gray-600">Full access to all sessions, networking events, and materials.</p>
-                            {url && (
+
+                                <div className="flex-grow pt-4">
+                                    <h3 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-700 bg-clip-text text-transparent mb-4">
+                                        Member FEST
+                                    </h3>
+
+                                    {discounted_price !== null && discounted_price < normal_price ? (
+                                        <div className="mb-6">
+                                            <div className="flex items-baseline">
+                                                <p className="text-5xl font-extrabold bg-gradient-to-r from-green-600 to-emerald-700 bg-clip-text text-transparent">
+                                                    {currency} {discounted_price}
+                                                </p>
+                                                <span className="text-2xl text-gray-400 line-through ml-3 decoration-2">{currency} {normal_price}</span>
+                                            </div>
+                                            <div className="inline-block bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-semibold mt-2">
+                                                Save {currency} {parseInt(normal_price) - parseInt(discounted_price)} 🔥
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <p className="text-5xl font-extrabold bg-gradient-to-r from-green-600 to-emerald-700 bg-clip-text text-transparent mb-6">
+                                            {currency} {normal_price}
+                                        </p>
+                                    )}
+
+                                    <ul className="space-y-4 text-gray-700">
+                                        {[
+                                            "Personal & Group Skill Coaching",
+                                            "CV & LinkedIn Review Online",
+                                            "Public Speaking Simulation",
+                                            "Project Assignments",
+                                            "Career Tools Kit",
+                                            "Networking Group",
+                                            "Sertifikat Digital + Hadiah Spesial",
+                                            "Internship Gateway (Bagi Peserta yang terpilih)"
+                                        ].map((feature, index) => (
+                                            <li key={index} className="flex items-start group/item">
+                                                <div className="flex-shrink-0 w-6 h-6 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full mr-3 mt-0.5 flex items-center justify-center">
+                                                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                    </svg>
+                                                </div>
+                                                <span className="group-hover/item:text-green-700 transition-colors duration-200">{feature}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+
                                 <a
-                                    href={url.startsWith('#') ? url : url}
-                                    target={url.startsWith('#') ? '_self' : '_blank'}
-                                    rel={url.startsWith('#') ? '' : 'noopener noreferrer'}
-                                    className="mt-6 block w-full text-center bg-green-500 border border-transparent rounded-md py-3 px-8 text-base font-medium text-white hover:bg-green-600 transition-colors"
+                                    href=""
+                                    target="_blank"
+                                    className="mt-10 block w-full text-center bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-4 px-8 rounded-xl text-lg font-bold transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105 relative overflow-hidden group/btn"
                                 >
-                                    {cta_button_text}
+                                    <span className="relative z-10">DAFTAR SEKARANG ✨</span>
+                                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-green-700 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
                                 </a>
-                            )}
+                            </div>
+                        </div>
+
+                        {/* Card 2: Non Member - Premium Look */}
+                        <div className="relative group">
+                            <div className="absolute -inset-1 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                            <div className="relative bg-white p-8 min-h-full rounded-xl shadow-2xl hover:shadow-3xl transition-all duration-500 flex flex-col transform hover:-translate-y-2 hover:scale-105 border border-blue-100">
+                                <div className="flex-grow">
+                                    <h3 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent mb-4">
+                                        Non Member
+                                    </h3>
+
+                                    <p className="text-5xl font-extrabold bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent mb-6">
+                                        {currency} {normal_price}
+                                    </p>
+
+                                    <ul className="space-y-4 text-gray-700">
+                                        {[
+                                            "Personal & Group Skill Coaching",
+                                            "CV & LinkedIn Review Online",
+                                            "Public Speaking Simulation",
+                                            "Project Assignments",
+                                            "Career Tools Kit",
+                                            "Networking Group",
+                                            "Sertifikat Digital + Hadiah Spesial",
+                                            "Internship Gateway (Bagi Peserta yang terpilih)"
+                                        ].map((feature, index) => (
+                                            <li key={index} className="flex items-start group/item">
+                                                <div className="flex-shrink-0 w-6 h-6 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full mr-3 mt-0.5 flex items-center justify-center">
+                                                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                    </svg>
+                                                </div>
+                                                <span className="group-hover/item:text-blue-700 transition-colors duration-200">{feature}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                <a
+                                    href=""
+                                    target="_blank"
+                                    className="mt-10 block w-full text-center bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white py-4 px-8 rounded-xl text-lg font-bold transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105 relative overflow-hidden group/btn"
+                                >
+                                    <span className="relative z-10">DAFTAR SEKARANG 🚀</span>
+                                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-blue-700 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                                </a>
+                            </div>
+                        </div>
+
+                        {/* Card 3: Selection - Calm, Minimal Design */}
+                        <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex flex-col md:col-span-2 lg:col-span-1 border-2 border-gray-100 hover:border-gray-200">
+                            <div className="flex-grow">
+                                <div className="flex items-center mb-4">
+                                    <h3 className="text-3xl font-semibold text-gray-700">Selection</h3>
+                                    <span className="ml-3 bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm font-medium">Limited Spots</span>
+                                </div>
+
+                                <p className="text-4xl font-bold text-gray-800 mb-6">Free</p>
+
+                                <div className="bg-gray-50 p-4 rounded-lg mb-6">
+                                    <p className="text-sm text-gray-600 font-medium mb-2">Requirements:</p>
+                                    <ol className="space-y-3 text-gray-700">
+                                        {[
+                                            "Mengisi Formulir di link berikut",
+                                            "Melampirkan CV di Formulir",
+                                            "Bersedia Mengikuti Program dari awal hingga akhir",
+                                            "Khusus Mahasiswa dan Fresh Graduate",
+                                            "Wajib Follow akun instagram @growins.id"
+                                        ].map((requirement, index) => (
+                                            <li key={index} className="flex items-start text-sm">
+                                                <span className="flex-shrink-0 w-5 h-5 bg-gray-300 text-white rounded-full text-xs font-bold flex items-center justify-center mr-3 mt-0.5">
+                                                    {index + 1}
+                                                </span>
+                                                <span>{requirement}</span>
+                                            </li>
+                                        ))}
+                                    </ol>
+                                </div>
+                            </div>
+
+                            <a
+                                href=""
+                                target="_blank"
+                                className="mt-6 block w-full text-center bg-gray-600 hover:bg-gray-700 text-white py-3.5 px-8 rounded-lg text-base font-semibold transition-colors duration-200 shadow-sm hover:shadow-md"
+                            >
+                                Daftar Sekarang
+                            </a>
                         </div>
                     </div>
                 </div>
             </section>
 
+
             {/* Registration Form Section (if form_fields are provided) */}
-            {finalAttributes && finalAttributes.length > 0 ? (
+            {/* {finalAttributes && finalAttributes.length > 0 ? (
                 <RegisterForm custom_attributes={finalAttributes} />
             ) : (
                 <section id="register-placeholder" className="py-16 bg-gray-50">
@@ -352,67 +531,9 @@ export default function Show({ bootcamp }) {
                         <p className="mt-2 text-lg text-gray-500">Custom form fields are not configured for this event.</p>
                     </div>
                 </section>
-            )}
-            {/* {custom_attributes && custom_attributes.length > 0 && (
-                <section id="register" className="py-16 bg-gray-50">
-                    <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="text-center mb-12">
-                            <h2 className="text-3xl font-bold text-gray-900">Register Your Interest</h2>
-                            <p className="mt-2 text-lg text-gray-600">Fill out the form below to secure your spot or get more information.</p>
-                        </div>
-                        <form className="bg-white p-8 rounded-lg shadow-lg space-y-6">
-                            {custom_attributes.map((field) => (
-                                <div key={field.name}>
-                                    <label htmlFor={field.name} className="block text-sm font-medium text-gray-700">
-                                        {field.label}
-                                        {field.required && <span className="text-red-500">*</span>}
-                                    </label>
-                                    {field.type === 'select' ? (
-                                        <select
-                                            id={field.name}
-                                            name={field.name}
-                                            required={field.required}
-                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                                        >
-                                            {field.placeholder && <option value="">{field.placeholder}</option>}
-                                            {field.options && field.options.map((option, idx) => (
-                                                <option key={idx} value={option}>{option}</option>
-                                            ))}
-                                        </select>
-                                    ) : field.type === 'textarea' ? (
-                                        <textarea
-                                            id={field.name}
-                                            name={field.name}
-                                            rows={3}
-                                            placeholder={field.placeholder}
-                                            required={field.required}
-                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                                        />
-                                    ) : (
-                                        <input
-                                            type={field.type || 'text'}
-                                            id={field.name}
-                                            name={field.name}
-                                            placeholder={field.placeholder}
-                                            required={field.required}
-                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                                        />
-                                    )}
-                                </div>
-                            ))}
-                            <div>
-                                <button
-                                    type="submit"
-                                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
-                                >
-                                    Submit Registration
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </section>
             )} */}
 
+            
             {/* Poster Section (Optional) */}
             {poster && (
                 <section className="py-16 bg-white">
