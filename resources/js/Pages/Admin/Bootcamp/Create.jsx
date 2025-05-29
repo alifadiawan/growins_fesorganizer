@@ -1,297 +1,363 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import React, { useState } from 'react'
-import { router, Link, usePage } from '@inertiajs/react'
+import { router, Link, usePage, useForm } from '@inertiajs/react'
 import { ArrowLeft } from 'lucide-react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
+import DynamicJsonInput from '@/Components/DynamicJsonInput'
 
 const Create = () => {
-  const [errors, setErrors] = useState({});
+  const [processing, setProcessing] = useState(false);
 
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [{ align: ["right", "center", "justify"] }],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["link", "image"],
-    ],
-  };
-
-  const [form, setForm] = useState({
-    bootcamp_id: '',
-    whatsapp_number: '',
-    city: '',
-    province: '',
-    nama: '',
-    jurusan: '',
-    url: '',
-    asal_kampus: '',
-    username_ig: '',
+  const { data, setData, post, errors } = useForm({
+    title: '',
+    slug: '',
     description: '',
+    main_theme: '',
+    quota: '',
+    normal_price: '',
+    discounted_price: '',
     time_start: '',
     time_end: '',
     date_start: '',
     date_end: '',
-    main_theme: '',
-    normal_price: '',
-    discounted_price: '',
+    layout_style: '',
+    meta_title: '',
+    meta_description: '',
+    is_published: false,
+    sections: [],
     cover: null,
+    hero_image: null,
+    poster: null,
+    meta_image: null,
   });
 
-  const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
+  const generateSlug = (text) =>
+    text
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, '') // remove non-word characters
+      .replace(/\s+/g, '-')     // replace spaces with dashes
+      .replace(/--+/g, '-');    // remove multiple dashes
+
+
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    setData(prev => {
+      const newData = {
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value,
+      };
+
+      if (
+        name === 'title' &&
+        (!prev.slug || prev.slug === generateSlug(prev.title))
+      ) {
+        newData.slug = generateSlug(value);
+      }
+
+      return newData;
     });
   };
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setForm({
-      ...form,
-      [e.target.name]: file
-    });
+    const { name, files } = e.target;
+    setData(prev => ({
+      ...prev,
+      [name]: files[0] || null
+    }));
   };
 
-  // Add a handler for Quill
-  const handleDescriptionChange = value => {
-    setForm({ ...form, description: value })
-  }
+  const handleSubmit = () => {
+    setProcessing(true);
 
-  const handleSubmit = e => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    Object.keys(form).forEach(key => {
-      // Only append if value exists
-      if (form[key] !== null && form[key] !== '') {
-        formData.append(key, form[key]);
-      }
-    });
-
-    router.post(route('bootcamp.store'), formData, {
-      forceFormData: true,
-      onError: (errors) => {
-        setErrors(errors);
-      },
+    post(route('bootcamp.store'), {
       onSuccess: () => {
-        // Handle success
+        console.log('Bootcamp created successfully');
+        setProcessing(false);
       },
+      onError: () => {
+        console.error('Error creating bootcamp:', errors);
+        setProcessing(false);
+      }
     });
   };
 
   return (
     <AuthenticatedLayout pageTitle="Create Bootcamp">
-      <div className="mb-8">
-        <Link
-          href="/admin/bootcamp"
-          className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 transition-colors"
-        >
-          <ArrowLeft className="h-4 w-4 mr-1" />
-          Back to Bootcamps
-        </Link>
-      </div>
-
-      {Object.keys(errors).length > 0 && (
-        <div className="mb-4">
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-            <strong className="font-bold">Error!</strong>
-            <ul className="list-disc pl-5">
-              {Object.entries(errors).map(([field, message]) => (
-                <li key={field}>{message}</li>
-              ))}
-            </ul>
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <div className="bg-white border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="py-6">
+              <div className="flex items-center space-x-4">
+                <button className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 transition-colors duration-200 hover:bg-gray-100 px-3 py-2 rounded-md">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Bootcamps
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      )}
 
+        {/* Main Content */}
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mx-auto">
+        <div className="bg-white rounded-lg shadow-md p-6">
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Title <span className='text-red-500 opacity-70 text-sm'>*required</span>
-            </label>
-            <input
-              name="title"
-              placeholder="Enter bootcamp title"
-              value={form.title}
-              onChange={handleChange}
-              className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                         focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
-              required
+          {Object.entries(errors).map(([field, message]) => (
+            <div key={field} className="mb-5" style={{ color: 'red' }}>
+              {message}
+            </div>
+          ))}
+
+          <h1 className="text-2xl font-bold text-gray-900 mb-6">Admin Form</h1>
+
+          <div className="space-y-6">
+            {/* Basic Information */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Title <span className="text-xs text-red-500">**</span>
+                </label>
+                <input
+                  type="text"
+                  name="title"
+                  value={data.title}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Slug <span className="text-xs text-gray-400">leave it empty for automatic</span>
+                </label>
+                <input
+                  disabled={true}
+                  type="text"
+                  name="slug"
+                  value={data.slug}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 bg-gray-300 text-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-5">
+                Description <span className="text-xs text-red-500">**</span>
+              </label>
+              <ReactQuill
+                theme="snow"
+                value={data.description}
+                onChange={(value) => handleInputChange({ target: { name: 'description', value } })}
+                className="bg-white"
+                style={{ height: '400px' }}
+              />
+            </div>
+
+            {/* Pricing */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Quota <span className="text-xs text-red-500">**</span>
+                </label>
+                <input
+                  type="number"
+                  name="quota"
+                  value={data.quota}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Normal Price <span className="text-xs text-red-500">**</span>
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  name="normal_price"
+                  value={data.normal_price}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Discounted Price
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  name="discounted_price"
+                  value={data.discounted_price}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+            </div>
+
+            {/* Time and Date */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Start Time
+                </label>
+                <input
+                  type="time"
+                  name="time_start"
+                  value={data.time_start}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  End Time
+                </label>
+                <input
+                  type="time"
+                  name="time_end"
+                  value={data.time_end}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Start Date <span className="text-xs text-red-500">**</span>
+                </label>
+                <input
+                  type="date"
+                  name="date_start"
+                  value={data.date_start}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  End Date
+                </label>
+                <input
+                  type="date"
+                  name="date_end"
+                  value={data.date_end}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+            </div>
+
+            {/* Meta Information */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Meta Title <span className="text-xs text-gray-400">opsional</span>
+                </label>
+                <input
+                  type="text"
+                  name="meta_title"
+                  value={data.meta_title}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Meta Description <span className="text-xs text-gray-400">opsional</span>
+                </label>
+                <textarea
+                  name="meta_description"
+                  value={data.meta_description}
+                  onChange={handleInputChange}
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+            </div>
+
+            {/* File Uploads */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Cover Image <span className="text-xs text-red-500">**</span>
+                </label>
+                <input
+                  type="file"
+                  name="cover"
+                  onChange={handleFileChange}
+                  accept="image/*"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Poster <span className="text-xs text-red-500">**</span>
+                </label>
+                <input
+                  type="file"
+                  name="poster"
+                  onChange={handleFileChange}
+                  accept="image/*"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-200 p-4 rounded-md text-gray-500"> 
+                <p>Custom Field</p>
+            </div>
+
+            <DynamicJsonInput
+              value={data.custom_attributes} // Pass the array from useForm's data
+              onChange={(newAttributes) => setData('custom_attributes', newAttributes)} // Update the array in useForm's data
+              fieldTitleLabel="Attribute Name" // Custom label for this context
+              dataTypeLabel="Attribute Type"   // Custom label for this context
+              addRecordButtonText="Add Attribute"
+              idPrefix="prod-attr" // Unique prefix if using multiple DynamicJsonInputs on one page
             />
 
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              URL  <span className='text-red-500 opacity-70 text-sm'>*required</span>
-            </label>
-            <input
-              name="url"
-              placeholder="Enter bootcamp url ( /workshop/workshop-name /)"
-              value={form.url}
-              onChange={handleChange}
-              className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                         focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
-              required
-            />
-
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Description <span className='text-red-500 opacity-70 text-sm'>*required</span>
-            </label>
-            <ReactQuill
-              modules={modules}
-              value={form.description}
-              onChange={handleDescriptionChange}
-              theme="snow"
-              className="bg-white dark:bg-gray-700 rounded-md"
-            />
-
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Time Start
-              </label>
+            {/* Published Status */}
+            <div className="flex items-center">
               <input
-                type="time"
-                name="time_start"
-                value={form.time_start}
-                onChange={handleChange}
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                 focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
+                type="checkbox"
+                name="is_published"
+                checked={data.is_published}
+                onChange={handleInputChange}
+                className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               />
-
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Time End
+              <label className="ml-2 block text-sm text-gray-700">
+                Published
               </label>
-              <input
-                type="time"
-                name="time_end"
-                value={form.time_end}
-                onChange={handleChange}
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                 focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Date Start  <span className='text-red-500 opacity-70 text-sm'>*required</span>
-              </label>
-              <input
-                type="date"
-                name="date_start"
-                value={form.date_start}
-                onChange={handleChange}
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                 focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Date End
-              </label>
-              <input
-                type="date"
-                name="date_end"
-                value={form.date_end}
-                onChange={handleChange}
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                 focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
-              />
-            </div>
-          </div>
-
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Main Theme
-            </label>
-            <input
-              name="main_theme"
-              placeholder="Enter main theme"
-              value={form.main_theme}
-              onChange={handleChange}
-              className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                         focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Normal Price  <span className='text-red-500 opacity-70 text-sm'>*required</span>
-              </label>
-              <input
-                type="number"
-                name="normal_price"
-                placeholder="Enter price"
-                value={form.normal_price}
-                onChange={handleChange}
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                           focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
-                required
-              />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Discounted Price
-              </label>
-              <input
-                type="number"
-                name="discounted_price"
-                placeholder="Enter discounted price"
-                value={form.discounted_price}
-                onChange={handleChange}
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                           focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
-              />
+            {/* Submit Button */}
+            <div className="flex justify-end pt-6">
+              <button
+                onClick={handleSubmit}
+                disabled={processing}
+                className="px-6 py-2 bg-blue-600 text-white font-medium rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {processing ? 'Saving...' : 'Save'}
+              </button>
             </div>
           </div>
-
-          {/* Cover Image Upload */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Cover Image 
-            </label>
-            <input
-              type="file"
-              name="cover"
-              onChange={handleFileChange}
-              accept="image/jpeg,image/png,image/jpg,image/gif"
-              className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                           focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
-            />
-            <p className="mt-1 text-sm text-gray-500">Accepted formats: JPEG, PNG, JPG, GIF (Max: 3MBb)</p>
-          </div>
-
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 
-                         transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 
-                         focus:ring-teal-500"
-            >
-              Create Bootcamp
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
+
+
     </AuthenticatedLayout>
   )
 }

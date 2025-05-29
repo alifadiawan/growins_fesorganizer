@@ -87,7 +87,7 @@ const Bootcamp = ({ bootcamp }) => {
                         {/* Bootcamp card content */}
                         <div className="h-48 bg-gray-200 overflow-hidden">
                             <img
-                                src={`/storage/${item.cover}`}
+                                src={`/storage/${item.cover}` && `/storage/${item.poster}`}
                                 alt={item.title}
                                 className="w-full h-full object-cover"
                                 onError={(e) => {
@@ -138,7 +138,7 @@ const Bootcamp = ({ bootcamp }) => {
 
 
                                 <Link
-                                    href={item.url ? item.url : route('user.workshops')}
+                                    href={item.url ? item.url : route('bootcamp.show.public', item.slug)}
                                     className="block w-full bg-teal-600 text-white py-3 px-6 rounded-lg text-center font-semibold hover:bg-teal-700 transition-colors duration-300"
                                 >
                                     Daftar Sekarang

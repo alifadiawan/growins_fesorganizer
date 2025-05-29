@@ -1,285 +1,405 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import React, { useState } from 'react'
-import { router, Link } from '@inertiajs/react'
+import { router, Link, useForm } from '@inertiajs/react'
 import { ArrowLeft } from 'lucide-react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
+import DynamicJsonInput from '@/Components/DynamicJsonInput'
 
 const Edit = ({ bootcamp }) => {
-  const [errors, setErrors] = useState({})
-  const [form, setForm] = useState({
-    title: bootcamp.title || '',
-    url: bootcamp.url || '',
-    description: bootcamp.description || '',
-    time_start: bootcamp.time_start || '',
-    time_end: bootcamp.time_end || '',
-    date_start: bootcamp.date_start || '',
-    date_end: bootcamp.date_end || '',
-    main_theme: bootcamp.main_theme || '',
-    normal_price: bootcamp.normal_price || '',
-    discounted_price: bootcamp.discounted_price || '',
-    cover: bootcamp.cover || null,
+  const [processing, setProcessing] = useState(false);
+  const [preview, setPreview] = useState({
+    cover: null,
+    poster: null,
   });
 
   const modules = {
     toolbar: [
-      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-      [{ align: ['right', 'center', 'justify'] }],
+      [{ header: [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
       [{ list: 'ordered' }, { list: 'bullet' }],
       ['link', 'image'],
+      ['clean'],
     ],
-  }
+  };
 
-  const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
+  const formats = [
+    'header',
+    'bold', 'italic', 'underline', 'strike',
+    'list', 'bullet',
+    'link', 'image',
+  ];
 
-  const handleFileChange = e => {
-    const file = e.target.files[0]
-    setForm({ ...form, [e.target.name]: file })
-  }
+  const { data, setData, post, errors } = useForm({
+    title: bootcamp.title || '',
+    slug: bootcamp.slug || '',
+    description: bootcamp.description || '',
+    main_theme: bootcamp.main_theme || '',
+    quota: bootcamp.quota || '',
+    normal_price: bootcamp.normal_price || '',
+    discounted_price: bootcamp.discounted_price || '',
+    time_start: bootcamp.time_start || '',
+    time_end: bootcamp.time_end || '',
+    date_start: bootcamp.date_start || '',
+    date_end: bootcamp.date_end || '',
+    layout_style: bootcamp.layout_style || '',
+    meta_title: bootcamp.meta_title || '',
+    meta_description: bootcamp.meta_description || '',
+    is_published: bootcamp.is_published || false,
+    sections: bootcamp.sections || [],
+    cover: bootcamp.cover || null,
+    hero_image: bootcamp.hero_image || null,
+    poster: bootcamp.poster || null,
+    meta_image: bootcamp.meta_image || null,
+    custom_attributes: bootcamp.custom_attributes || [],
+  });
 
-  const handleDescriptionChange = value => {
-    setForm({ ...form, description: value })
-  }
+  const generateSlug = (text) =>
+    text
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/--+/g, '-');
 
-  const handleSubmit = e => {
-    e.preventDefault()
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
 
-    const formData = new FormData()
-    formData.append('_method', 'PUT');
-    Object.keys(form).forEach(key => {
-      if (key === 'cover') {// Only append if it's a File (user selected a new file)
-        if (form.cover && form.cover instanceof File) {
-          formData.append('cover', form.cover);
-        }
-      } else if (form[key] !== null && form[key] !== '') {
-        formData.append(key, form[key]);
+    setData(prev => {
+      const newData = {
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value,
+      };
+
+      if (
+        name === 'title' &&
+        (!prev.slug || prev.slug === generateSlug(prev.title))
+      ) {
+        newData.slug = generateSlug(value);
       }
-    })
+
+      return newData;
+    });
+  };
+
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    setData(prev => ({
+      ...prev,
+      [name]: files[0] || null
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setProcessing(true);
+
+    const formData = new FormData();
+    formData.append('_method', 'PUT');
+
+    Object.keys(data).forEach(key => {
+      if (['cover', 'hero_image', 'poster', 'meta_image'].includes(key)) {
+        if (data[key] && data[key] instanceof File) {
+          formData.append(key, data[key]);
+        }
+      } else if (key === 'custom_attributes') {
+        formData.append(key, JSON.stringify(data[key])); // <-- KEY LINE
+      } else {
+        formData.append(key, data[key]);
+      }
+    });
 
     router.post(route('bootcamp.update', bootcamp.id), formData, {
-      forceFormData: true,
-      onError: errors => {
-        setErrors(errors);
-      },
+      forceFormData: true, // <--- key line (only works in recent versions)
       onSuccess: () => {
-        window.location.href = route('bootcamp.index');
+        setProcessing(false);
       },
-    })
-  }
+      onError: (errors) => {
+        setProcessing(false);
+        console.log(errors); // Now this will not be empty if validation fails
+      },
+    });
+  };
 
   return (
     <AuthenticatedLayout pageTitle="Edit Bootcamp">
-      <div className="mb-8">
-        <Link
-          href="/admin/bootcamp"
-          className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 transition-colors"
-        >
-          <ArrowLeft className="h-4 w-4 mr-1" />
-          Back to Bootcamps
-        </Link>
-      </div>
-
-      {Object.keys(errors).length > 0 && (
-        <div className="mb-4">
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-            <strong className="font-bold">Error!</strong>
-            <ul className="list-disc pl-5">
-              {Object.entries(errors).map(([field, message]) => (
-                <li key={field}>{message}</li>
-              ))}
-            </ul>
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <div className="bg-white border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="py-6">
+              <div className="flex items-center space-x-4">
+                <Link
+                  href={route('bootcamp.index')}
+                  className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 transition-colors duration-200 hover:bg-gray-100 px-3 py-2 rounded-md"
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Bootcamps
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
-      )}
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mx-auto">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Title <span className='text-red-500 opacity-70 text-sm'>*required</span>
-            </label>
-            <input
-              name="title"
-              placeholder="Enter bootcamp title"
-              value={form.title}
-              onChange={handleChange}
-              className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                         focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
-              required
-            />
-          </div>
+        {/* Main Content */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="bg-white rounded-lg shadow-md p-6">
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              URL  <span className='text-red-500 opacity-70 text-sm'>*required</span>
-            </label>
-            <input
-              name="url"
-              placeholder="Enter bootcamp url ( /workshop/workshop-name /)"
-              value={form.url}
-              onChange={handleChange}
-              className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                         focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
-              required
-            />
-          </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Description <span className='text-red-500 opacity-70 text-sm'>*required</span>
-            </label>
-            <ReactQuill
-              modules={modules}
-              value={form.description}
-              onChange={handleDescriptionChange}
-              theme="snow"
-              className="bg-white dark:bg-gray-700 rounded-md"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Time Start
-              </label>
-              <input
-                type="time"
-                name="time_start"
-                value={form.time_start}
-                onChange={handleChange}
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                 focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Time End
-              </label>
-              <input
-                type="time"
-                name="time_end"
-                value={form.time_end}
-                onChange={handleChange}
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                 focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Date Start  <span className='text-red-500 opacity-70 text-sm'>*required</span>
-              </label>
-              <input
-                type="date"
-                name="date_start"
-                value={form.date_start}
-                onChange={handleChange}
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                 focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Date End
-              </label>
-              <input
-                type="date"
-                name="date_end"
-                value={form.date_end}
-                onChange={handleChange}
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                 focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Main Theme
-            </label>
-            <input
-              name="main_theme"
-              placeholder="Enter main theme"
-              value={form.main_theme}
-              onChange={handleChange}
-              className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                         focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Normal Price  <span className='text-red-500 opacity-70 text-sm'>*required</span>
-              </label>
-              <input
-                type="number"
-                name="normal_price"
-                placeholder="Enter price"
-                value={form.normal_price}
-                onChange={handleChange}
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                           focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Discounted Price
-              </label>
-              <input
-                type="number"
-                name="discounted_price"
-                placeholder="Enter discounted price"
-                value={form.discounted_price}
-                onChange={handleChange}
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                           focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Cover Image
-            </label>
-            <input
-              type="file"
-              name="cover"
-              onChange={handleFileChange}
-              accept="image/jpeg,image/png,image/jpg,image/gif"
-              className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 
-                           focus:ring-teal-500 dark:bg-gray-700 dark:border-gray-600"
-            />
-            <p className="mt-1 text-sm text-gray-500">Accepted formats: JPEG, PNG, JPG, GIF (Max: 3MB)</p>
-            {form.cover && typeof form.cover === 'string' && (
-              <div className="mt-2">
-                <img src={form.cover} alt="Current cover" className="h-20 w-auto object-cover rounded" />
+            {Object.entries(errors).map(([field, message]) => (
+              <div key={field} className="mb-5" style={{ color: 'red' }}>
+                {message}
               </div>
-            )}
-          </div>
+            ))}
 
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 
-                         transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 
-                         focus:ring-teal-500"
-            >
-              Update Bootcamp
-            </button>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Basic Information */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Title <span className="text-xs text-red-500">**</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="title"
+                    value={data.title}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Slug <span className="text-xs text-gray-400">automatic</span>
+                  </label>
+                  <input
+                    disabled={true}
+                    type="text"
+                    name="slug"
+                    value={data.slug}
+                    className="w-full px-3 py-2 border border-gray-300 bg-gray-300 text-gray-700 rounded-md shadow-sm"
+                  />
+                </div>
+              </div>
+
+              {/* Description */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-5">
+                  Description <span className="text-xs text-red-500">**</span>
+                </label>
+                <ReactQuill
+                  theme="snow"
+                  modules={modules}
+                  formats={formats}
+                  value={data.description}
+                  onChange={(value) => setData('description', value)}
+                  className="bg-white"
+                  style={{ height: '400px' }}
+                />
+              </div>
+
+              {/* Pricing */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-12">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Quota <span className="text-xs text-red-500">**</span>
+                  </label>
+                  <input
+                    type="number"
+                    name="quota"
+                    value={data.quota}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Normal Price <span className="text-xs text-red-500">**</span>
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    name="normal_price"
+                    value={data.normal_price}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Discounted Price
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    name="discounted_price"
+                    value={data.discounted_price}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+              </div>
+
+              {/* Time and Date */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Start Time
+                  </label>
+                  <input
+                    type="time"
+                    name="time_start"
+                    value={data.time_start}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    End Time
+                  </label>
+                  <input
+                    type="time"
+                    name="time_end"
+                    value={data.time_end}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Start Date <span className="text-xs text-red-500">**</span>
+                  </label>
+                  <input
+                    type="date"
+                    name="date_start"
+                    value={data.date_start}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    End Date
+                  </label>
+                  <input
+                    type="date"
+                    name="date_end"
+                    value={data.date_end}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+              </div>
+
+              {/* Meta Information */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Meta Title <span className="text-xs text-gray-400">optional</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="meta_title"
+                    value={data.meta_title}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Meta Description <span className="text-xs text-gray-400">optional</span>
+                  </label>
+                  <textarea
+                    name="meta_description"
+                    value={data.meta_description}
+                    onChange={handleInputChange}
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+              </div>
+
+              {/* File Uploads */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Cover Image <span className="text-xs text-red-500">**</span>
+                  </label>
+                  <input
+                    type="file"
+                    name="cover"
+                    onChange={handleFileChange}
+                    accept="image/*"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Poster <span className="text-xs text-red-500">**</span>
+                  </label>
+                  <input
+                    type="file"
+                    name="poster"
+                    onChange={handleFileChange}
+                    accept="image/*"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+              </div>
+
+              {/* Custom Attributes */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-200 p-4 rounded-md text-gray-500">
+                <p>Custom Field</p>
+              </div>
+
+              <DynamicJsonInput
+                value={data.custom_attributes}
+                onChange={(newAttributes) => setData('custom_attributes', newAttributes)}
+                fieldTitleLabel="Attribute Name"
+                dataTypeLabel="Attribute Type"
+                addRecordButtonText="Add Attribute"
+                idPrefix="prod-attr"
+              />
+
+              {/* Published Status */}
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="is_published"
+                  checked={data.is_published}
+                  onChange={handleInputChange}
+                  className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <label className="ml-2 block text-sm text-gray-700">
+                  Published
+                </label>
+              </div>
+
+              {/* Submit Button */}
+              <div className="flex justify-end pt-6">
+                <button
+                  type="submit"
+                  disabled={processing}
+                  className="px-6 py-2 bg-blue-600 text-white font-medium rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {processing ? 'Saving...' : 'Update Bootcamp'}
+                </button>
+              </div>
+            </form>
           </div>
-        </form>
+        </div>
       </div>
     </AuthenticatedLayout>
-  )
-}
+  );
+};
 
-export default Edit
+export default Edit;

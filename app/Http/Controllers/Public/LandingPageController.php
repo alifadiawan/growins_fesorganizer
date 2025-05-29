@@ -18,9 +18,12 @@ class LandingPageController extends Controller
     {
         $course = CourseModel::paginate(10);
         $categories = CategoryModel::take(10)->get();
+        $bootcamp = Bootcamp::latest()->take(3)->get();
+
         return Inertia::render('Welcome', [
             'courseList' => $course,
             'categories' => $categories,
+            'bootcamps' => $bootcamp,
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             'laravelVersion' => Application::VERSION,
