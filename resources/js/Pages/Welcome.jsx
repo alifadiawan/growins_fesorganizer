@@ -228,69 +228,76 @@ export default function Welcome({ courseList, categories, bootcamps }) {
                         <p className="text-gray-200 max-w-2xl mx-auto">Tingkatkan kemampuan soft skill Anda dengan program bootcamp terbaru kami.</p>
                     </div>
                     <div className="flex lg:flex-row justify-center gap-8 w-full"> {/* Consider adding flex-wrap if you want cards to wrap on smaller screens or if there are many */}
-                        {bootcamps.map((bootcamp) => (
-                            <div
-                                key={bootcamp.id}
-                                className="bg-white/10 w-96 backdrop-blur-sm border border-white/20 rounded-xl shadow-2xl overflow-hidden flex flex-col"
-                            >
-                                {!bootcamp.poster && (
-                                    <div className="aspect-[3/4] w-full bg-white/5 flex items-center justify-center">
-                                        <span className="text-teal-300 text-sm">No Image Available</span>
-                                    </div>
-                                )}
-
-                                {bootcamp.poster && (
-                                    <div className="aspect-[6/2] w-full">
-                                        <img
-                                            src={`/storage/${bootcamp.poster}`}
-                                            alt={`${bootcamp.title} Poster`}
-                                            className="w-full h-full object-contain"
-                                        />
-                                    </div>
-                                )}
-
-                                <div className="p-6 flex flex-col flex-grow">
-                                    <h3 className="text-xl font-semibold text-white mb-2">
-                                        {bootcamp.title}
-                                    </h3>
-                                    <p className="text-teal-100 text-sm mb-1">
-                                        Starts: {bootcamp.date_start}
-                                    </p>
-                                    <p className="text-teal-200 text-sm leading-relaxed mb-4 flex-grow">
-                                        {bootcamp.description.substring(0, 100)}... {/* Short description */}
-                                    </p>
-                                    <div className="mb-4">
-                                        {bootcamp.discounted_price ? (
-                                            <div>
-                                                <span className="text-2xl font-bold text-white">
-                                                    Rp. {bootcamp.discounted_price}
-                                                </span>
-                                                <span className="text-sm text-teal-300 line-through ml-2">
-                                                    Rp. {bootcamp.normal_price}
-                                                </span>
-                                            </div>
-                                        ) : (
-                                            <span className="text-2xl font-bold text-white">
-                                                Rp. {bootcamp.normal_price}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <div className="mt-auto flex flex-row gap-3">
-                                        <a
-                                            href={route('bootcamp.show.public', bootcamp.slug)} // Replace with your actual route or Inertia Link
-                                            className="w-full text-center bg-teal-500 hover:bg-teal-400 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-opacity-50"
-                                        >
-                                            Learn More
-                                        </a>
-                                    </div>
+                        {
+                            bootcamps.length === 0 ? (
+                                <div className="w-full text-center py-16 text-white/70 text-lg">
+                                    Tidak ada bootcamp yang tersedia saat ini.
                                 </div>
-                            </div>
-                        ))}
+                            ) : (
+                                bootcamps.map((bootcamp) => (
+                                    <div
+                                        key={bootcamp.id}
+                                        className="bg-white/10 w-96 backdrop-blur-sm border border-white/20 rounded-xl shadow-2xl overflow-hidden flex flex-col"
+                                    >
+                                        {!bootcamp.poster && (
+                                            <div className="aspect-[3/4] w-full bg-white/5 flex items-center justify-center">
+                                                <span className="text-teal-300 text-sm">No Image Available</span>
+                                            </div>
+                                        )}
+
+                                        {bootcamp.poster && (
+                                            <div className="aspect-[6/2] w-full">
+                                                <img
+                                                    src={`/storage/${bootcamp.poster}`}
+                                                    alt={`${bootcamp.title} Poster`}
+                                                    className="w-full h-full object-contain"
+                                                />
+                                            </div>
+                                        )}
+
+                                        <div className="p-6 flex flex-col flex-grow">
+                                            <h3 className="text-xl font-semibold text-white mb-2">
+                                                {bootcamp.title}
+                                            </h3>
+                                            <p className="text-teal-100 text-sm mb-1">
+                                                Starts: {bootcamp.date_start}
+                                            </p>
+                                            <p className="text-teal-200 text-sm leading-relaxed mb-4 flex-grow">
+                                                {bootcamp.description.substring(0, 100)}... {/* Short description */}
+                                            </p>
+                                            <div className="mb-4">
+                                                {bootcamp.discounted_price ? (
+                                                    <div>
+                                                        <span className="text-2xl font-bold text-white">
+                                                            Rp. {bootcamp.discounted_price}
+                                                        </span>
+                                                        <span className="text-sm text-teal-300 line-through ml-2">
+                                                            Rp. {bootcamp.normal_price}
+                                                        </span>
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-2xl font-bold text-white">
+                                                        Rp. {bootcamp.normal_price}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <div className="mt-auto flex flex-row gap-3">
+                                                <a
+                                                    href={route('bootcamp.show.public', bootcamp.slug)} // Replace with your actual route or Inertia Link
+                                                    className="w-full text-center bg-teal-500 hover:bg-teal-400 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-opacity-50"
+                                                >
+                                                    Learn More
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
                     </div>
 
                     <div className="text-center mt-12">
                         <Link
-                            href="/bootcamps" // Replace with your route to all bootcamps page
+                            href="/bootcamp-softskill" // Replace with your route to all bootcamps page
                             className="inline-block bg-white/90 hover:bg-white text-teal-700 font-semibold py-3 px-8 rounded-lg shadow-md transition duration-150 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-opacity-50"
                         >
                             View All Bootcamps
