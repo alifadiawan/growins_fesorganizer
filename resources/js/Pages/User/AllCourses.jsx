@@ -3,6 +3,7 @@ import GuestLayout from '@/Layouts/GuestLayout'
 import { Link } from '@inertiajs/react';
 import { Search, Filter, Clock, Star, ChevronDown, Grid, List, BookOpen, Loader2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
+import { motion } from "framer-motion";
 
 const AllCourses = ({ categories, courses }) => {
   const [viewMode, setViewMode] = useState('grid');
@@ -54,18 +55,46 @@ const AllCourses = ({ categories, courses }) => {
     >
       <div className="min-h-screen bg-gray-50">
         {/* Page Title */}
-        <div className="relative bg-gradient-to-r from-teal-900 to-teal-600">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="relative bg-gradient-to-r from-teal-900 to-teal-600"
+        >
           <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-10"></div>
+
           <div className="relative container mx-auto px-6 py-16">
-            <div className="max-w-3xl">
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.2 }}
+              className="max-w-3xl"
+            >
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 0.4 }}
+                className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight"
+              >
                 Katalog Kursus Online
                 <span className="block text-yellow-400">untuk Masa Depan Anda</span>
-              </h1>
-              <p className="text-teal-100 text-lg md:text-xl leading-relaxed mb-8">
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 0.6 }}
+                className="text-teal-100 text-lg md:text-xl leading-relaxed mb-8"
+              >
                 Temukan kursus terbaik untuk meningkatkan keterampilan dan membuka peluang karir yang lebih baik
-              </p>
-              <div className="flex flex-wrap gap-4">
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 0.8 }}
+                className="flex flex-wrap gap-4"
+              >
                 <div className="relative flex-1 min-w-[280px]">
                   <input
                     type="text"
@@ -78,18 +107,29 @@ const AllCourses = ({ categories, courses }) => {
                   <Search className="w-5 h-5" />
                   Cari Sekarang
                 </button>
-              </div>
-              <div className="mt-8 flex flex-wrap gap-4 items-center">
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 1 }}
+                className="mt-8 flex flex-wrap gap-4 items-center"
+              >
                 <span className="text-teal-100">Populer:</span>
-                {['Web Development', 'Digital Marketing', 'Design', 'Business'].map((tag) => (
-                  <span key={tag} className="px-3 py-1 bg-white/10 rounded-full text-sm text-white hover:bg-white/20 cursor-pointer">
+                {['Web Development', 'Digital Marketing', 'Design', 'Business'].map((tag, index) => (
+                  <motion.span
+                    key={tag}
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                    className="px-3 py-1 bg-white/10 rounded-full text-sm text-white hover:bg-white/20 cursor-pointer"
+                  >
                     {tag}
-                  </span>
+                  </motion.span>
                 ))}
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Course Filter and List */}
         <div className="container mx-auto px-6 py-8">

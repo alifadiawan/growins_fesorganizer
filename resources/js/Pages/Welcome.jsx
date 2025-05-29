@@ -4,6 +4,7 @@ import Toast from '@/Components/Toast';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Link, usePage } from '@inertiajs/react';
 import { Award, Calendar, Clock, ChevronLeft, ChevronRight, ArrowRight, Star, MapPin, Users } from "lucide-react";
+import { motion } from 'framer-motion';
 
 import { useEffect, useRef, useState } from 'react';
 
@@ -67,42 +68,76 @@ export default function Welcome({ courseList, categories, bootcamps }) {
                 customBgColor: 'bg-gradient-to-r from-teal-900 to-teal-600 opacity-95',
             }}
         >
-
-
             {/* Hero Section - Updated with more modern design */}
             <section className="relative overflow-hidden">
                 <Toast success={toastMessage.success} error={toastMessage.error} />
-                {/* Enhanced background with subtle pattern */}
+
                 <div className="absolute inset-0 bg-gradient-to-r from-teal-900 to-teal-600 opacity-95"></div>
                 <div className="absolute inset-0 bg-[url('/bg-pattern.png')] opacity-10 bg-repeat mix-blend-overlay"></div>
 
                 <div className="relative container mx-auto px-6 py-24 lg:py-32 flex flex-col lg:flex-row items-center">
-                    <div className="text-white max-w-xl mb-12 lg:mb-0 z-10">
-                        <div className="inline-block px-4 py-1.5 bg-teal-400/20 rounded-full text-sm font-medium mb-8 backdrop-blur-sm border border-teal-400/30">
+
+                    {/* Left Content */}
+                    <motion.div
+                        initial={{ opacity: 0, x: -50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 1 }}
+                        className="text-white max-w-xl mb-12 lg:mb-0 z-10"
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ duration: 1, delay: 0.2 }}
+                            className="inline-block px-4 py-1.5 bg-teal-400/20 rounded-full text-sm font-medium mb-8 backdrop-blur-sm border border-teal-400/30"
+                        >
                             ✨ Platform Pembelajaran Terbaik
-                        </div>
-                        <h1 className="text-4xl lg:text-6xl font-black mb-8 leading-tight">
+                        </motion.div>
+
+                        <motion.h1
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 1, delay: 0.4 }}
+                            className="text-4xl lg:text-6xl font-black mb-8 leading-tight"
+                        >
                             Empower Your Future <br />
                             <span className="text-yellow-400 relative">
                                 with GROW
                                 <span className="absolute bottom-0 left-0 w-full h-1 bg-yellow-400/30"></span>
                             </span>
-                        </h1>
-                        <p className="text-lg text-teal-50 mb-10 leading-relaxed opacity-90">
+                        </motion.h1>
+
+                        <motion.p
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 1, delay: 0.6 }}
+                            className="text-lg text-teal-50 mb-10 leading-relaxed opacity-90"
+                        >
                             Tingkatkan keterampilan komunikasi, kepemimpinan, dan pengelolaan diri melalui workshop kami yang interaktif dan aplikatif.
-                        </p>
-                        <div className="flex flex-col sm:flex-row gap-5">
-                            <Link href="/register" className="px-8 py-4 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl inline-flex items-center justify-center">
+                        </motion.p>
+
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 1, delay: 0.8 }}
+                            className="flex flex-col sm:flex-row gap-5"
+                        >
+                            <Link href="/register" className="group px-8 py-4 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl inline-flex items-center justify-center">
                                 Mulai Belajar
                                 <ArrowRight className="ml-2 h-5 w-5 transform group-hover:translate-x-1 transition-transform" />
                             </Link>
                             <Link href="/courses/all" className="px-8 py-4 border-2 border-white/30 hover:border-white hover:bg-white/10 text-white font-medium rounded-xl transition-all duration-300 inline-flex items-center justify-center backdrop-blur-sm">
                                 Lihat Semua Kursus
                             </Link>
-                        </div>
-                    </div>
+                        </motion.div>
+                    </motion.div>
 
-                    <div className="relative lg:absolute lg:right-0 lg:top-1/2 lg:-translate-y-1/2 lg:w-1/2 z-10">
+                    {/* Right Image */}
+                    <motion.div
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 1, delay: 1 }}
+                        className="relative lg:absolute lg:right-0 lg:top-1/5 lg:-translate-y-1/2 lg:w-1/2 z-10"
+                    >
                         <div className="relative">
                             <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-teal-400/30 to-yellow-400/30 blur-3xl opacity-30"></div>
                             <img
@@ -111,9 +146,8 @@ export default function Welcome({ courseList, categories, bootcamps }) {
                                 className="relative rounded-2xl lg:max-w-md max-w-64 mx-auto transform hover:scale-105 transition-transform duration-500"
                             />
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
-
             </section>
 
             {/* Categories section */}
@@ -204,11 +238,11 @@ export default function Welcome({ courseList, categories, bootcamps }) {
                                         <span className="text-teal-300 text-sm">No Image Available</span>
                                     </div>
                                 )}
-                                
+
                                 {bootcamp.poster && (
-                                    <div className="aspect-[6/2] w-full"> 
+                                    <div className="aspect-[6/2] w-full">
                                         <img
-                                            src={`/storage/${bootcamp.poster}`} 
+                                            src={`/storage/${bootcamp.poster}`}
                                             alt={`${bootcamp.title} Poster`}
                                             className="w-full h-full object-contain"
                                         />
