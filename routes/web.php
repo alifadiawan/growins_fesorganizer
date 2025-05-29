@@ -52,7 +52,7 @@ Route::prefix('oauth')->middleware(['web'])->name('oauth.')->group(function () {
 
 Route::prefix('oauth')->middleware(['auth'])->name('oauth.')->group(function () {
     Route::get('/set-password', [OauthController::class, 'showForm'])->name('showForm')->middleware(['auth', 'signed']);
-    Route::post('/set-password', [OauthController::class, 'store'])->name('store')->middleware('auth');
+    Route::post('/set-password', [OauthController::class, 'store'])->name('store');
 });
 
 Route::middleware('auth')->group(function () {

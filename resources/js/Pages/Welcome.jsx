@@ -12,7 +12,7 @@ export default function Welcome({ courseList, categories, bootcamps }) {
     const [scrollPosition, setScrollPosition] = useState(0);
     const [toastMessage, setToastMessage] = useState({ success: '', error: '' });
     const scrollContainerRef = useRef(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const course = courseList?.data || [];
     const { success, error } = usePage().props;
 
@@ -376,7 +376,11 @@ export default function Welcome({ courseList, categories, bootcamps }) {
 
                     {
                         isLoading ? (
-                            <div className="text-center py-12" > Loading courses...</div>
+                            <div className="text-center py-12 w-full">Memuat kursus...</div>
+                        ) : course.length === 0 ? (
+                            <div className="text-center py-12 w-full text-gray-500">
+                                Tidak ada kursus yang tersedia saat ini.
+                            </div>
                         ) : (
                             course.map((course) => (
                                 <div

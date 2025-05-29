@@ -87,7 +87,7 @@ const Bootcamp = ({ bootcamp }) => {
                         {/* Bootcamp card content */}
                         <div className="h-48 bg-gray-200 overflow-hidden">
                             <img
-                                src={`/storage/${item.cover}`}
+                                src={`/storage/${item.cover}` && `/storage/${item.poster}`}
                                 alt={item.title}
                                 className="w-full h-full object-cover"
                                 onError={(e) => {
