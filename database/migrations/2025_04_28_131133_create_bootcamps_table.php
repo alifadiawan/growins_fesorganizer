@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->string('id')->primary();
             $table->string('slug')->unique();
             $table->string('title');
+            $table->mediumText('short_description');
             $table->mediumText('description');
 
             $table->string('quota')->nullable();

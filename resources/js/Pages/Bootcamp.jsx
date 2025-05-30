@@ -100,7 +100,7 @@ const Bootcamp = ({ bootcamp }) => {
                                 #Bootcamp
                             </span>
                             <h3 className="text-2xl font-bold mb-3 line-clamp-2 text-black">{item.title}</h3>
-                            <div className="text-gray-600 mb-6 line-clamp-3" dangerouslySetInnerHTML={{ __html: item.description }}></div>
+                            <div className="text-gray-600 mb-6 line-clamp-3" dangerouslySetInnerHTML={{ __html: item.short_description }}></div>
 
                             <div className="space-y-4 text-sm">
                                 <div className="flex items-center p-2 bg-gray-50 rounded-lg">

@@ -43,6 +43,7 @@ class BootcampController extends Controller
         $data = $request->validate([
             'title' => 'required|string',
             'slug' => 'required|string|unique:bootcamps,slug',
+            'short_description' => 'required|string',
             'description' => 'required|string',
             'quota' => 'nullable|integer',
             'normal_price' => 'nullable|integer',
@@ -132,6 +133,7 @@ class BootcampController extends Controller
         $data = $request->validate([
             'title' => 'required|string',
             'slug' => 'required|string|unique:bootcamps,slug,' . $id,
+            'short_description' => 'required|string',
             'description' => 'required|string',
             'quota' => 'nullable|integer',
             'normal_price' => 'nullable|integer',

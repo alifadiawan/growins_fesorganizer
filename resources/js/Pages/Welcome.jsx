@@ -262,9 +262,9 @@ export default function Welcome({ courseList, categories, bootcamps }) {
                                             <p className="text-teal-100 text-sm mb-1">
                                                 Starts: {bootcamp.date_start}
                                             </p>
-                                            <p className="text-teal-200 text-sm leading-relaxed mb-4 flex-grow">
-                                                {bootcamp.description.substring(0, 100)}... {/* Short description */}
-                                            </p>
+                                            <div className="text-teal-200 text-sm leading-relaxed mb-4 flex-grow line-clamp-6" dangerouslySetInnerHTML={{ __html: bootcamp.short_description }} >
+
+                                            </div>
                                             <div className="mb-4">
                                                 {bootcamp.discounted_price ? (
                                                     <div>

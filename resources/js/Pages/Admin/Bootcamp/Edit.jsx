@@ -33,6 +33,7 @@ const Edit = ({ bootcamp }) => {
   const { data, setData, post, errors } = useForm({
     title: bootcamp.title || '',
     slug: bootcamp.slug || '',
+    short_description: bootcamp.short_description || '',
     description: bootcamp.description || '',
     main_theme: bootcamp.main_theme || '',
     quota: bootcamp.quota || '',
@@ -182,8 +183,24 @@ const Edit = ({ bootcamp }) => {
                 </div>
               </div>
 
-              {/* Description */}
+              {/* Short Description */}
               <div>
+                <label className="block text-sm font-medium text-gray-700 mb-5">
+                  Short Description <span className="text-xs text-red-500">**</span>
+                </label>
+                <ReactQuill
+                  theme="snow"
+                  modules={modules}
+                  formats={formats}
+                  value={data.short_description}
+                  onChange={(value) => setData('short_description', value)}
+                  className="bg-white"
+                  style={{ height: '400px' }}
+                />
+              </div>
+
+              {/* Description */}
+              <div className="pt-12">
                 <label className="block text-sm font-medium text-gray-700 mb-5">
                   Description <span className="text-xs text-red-500">**</span>
                 </label>
