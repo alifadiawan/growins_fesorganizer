@@ -74,7 +74,7 @@ const DynamicJsonInput = ({
                                 value={field.title || ''}
                                 onChange={(e) => handleFieldChange(index, e)}
                                 className={inputBaseClass}
-                                required
+                                
                             />
                         </div>
 
@@ -92,7 +92,7 @@ const DynamicJsonInput = ({
                                 value={field.dataType || (availableDataTypes.length > 0 ? availableDataTypes[0].value : 'text')}
                                 onChange={(e) => handleFieldChange(index, e)}
                                 className={inputBaseClass}
-                                required
+                                
                             >
                                 {availableDataTypes.map(option => (
                                     <option key={option.value} value={option.value}>

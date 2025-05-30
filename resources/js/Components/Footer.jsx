@@ -12,69 +12,64 @@ const Footer = () => {
     const { url } = usePage()
 
     return (
-        <footer className="tracking-wide bg-gray-50 px-10 pt-12 pb-6">
-            <div className="flex flex-wrap justify-between gap-10">
-                <div className="max-w-md">
-                    <Link href="/">
-                        <img src="/LOGOGROWINS.png" alt="Growins Logo" className="w-36" />
-                    </Link>
-                    <ul className="mt-10 flex space-x-5">
-                        <li>
-                            <Link href="https://www.instagram.com/growins.id/" target="_blank" className="hover:opacity-80">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" viewBox="0 0 152 152">
-                                    <linearGradient id="a" x1="22.26" x2="129.74" y1="22.26" y2="129.74" gradientUnits="userSpaceOnUse">
-                                        <stop offset={0} stopColor="#fae100" />
-                                        <stop offset=".15" stopColor="#fcb720" />
-                                        <stop offset=".3" stopColor="#ff7950" />
-                                        <stop offset=".5" stopColor="#ff1c74" />
-                                        <stop offset={1} stopColor="#6c1cd1" />
-                                    </linearGradient>
-                                    <g data-name="Layer 2">
-                                        <g data-name="03.Instagram">
-                                            <rect width={152} height={152} fill="url(#a)" rx={76} />
-                                            <g fill="#fff">
-                                                <path d="M94 36H58a22 22 0 0 0-22 22v36a22 22 0 0 0 22 22h36a22 22 0 0 0 22-22V58a22 22 0 0 0-22-22zm15 54.84A18.16 18.16 0 0 1 90.84 109H61.16A18.16 18.16 0 0 1 43 90.84V61.16A18.16 18.16 0 0 1 61.16 43h29.68A18.16 18.16 0 0 1 109 61.16z" />
-                                                <path d="m90.59 61.56-.19-.19-.16-.16A20.16 20.16 0 0 0 76 55.33 20.52 20.52 0 0 0 55.62 76a20.75 20.75 0 0 0 6 14.61 20.19 20.19 0 0 0 14.42 6 20.73 20.73 0 0 0 14.55-35.05zM76 89.56A13.56 13.56 0 1 1 89.37 76 13.46 13.46 0 0 1 76 89.56zm26.43-35.18a4.88 4.88 0 0 1-4.85 4.92 4.81 4.81 0 0 1-3.42-1.43 4.93 4.93 0 0 1 3.43-8.39 4.82 4.82 0 0 1 3.09 1.12l.1.1a3.05 3.05 0 0 1 .44.44l.11.12a4.92 4.92 0 0 1 1.1 3.12z" />
-                                            </g>
-                                        </g>
-                                    </g>
+        <footer className="bg-white border-t border-gray-200 px-6 py-10">
+            <div className="mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-3 justify-between gap-8 mb-8">
+                    {/* Logo and Social Section */}
+                    <div className="space-y-6">
+                        <Link href="/">
+                            <img src="/LOGOGROWINS_2.png" alt="Growins Logo" className="h-30" />
+                        </Link>
+                        <div className="flex space-x-4">
+                            <Link href="https://www.instagram.com/growins.id/" target="_blank" className="text-gray-400 hover:text-gray-600 transition-colors">
+                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                                 </svg>
                             </Link>
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
+
+                    <div></div>
+
+                    {/* Quick Links Section */}
+                    <div>
+                        <h4 className="text-gray-900 font-medium text-sm mb-4">Quick Links</h4>
+                        <ul className="space-y-3">
+                            {quickLinks.map((link) => {
+                                const isActive = url === link.href
+                                return (
+                                    <li key={link.href}>
+                                        <Link
+                                            href={link.href}
+                                            className={`text-sm transition-colors ${isActive ? 'text-gray-900 font-medium' : 'text-gray-600 hover:text-gray-900'
+                                                }`}
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    </li>
+                                )
+                            })}
+                        </ul>
+                    </div>
+
                 </div>
-                <div className="max-lg:min-w-[140px]">
-                    <h4 className="text-slate-900 font-semibold text-sm">Quick Links</h4>
-                    <ul className="mt-6 space-y-4">
-                        {quickLinks.map((link) => {
-                            const isActive = url === link.href
-                            return (
-                                <li key={link.href}>
-                                    <Link 
-                                        href={link.href}
-                                        className={`transition-colors ${
-                                            isActive ? 'text-slate-900 font-medium' : 'text-slate-600 hover:text-slate-900'
-                                        } text-sm`}
-                                    >
-                                        {link.label}
-                                    </Link>
-                                </li>
-                            )
-                        })}
-                    </ul>
+
+                {/* Bottom Section */}
+                <div className="pt-6 border-t border-gray-200">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+                        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6">
+                            <Link href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                                Terms of Service
+                            </Link>
+                            <Link href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                                Privacy Policy
+                            </Link>
+                        </div>
+                        <p className="text-sm text-gray-600">
+                            © {new Date().getFullYear()} Growins. All rights reserved.
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <hr className="mt-10 mb-6 border-gray-300" />
-            <div className="flex flex-wrap justify-between gap-4">
-                <ul className="flex space-x-6 max-md:space-y-2 max-md:flex-col max-md:space-x-0">
-                    <li>
-                        <Link href="/terms" className="hover:text-slate-900 text-slate-600 text-sm">Terms of Service</Link>
-                    </li>
-                    <li>
-                        <Link href="/privacy" className="hover:text-slate-900 text-slate-600 text-sm">Privacy Policy</Link>
-                    </li>
-                </ul>
-                <p className="text-slate-600 text-sm">© {new Date().getFullYear()} Growins. All rights reserved.</p>
             </div>
         </footer>
     )

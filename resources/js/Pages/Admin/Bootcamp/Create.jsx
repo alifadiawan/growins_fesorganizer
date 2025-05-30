@@ -12,6 +12,7 @@ const Create = () => {
   const { data, setData, post, errors } = useForm({
     title: '',
     slug: '',
+    short_description: '',
     description: '',
     main_theme: '',
     quota: '',
@@ -31,6 +32,23 @@ const Create = () => {
     poster: null,
     meta_image: null,
   });
+
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['link', 'image'],
+      ['clean'],
+    ],
+  };
+
+  const formats = [
+    'header',
+    'bold', 'italic', 'underline', 'strike',
+    'list', 'bullet',
+    'link', 'image',
+  ];
 
   const generateSlug = (text) =>
     text
@@ -93,10 +111,10 @@ const Create = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="py-6">
               <div className="flex items-center space-x-4">
-                <button className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 transition-colors duration-200 hover:bg-gray-100 px-3 py-2 rounded-md">
+                <Link href={route('bootcamp.index')} className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 transition-colors duration-200 hover:bg-gray-100 px-3 py-2 rounded-md">
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back to Bootcamps
-                </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -145,14 +163,35 @@ const Create = () => {
               </div>
             </div>
 
-            <div>
+            {/* Short Description */}
+            <div className="pb-12">
               <label className="block text-sm font-medium text-gray-700 mb-5">
-                Description <span className="text-xs text-red-500">**</span>
+                Short Description <span className="text-xs text-red-500">** </span>
+                (Untuk SEO dan tampilan di halaman utama)
               </label>
               <ReactQuill
                 theme="snow"
+                modules={modules}
+                formats={formats}
+                value={data.short_description}
+                onChange={(value) => setData('short_description', value)}
+                className="bg-white"
+                style={{ height: '100px' }}
+              />
+            </div>
+
+            {/* Description */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-5">
+                Description <span className="text-xs text-red-500">** </span>
+                (Untuk tampilan bagian di Event Poster / Detail)
+              </label>
+              <ReactQuill
+                theme="snow"
+                modules={modules}    // Add this line
+                formats={formats}    // Add this line
                 value={data.description}
-                onChange={(value) => handleInputChange({ target: { name: 'description', value } })}
+                onChange={(value) => setData('description', value)}  // Changed this line
                 className="bg-white"
                 style={{ height: '400px' }}
               />
@@ -316,8 +355,8 @@ const Create = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-200 p-4 rounded-md text-gray-500"> 
-                <p>Custom Field</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-200 p-4 rounded-md text-gray-500">
+              <p>Custom Field</p>
             </div>
 
             <DynamicJsonInput
